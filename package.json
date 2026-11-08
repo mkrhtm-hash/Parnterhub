@@ -1,0 +1,32 @@
+{
+  "name": "partnerhub",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "predev": "node scripts/check-env.js",
+    "dev": "concurrently --kill-others --names api,web --prefix-colors green,cyan \"node --watch server/dev-api.js\" \"vite\"",
+    "predb:setup": "node scripts/check-env.js",
+    "db:setup": "node scripts/db-setup.js",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.5",
+    "@vitejs/plugin-react": "^6.2.1",
+    "concurrently": "^10.0.6",
+    "express": "^5.3.0",
+    "tailwindcss": "^4.3.5",
+    "vite": "^8.3.6"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^1.2.0",
+    "bcryptjs": "^3.0.3",
+    "framer-motion": "^14.10.1",
+    "jose": "^6.2.15",
+    "lucide-react": "^1.70.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-router-dom": "^7.18.5"
+  }
+}

@@ -1,16 +1,27 @@
 import { useEffect, useRef, useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
-import { BookOpen, CalendarDays, Check, Clock, Download, PlayCircle, SearchX, X } from 'lucide-react';
+import { Navigate, NavLink, useParams } from 'react-router-dom';
+import { BookOpen, CalendarDays, Check, Clock, Download, PlayCircle, Presentation, SearchX, X } from 'lucide-react';
 import Button from '../components/ui/Button';
+import OpinionForm from '../components/learning/OpinionForm';
 import { IconTile, PageHeader, Reveal } from '../components/ui/Primitives';
 import { usePageMeta } from '../hooks/usePageMeta';
 import { useCompliance, useSiteData } from '../context/SiteDataContext';
 
-const filters = [
-  { id: 'all', label: 'All' },
-  { id: 'video', label: 'Videos' },
-  { id: 'ebook', label: 'Ebooks' },
+const sections = [
+  { slug: 'videos', label: 'Videos', kind: 'video' },
+  { slug: 'ebooks', label: 'eBook', kind: 'ebook' },
+  { slug: 'webinars', label: 'Webinar', kind: 'webinar' },
+  { slug: 'your-opinion', label: 'Your Opinion' },
 ];
+
+const kinds = {
+  video: { label: 'Video', Icon: PlayCircle, tone: 'emerald' },
+  ebook: { label: 'eBook', Icon: BookOpen, tone: 'gold' },
+  webinar: { label: 'Webinar', Icon: Presentation, tone: 'emerald' },
+};
+
+const webinarDate = (value) =>
+  new Date(value).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
 
 /** Turns a YouTube or Vimeo page link into its embeddable address. Other links play as a video file. */
 function embedUrl(link) {
@@ -60,13 +71,15 @@ function VideoDialog({ video, onClose }) {
 }
 
 function LessonCard({ item, onPlay }) {
-  const isVideo = item.kind === 'video';
+  const { label, Icon, tone } = kinds[item.kind];
+  const isPast = item.startsAt && new Date(item.startsAt) < new Date();
+  const when = item.kind === 'webinar' && item.startsAt ? webinarDate(item.startsAt) : item.lengthLabel;
   return (
     <article className="glass lift flex h-full flex-col p-6">
       <div className="flex items-start justify-between gap-3">
-        <IconTile icon={isVideo ? PlayCircle : BookOpen} tone={isVideo ? 'emerald' : 'gold'} />
+        <IconTile icon={Icon} tone={tone} />
         <p className="text-right text-xs font-medium text-muted">
-          {isVideo ? 'Video' : 'Ebook'} · {item.level}
+          {label} · {item.level}
         </p>
       </div>
       <h2 className="mt-5 text-xl font-semibold">{item.title}</h2>
@@ -83,27 +96,27 @@ function LessonCard({ item, onPlay }) {
       </ul>
 
       <div className="mt-auto flex items-center justify-between gap-3">
-        {item.lengthLabel ? (
+        {when ? (
           <span className="inline-flex items-center gap-1.5 text-xs text-muted">
             <Clock className="size-3.5" aria-hidden="true" />
-            {item.lengthLabel}
+            {when}
           </span>
         ) : (
           <span />
         )}
         {!item.url && (
-          <span className="inline-flex min-h-11 items-center rounded-full border border-dashed border-gold/60 bg-gold/10 px-4 text-xs font-medium text-gold">Coming soon</span>
+          <span className="inline-flex min-h-11 items-center rounded-full border border-dashed border-gold/60 bg-gold/10 px-4 text-xs font-medium text-gold">{item.kind === 'webinar' ? 'Date to be announced' : 'Coming soon'}</span>
         )}
-        {item.url && isVideo && (
+        {item.url && item.kind === 'video' && (
           <Button onClick={() => onPlay(item)} className="!min-h-11 !py-2">
             <PlayCircle className="size-4" aria-hidden="true" />
             Watch
           </Button>
         )}
-        {item.url && !isVideo && (
+        {item.url && item.kind !== 'video' && (
           <Button href={item.url} className="!min-h-11 !py-2">
-            <Download className="size-4" aria-hidden="true" />
-            Read ebook
+            {item.kind === 'ebook' && <Download className="size-4" aria-hidden="true" />}
+            {item.kind === 'ebook' ? 'Read eBook' : isPast ? 'Watch recording' : 'Register'}
             <span className="sr-only">(opens in a new tab)</span>
           </Button>
         )}
@@ -115,55 +128,54 @@ function LessonCard({ item, onPlay }) {
 export default function Learning() {
   const { learning } = useSiteData().data;
   const { notAdvice } = useCompliance();
-  usePageMeta('Learning', 'Educational videos and ebooks on brokers, CFDs, leverage and trading costs, each showing what you will learn.');
-  const [filter, setFilter] = useState('all');
+  const { section: slug } = useParams();
+  const section = sections.find((s) => s.slug === slug);
+  usePageMeta(section ? `${section.label} | Learning` : 'Learning', 'Educational videos, ebooks and webinars on brokers, CFDs, leverage and trading costs, each showing what you will learn.');
   const [video, setVideo] = useState(null);
-  const shown = learning.filter((item) => filter === 'all' || item.kind === filter);
+
+  if (!section) return <Navigate to="/learning/videos" replace />;
+  const shown = learning.filter((item) => item.kind === section.kind);
 
   return (
     <>
       <PageHeader
         eyebrow="Learning"
         title="Understand it before you trade it."
-        intro="Short videos and ebooks in plain English. Each one shows what you will learn before you start."
+        intro="Short videos, ebooks and webinars in plain English. Each one shows what you will learn before you start."
       />
 
       <section className="shell">
-        <div role="group" aria-label="Filter by format" className="grid max-w-md grid-cols-3 gap-1 rounded-2xl border border-line bg-[var(--glass)] p-1.5">
-          {filters.map(({ id, label }) => {
-            const active = id === filter;
-            return (
-              <button
-                key={id}
-                type="button"
-                aria-pressed={active}
-                onClick={() => setFilter(id)}
-                className={`relative min-h-11 rounded-xl px-2 text-sm font-semibold transition-colors ${active ? 'text-on-accent' : 'text-muted hover:text-ink'}`}
-              >
-                {active && <motion.span layoutId="learning-pill" className="bg-brand absolute inset-0 rounded-xl" transition={{ type: 'spring', stiffness: 340, damping: 30 }} />}
-                <span className="relative">{label}</span>
-              </button>
-            );
-          })}
-        </div>
+        <nav aria-label="Learning sections" className="grid max-w-2xl grid-cols-2 gap-1 rounded-2xl border border-line bg-[var(--glass)] p-1.5 sm:grid-cols-4">
+          {sections.map(({ slug: to, label }) => (
+            <NavLink
+              key={to}
+              to={`/learning/${to}`}
+              className={({ isActive }) => `flex min-h-11 items-center justify-center rounded-xl px-2 text-sm font-semibold transition-colors ${isActive ? 'bg-brand text-on-accent' : 'text-muted hover:text-ink'}`}
+            >
+              {label}
+            </NavLink>
+          ))}
+        </nav>
 
-        {shown.length === 0 ? (
-          <div className="glass mt-6 p-10 text-center md:p-14">
-            <SearchX className="mx-auto size-8 text-gold" aria-hidden="true" />
-            <h2 className="mt-4 text-xl font-semibold">Nothing here yet</h2>
-            <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-muted">New lessons will appear here as soon as they are ready.</p>
-          </div>
-        ) : (
-          <motion.div layout className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            <AnimatePresence initial={false}>
+        <div className="mt-6">
+          {!section.kind ? (
+            <OpinionForm />
+          ) : shown.length === 0 ? (
+            <div className="glass p-10 text-center md:p-14">
+              <SearchX className="mx-auto size-8 text-gold" aria-hidden="true" />
+              <h2 className="mt-4 text-xl font-semibold">Nothing here yet</h2>
+              <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-muted">New lessons will appear here as soon as they are ready.</p>
+            </div>
+          ) : (
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {shown.map((item) => (
-                <motion.div key={item.id} layout initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.97 }} transition={{ duration: 0.22 }}>
+                <Reveal key={item.id}>
                   <LessonCard item={item} onPlay={setVideo} />
-                </motion.div>
+                </Reveal>
               ))}
-            </AnimatePresence>
-          </motion.div>
-        )}
+            </div>
+          )}
+        </div>
 
         <p className="mt-6 text-xs leading-relaxed text-faint">{notAdvice}</p>
 

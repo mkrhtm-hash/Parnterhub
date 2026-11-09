@@ -40,7 +40,7 @@ Content now lives in the database, so edit it in the Neon dashboard under **Tabl
 |---|---|
 | Brokers and licences | `brokers`, `broker_licences` |
 | Regulators, tiers, countries | `regulators`, `regulator_tiers`, `countries` |
-| Learning page videos and ebooks | `learning_resources` |
+| Learning page videos, ebooks and webinars | `learning_resources` |
 | Company, founder, risk percentage, legal pages, FAQ, time slots, form options | `site_content` (one JSON value per `key`) |
 
 For example, to set the risk percentage:
@@ -59,6 +59,20 @@ To publish a lesson, put its link in the `url` column. Until then it shows as "C
 UPDATE learning_resources
 SET url = 'https://www.youtube.com/watch?v=YOUR_VIDEO_ID', length_label = '8 min'
 WHERE id = 'how-cfds-work';
+```
+
+For a webinar, also set the date. A future date shows a Register button and a past date shows Watch recording:
+
+```sql
+UPDATE learning_resources
+SET starts_at = '2027-01-20 18:00+00', url = 'https://example.com/your-webinar-link'
+WHERE id = 'choosing-a-regulated-broker';
+```
+
+Messages from the Your Opinion tab are private. Read them in the Neon SQL Editor:
+
+```sql
+SELECT * FROM learning_feedback ORDER BY created_at DESC;
 ```
 
 For a real broker, set `is_sample` to `false` and add `verify_url` if you can link directly to its register entry.

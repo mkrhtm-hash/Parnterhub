@@ -11,7 +11,7 @@ export default route({
       sql`SELECT code, name, jurisdiction, tier, register_url, segregation, negative_balance, compensation
           FROM regulators ORDER BY tier, code`,
       sql`SELECT code, name, home_regulator FROM countries ORDER BY sort_order`,
-      sql`SELECT id, kind, title, summary, topics, level, length_label, url
+      sql`SELECT id, kind, title, summary, topics, level, length_label, url, starts_at
           FROM learning_resources WHERE published ORDER BY sort_order, title`,
     ]);
 
@@ -33,7 +33,7 @@ export default route({
           },
         ]),
       ),
-      learning: learning.map(({ length_label: lengthLabel, ...item }) => ({ ...item, lengthLabel })),
+      learning: learning.map(({ length_label: lengthLabel, starts_at: startsAt, ...item }) => ({ ...item, lengthLabel, startsAt })),
       countries: countries.map((c) => ({ code: c.code, name: c.name, homeRegulator: c.home_regulator ?? undefined })),
     });
   },

@@ -32,7 +32,7 @@ function PageSkeleton() {
   );
 }
 
-export function DataError({ compact = false }) {
+export function DataError({ compact = false, testFormLink = false }) {
   const { retry } = useSiteData();
   return (
     <div role="alert" className={`glass mx-auto max-w-2xl text-center ${compact ? 'p-6' : 'p-8 md:p-12'}`}>
@@ -41,22 +41,25 @@ export function DataError({ compact = false }) {
       </span>
       <h2 className="mt-5 text-xl font-semibold md:text-2xl">We cannot reach our database right now</h2>
       <p className="mt-2 text-sm leading-relaxed text-muted md:text-base">This part of the site needs live data. Nothing is wrong on your side, so please try again in a moment.</p>
-      <Button variant="ghost" className="mt-6" onClick={retry}>
-        <RotateCcw className="size-4" aria-hidden="true" />
-        Try again
-      </Button>
+      <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
+        <Button variant="ghost" onClick={retry}>
+          <RotateCcw className="size-4" aria-hidden="true" />
+          Try again
+        </Button>
+        {testFormLink && <Button to="/book/test">Try the test form</Button>}
+      </div>
     </div>
   );
 }
 
 /** Shows a page once its data has loaded, with a skeleton before that and a clear message on failure. */
-export function DataGate({ children }) {
+export function DataGate({ children, testFormLink = false }) {
   const { status } = useSiteData();
   if (status === 'loading') return <PageSkeleton />;
   if (status === 'error') {
     return (
       <div className="shell min-h-[50vh] pt-12 md:pt-24">
-        <DataError />
+        <DataError testFormLink={testFormLink} />
       </div>
     );
   }

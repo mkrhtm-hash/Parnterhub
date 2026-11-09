@@ -41,7 +41,7 @@ try {
   }
 
   console.log('\nRow counts:');
-  for (const table of ['regulator_tiers', 'regulators', 'countries', 'brokers', 'broker_licences', 'site_content', 'learning_resources', 'consultations']) {
+  for (const table of ['regulator_tiers', 'regulators', 'countries', 'brokers', 'broker_licences', 'site_content', 'learning_resources', 'learning_feedback', 'consultations']) {
     const [{ count }] = await sql.query(`SELECT count(*)::int AS count FROM ${table}`);
     console.log(`  ${table.padEnd(18)} ${count}`);
   }

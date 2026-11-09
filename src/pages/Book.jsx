@@ -1,13 +1,14 @@
 import { useMemo, useRef, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { CalendarDays, Check, ChevronLeft, ChevronRight, CircleCheck, Clock, Lock, LoaderCircle, TriangleAlert } from 'lucide-react';
+import { CalendarDays, Check, ChevronLeft, ChevronRight, CircleCheck, Clock, FlaskConical, Lock, LoaderCircle, TriangleAlert } from 'lucide-react';
 import Button from '../components/ui/Button';
 import { PageHeader, PlaceholderText } from '../components/ui/Primitives';
 import { usePageMeta } from '../hooks/usePageMeta';
 import { useToast } from '../context/ToastContext';
 import { submitLead } from '../services/leads';
 import { useSiteData } from '../context/SiteDataContext';
+import { testBooking } from '../data/staticContent';
 
 const DAY_LABELS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
@@ -22,8 +23,7 @@ const sameDay = (a, b) => Boolean(a && b) && a.getTime() === b.getTime();
 const isoDate = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 const longDate = (d) => d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 
-function Calendar({ selected, onSelect }) {
-  const { consultation } = useSiteData().data;
+function Calendar({ consultation, selected, onSelect }) {
   const today = useMemo(() => startOfDay(new Date()), []);
   const lastDay = useMemo(() => {
     const d = new Date(today);
@@ -115,10 +115,11 @@ function validate(form, date, time) {
   return errors;
 }
 
-export default function Book() {
-  const { consultation, countries, options } = useSiteData().data;
+export default function Book({ testMode = false }) {
+  const siteData = useSiteData().data;
+  const { consultation, countries, options } = testMode ? testBooking : siteData;
   const { experienceLevels } = options;
-  usePageMeta('Book a Consultation', 'Book a free consultation with Partnerhub. Pick a time and tell us what you need. We never ask for passwords, payment details or ID documents here.');
+  usePageMeta(testMode ? 'Test Booking Form' : 'Book a Consultation', 'Book a free consultation with Partnerhub. Pick a time and tell us what you need. We never ask for passwords, payment details or ID documents here.');
   const toast = useToast();
   const [params] = useSearchParams();
   const [date, setDate] = useState(null);
@@ -164,6 +165,14 @@ export default function Book() {
       return;
     }
     setStatus('sending');
+    if (testMode) {
+      // Nothing leaves the browser in test mode.
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      setStatus('success');
+      toast('Test complete. Nothing was sent or saved.');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
     try {
       await submitLead({ ...form, date: isoDate(date), time });
       setStatus('success');
@@ -179,6 +188,25 @@ export default function Book() {
       }
     }
   };
+
+  if (status === 'success' && testMode) {
+    return (
+      <section className="shell pt-12 md:pt-24">
+        <motion.div initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} className="glass mx-auto max-w-2xl p-8 text-center md:p-12">
+          <FlaskConical className="mx-auto size-14 text-gold" aria-hidden="true" />
+          <h1 className="mt-6 text-3xl font-semibold md:text-4xl">Test complete</h1>
+          <p className="mt-3 leading-relaxed text-muted">
+            The form accepted a test request for <strong className="font-semibold text-ink">{longDate(date)}</strong> at{' '}
+            <strong className="font-semibold text-ink">{time}</strong>. Nothing was sent or saved, and no call has been booked.
+          </p>
+          <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
+            <Button variant="ghost" onClick={() => setStatus('idle')}>Run another test</Button>
+            <Button to="/">Back to home</Button>
+          </div>
+        </motion.div>
+      </section>
+    );
+  }
 
   if (status === 'success') {
     return (
@@ -201,7 +229,17 @@ export default function Book() {
 
   return (
     <>
-      <PageHeader eyebrow="Book a consultation" title="Let's talk it through." intro={`A free ${consultation.durationMinutes}-minute call. No pressure, and no obligation to open an account.`} />
+      {testMode && <meta name="robots" content="noindex" />}
+      <PageHeader eyebrow={testMode ? 'Test booking form' : 'Book a consultation'} title="Let's talk it through." intro={`A free ${consultation.durationMinutes}-minute call. No pressure, and no obligation to open an account.`} />
+
+      {testMode && (
+        <div className="shell mb-5">
+          <p className="flex gap-3 rounded-2xl border border-dashed border-gold/60 bg-gold/10 p-4 text-sm leading-relaxed text-ink">
+            <FlaskConical className="mt-0.5 size-4 shrink-0 text-gold" aria-hidden="true" />
+            <span><strong className="font-semibold">Test mode.</strong> This form works without the database. Nothing you enter is sent or saved, and no call is booked.</span>
+          </p>
+        </div>
+      )}
 
       <form ref={formRef} onSubmit={onSubmit} noValidate className="shell grid items-start gap-5 lg:grid-cols-[0.9fr_1.1fr]">
         <div className="glass p-5 md:p-7 lg:sticky lg:top-24">
@@ -211,6 +249,7 @@ export default function Book() {
           </h2>
           <div data-field="date" tabIndex={-1} className="outline-none">
             <Calendar
+              consultation={consultation}
               selected={date}
               onSelect={(d) => {
                 setDate(d);
@@ -311,7 +350,7 @@ export default function Book() {
 
           <Button type="submit" disabled={status === 'sending'} className="w-full">
             {status === 'sending' ? <LoaderCircle className="size-4 animate-spin" aria-hidden="true" /> : <CalendarDays className="size-4" aria-hidden="true" />}
-            {status === 'sending' ? 'Sending your request' : 'Request my free consultation'}
+            {status === 'sending' ? 'Sending your request' : testMode ? 'Send test request' : 'Request my free consultation'}
           </Button>
 
           <p className="flex gap-2 text-xs leading-relaxed text-faint">

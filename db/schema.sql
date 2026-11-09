@@ -77,10 +77,10 @@ CREATE INDEX IF NOT EXISTS consultations_created_at_idx ON consultations (create
 CREATE INDEX IF NOT EXISTS consultations_email_idx ON consultations (email);
 CREATE INDEX IF NOT EXISTS consultations_preferred_date_idx ON consultations (preferred_date);
 
--- Videos and ebooks on the Learning page. A row with no url shows as "Coming soon".
+-- Videos, ebooks and webinars on the Learning page. A row with no url shows as "Coming soon".
 CREATE TABLE IF NOT EXISTS learning_resources (
   id           text PRIMARY KEY,
-  kind         text NOT NULL CHECK (kind IN ('video', 'ebook')),
+  kind         text NOT NULL CHECK (kind IN ('video', 'ebook', 'webinar')),
   title        text NOT NULL,
   summary      text NOT NULL,
   topics       text[] NOT NULL DEFAULT '{}',
@@ -92,3 +92,19 @@ CREATE TABLE IF NOT EXISTS learning_resources (
   created_at   timestamptz NOT NULL DEFAULT now()
 );
 CREATE INDEX IF NOT EXISTS learning_resources_order_idx ON learning_resources (published, sort_order);
+
+-- Webinars share the learning table. These keep databases set up before webinars existed in step.
+ALTER TABLE learning_resources ADD COLUMN IF NOT EXISTS starts_at timestamptz;
+ALTER TABLE learning_resources DROP CONSTRAINT IF EXISTS learning_resources_kind_check;
+ALTER TABLE learning_resources ADD CONSTRAINT learning_resources_kind_check CHECK (kind IN ('video', 'ebook', 'webinar'));
+
+-- Messages from the Your Opinion tab. Private: no API route ever returns these rows.
+CREATE TABLE IF NOT EXISTS learning_feedback (
+  id         bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  name       text NOT NULL DEFAULT '',
+  topic      text NOT NULL CHECK (topic IN ('video', 'ebook', 'webinar', 'general')),
+  rating     integer CHECK (rating BETWEEN 1 AND 5),
+  message    text NOT NULL,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS learning_feedback_created_at_idx ON learning_feedback (created_at DESC);

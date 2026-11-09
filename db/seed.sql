@@ -434,3 +434,11 @@ INSERT INTO learning_resources (id, kind, title, summary, topics, level, sort_or
   ('before-your-first-account', 'ebook', 'Before you open your first account', 'What to prepare and what to understand before you deposit any money.',
    ARRAY['Documents brokers usually ask for', 'What suitability questions are for', 'Why practising on a demo account comes first'], 'Beginner', 60)
 ON CONFLICT (id) DO NOTHING;
+
+-- Webinar outlines. Set starts_at and url when a session is scheduled.
+INSERT INTO learning_resources (id, kind, title, summary, topics, level, sort_order) VALUES
+  ('choosing-a-regulated-broker', 'webinar', 'Choosing a regulated broker', 'A live walkthrough of what to compare before you decide.',
+   ARRAY['Which regulator is likely to cover you', 'How to compare costs and platforms', 'Questions to ask before opening an account'], 'Beginner', 70),
+  ('understanding-the-risks', 'webinar', 'Understanding the risks of CFD trading', 'A live session on how losses happen and how leverage affects them.',
+   ARRAY['How leverage can magnify losses', 'What a stop order can and cannot do', 'Questions to ask yourself before you trade'], 'Beginner', 80)
+ON CONFLICT (id) DO NOTHING;

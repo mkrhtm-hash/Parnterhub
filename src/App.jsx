@@ -23,10 +23,12 @@ export default function App() {
         <Route path="how-it-works" element={<HowItWorks />} />
         <Route path="broker-match" element={<DataGate><BrokerMatch /></DataGate>} />
         <Route path="partners" element={<DataGate><BrokerPartners /></DataGate>} />
-        <Route path="learning" element={<DataGate><Learning /></DataGate>} />
+        <Route path="learning" element={<Navigate to="/learning/videos" replace />} />
+        <Route path="learning/:section" element={<DataGate><Learning /></DataGate>} />
         <Route path="regulation" element={<Navigate to="/learning" replace />} />
         <Route path="about" element={<DataGate><About /></DataGate>} />
-        <Route path="book" element={<DataGate><Book /></DataGate>} />
+        <Route path="book" element={<DataGate testFormLink><Book /></DataGate>} />
+        <Route path="book/test" element={<Book testMode />} />
         <Route path="privacy" element={<DataGate><Legal page="privacy" /></DataGate>} />
         <Route path="terms" element={<DataGate><Legal page="terms" /></DataGate>} />
         <Route path="risk-disclosure" element={<DataGate><Legal page="risk" /></DataGate>} />

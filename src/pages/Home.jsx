@@ -96,7 +96,7 @@ export default function Home() {
         <div className="shell grid items-center gap-8 pt-8 pb-10 md:pt-14 lg:grid-cols-[1.12fr_0.88fr] lg:gap-6 lg:pt-14 lg:pb-14">
           <div>
             <motion.p custom={0} variants={rise} initial="hidden" animate="show" className="eyebrow mb-4">
-              Partnerhub · FX and CFD broker consultancy
+              MKPips · FX and CFD broker consultancy
             </motion.p>
             <motion.h1 custom={1} variants={rise} initial="hidden" animate="show" className="text-[2.45rem] leading-[1.06] font-semibold sm:text-6xl lg:text-[4.1rem]">
               The right broker starts with the <span className="text-brand">right partner.</span>

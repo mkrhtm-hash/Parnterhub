@@ -116,7 +116,7 @@ export default function OpinionForm() {
         <FieldError id="opinion-name-error" text={errors.name} />
       </div>
 
-      <p className="text-xs leading-relaxed text-faint">Your opinion goes privately to the Partnerhub team and is not published. Please do not include account numbers or other sensitive details.</p>
+      <p className="text-xs leading-relaxed text-faint">Your opinion goes privately to the MKPips team and is not published. Please do not include account numbers or other sensitive details.</p>
 
       <Button type="submit" disabled={status === 'sending'} className="w-full">
         {status === 'sending' ? 'Sending...' : 'Send my opinion'}

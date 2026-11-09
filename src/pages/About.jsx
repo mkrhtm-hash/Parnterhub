@@ -15,14 +15,14 @@ const values = [
 
 export default function About() {
   const { company, founder } = useSiteData().data;
-  usePageMeta('About', 'Meet the founder of Partnerhub and the values behind the service: transparency, client-first advice and regulated partners only.');
+  usePageMeta('About', 'Meet the founder of MKPips and the values behind the service: transparency, client-first advice and regulated partners only.');
   const lineRef = useRef(null);
   const { scrollYProgress } = useScroll({ target: lineRef, offset: ['start 80%', 'end 60%'] });
   const scaleY = useTransform(scrollYProgress, [0, 1], [0, 1]);
 
   return (
     <>
-      <PageHeader eyebrow="About" title="Built on 18 years of conversations with traders." intro="Partnerhub exists because choosing a broker should not depend on who has the loudest advert." />
+      <PageHeader eyebrow="About" title="Built on 18 years of conversations with traders." intro="MKPips exists because choosing a broker should not depend on who has the loudest advert." />
 
       <section className="shell">
         <Reveal className="glass grid gap-8 p-6 md:grid-cols-[17rem_1fr] md:p-10">

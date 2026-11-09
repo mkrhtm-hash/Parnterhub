@@ -14,7 +14,7 @@ const steps = [
 ];
 
 export default function HowItWorks() {
-  usePageMeta('How It Works', 'Four clear steps from a discovery call to guided onboarding, and a plain statement of what Partnerhub does and does not do.');
+  usePageMeta('How It Works', 'Four clear steps from a discovery call to guided onboarding, and a plain statement of what MKPips does and does not do.');
   const timelineRef = useRef(null);
   const { scrollYProgress } = useScroll({ target: timelineRef, offset: ['start 75%', 'end 60%'] });
   const scaleY = useTransform(scrollYProgress, [0, 1], [0, 1]);
@@ -66,7 +66,7 @@ export default function HowItWorks() {
               ))}
             </ul>
             <p className="mt-6 border-t border-line pt-5 text-sm leading-relaxed text-muted">
-              If anyone claiming to be from Partnerhub offers to do these things, please do not proceed. Contact us directly.
+              If anyone claiming to be from MKPips offers to do these things, please do not proceed. Contact us directly.
             </p>
           </Reveal>
         </div>

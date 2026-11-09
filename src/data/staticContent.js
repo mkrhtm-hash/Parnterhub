@@ -8,7 +8,7 @@ export const fallbackCompliance = {
   riskWarning:
     'CFDs are complex instruments and carry a high risk of losing money rapidly due to leverage. Only trade with money you can afford to lose.',
   compensationDisclosure:
-    'Partnerhub may receive compensation from partner brokers. Ask us about any arrangement that applies to a broker we discuss with you.',
+    'MKPips may receive compensation from partner brokers. Ask us about any arrangement that applies to a broker we discuss with you.',
   notAdvice:
     'Content on this site is general information, not investment advice. It does not take your personal circumstances into account.',
 };

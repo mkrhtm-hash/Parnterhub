@@ -5,7 +5,7 @@ const setMeta = (selector, content) => document.querySelector(selector)?.setAttr
 /** Sets the browser tab title and the search and social description for a page. */
 export function usePageMeta(title, description) {
   useEffect(() => {
-    const full = title ? `${title} | Partnerhub` : 'Partnerhub | Find a regulated FX and CFD broker with expert guidance';
+    const full = title ? `${title} | MKPips` : 'MKPips | Find a regulated FX and CFD broker with expert guidance';
     document.title = full;
     setMeta('meta[property="og:title"]', full);
     setMeta('meta[name="twitter:title"]', full);

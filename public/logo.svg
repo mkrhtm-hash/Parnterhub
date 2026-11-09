@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="512" height="512" role="img" aria-label="MKPips logo">
+  <defs>
+    <linearGradient id="g" gradientUnits="userSpaceOnUse" x1="5" y1="7" x2="27" y2="26">
+      <stop offset="0" stop-color="#34d399"/>
+      <stop offset="1" stop-color="#e8cb8a"/>
+    </linearGradient>
+  </defs>
+
+  <!-- The M is one route through the five service steps. -->
+  <path d="M5 26 9.5 7 16 18 22.5 7 27 26" fill="none" stroke="url(#g)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" pathLength="1" stroke-dasharray="1">
+    <animate attributeName="stroke-dashoffset" from="1" to="0" dur="1.2s" fill="freeze"/>
+  </path>
+
+  <g fill="url(#g)">
+    <circle cx="5" cy="26" r="2.8"><animate attributeName="r" values="2.8;2.8;3.8;2.8;2.8" keyTimes="0;.02;.05;.1;1" dur="8s" repeatCount="indefinite"/></circle>
+    <circle cx="9.5" cy="7" r="2.8"><animate attributeName="r" values="2.8;2.8;3.8;2.8;2.8" keyTimes="0;.1711;.2011;.2511;1" dur="8s" repeatCount="indefinite"/></circle>
+    <circle cx="16" cy="18" r="2.8"><animate attributeName="r" values="2.8;2.8;3.8;2.8;2.8" keyTimes="0;.27;.3;.35;1" dur="8s" repeatCount="indefinite"/></circle>
+    <circle cx="22.5" cy="7" r="2.8"><animate attributeName="r" values="2.8;2.8;3.8;2.8;2.8" keyTimes="0;.3689;.3989;.4489;1" dur="8s" repeatCount="indefinite"/></circle>
+    <circle cx="27" cy="26" r="2.8"><animate attributeName="r" values="2.8;2.8;3.8;2.8;2.8" keyTimes="0;.52;.55;.6;1" dur="8s" repeatCount="indefinite"/></circle>
+  </g>
+
+  <!-- The pip that travels the route. -->
+  <circle r="1" fill="#ffffff" opacity="0">
+    <animateMotion path="M5 26 9.5 7 16 18 22.5 7 27 26" keyPoints="0;0;1;1" keyTimes="0;.05;.55;1" calcMode="linear" dur="8s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;.05;.55;.6;1" dur="8s" repeatCount="indefinite"/>
+  </circle>
+</svg>

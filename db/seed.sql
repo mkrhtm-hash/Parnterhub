@@ -1,4 +1,4 @@
--- Partnerhub starting data. Safe to run repeatedly: rows that already exist are left alone,
+-- MKPips starting data. Safe to run repeatedly: rows that already exist are left alone,
 -- so re-running this file never creates duplicates or overwrites details you have edited.
 -- Every broker here is fictional and marked is_sample = true. Licence numbers are dummies.
 
@@ -96,7 +96,7 @@ INSERT INTO broker_licences (broker_id, regulator_code, licence_number, sort_ord
 ON CONFLICT (broker_id, regulator_code) DO NOTHING;
 
 INSERT INTO site_content (key, value) VALUES ('company', '{
-  "name": "Partnerhub",
+  "name": "MKPips",
   "tagline": "The right broker starts with the right partner.",
   "legalEntityName": "[Legal entity name]",
   "registrationNumber": "[Company registration number]",
@@ -105,7 +105,7 @@ INSERT INTO site_content (key, value) VALUES ('company', '{
   "email": "[hello@yourdomain.com]",
   "phone": "[+00 000 000 0000]",
   "whatsappNumber": "10000000000",
-  "whatsappMessage": "Hello Partnerhub, I would like to ask about finding a regulated broker.",
+  "whatsappMessage": "Hello MKPips, I would like to ask about finding a regulated broker.",
   "yearsExperience": 18,
   "lastLegalUpdate": "[Date of last legal review]"
 }'::jsonb)
@@ -115,7 +115,7 @@ INSERT INTO site_content (key, value) VALUES ('founder', '{
   "name": "[Founder name]",
   "role": "[Founder title]",
   "photo": null,
-  "bio": "[Two or three sentences in your own words: how you started in FX and CFD sales, what you saw clients struggle with, and why you set up Partnerhub.]",
+  "bio": "[Two or three sentences in your own words: how you started in FX and CFD sales, what you saw clients struggle with, and why you set up MKPips.]",
   "highlights": [
     "[Career highlight 1]",
     "[Career highlight 2]",
@@ -140,7 +140,7 @@ INSERT INTO site_content (key, value) VALUES ('founder', '{
     {
       "period": "Years 15 to 18",
       "title": "[Most recent role and company]",
-      "detail": "[What led you to start Partnerhub]"
+      "detail": "[What led you to start MKPips]"
     }
   ]
 }'::jsonb)
@@ -150,7 +150,7 @@ INSERT INTO site_content (key, value) VALUES ('compliance', '{
   "riskWarning": "CFDs are complex instruments and carry a high risk of losing money rapidly due to leverage. Only trade with money you can afford to lose.",
   "retailLossPercent": "[XX]",
   "retailLossSentence": "of retail accounts lose money when trading CFDs.",
-  "compensationDisclosure": "Partnerhub may receive compensation from partner brokers. Ask us about any arrangement that applies to a broker we discuss with you.",
+  "compensationDisclosure": "MKPips may receive compensation from partner brokers. Ask us about any arrangement that applies to a broker we discuss with you.",
   "notAdvice": "Content on this site is general information, not investment advice. It does not take your personal circumstances into account."
 }'::jsonb)
 ON CONFLICT (key) DO NOTHING;
@@ -196,7 +196,7 @@ INSERT INTO site_content (key, value) VALUES ('legalPages', '{
       },
       {
         "heading": "Our service",
-        "body": "Partnerhub introduces traders to brokers and helps them compare options. We do not manage funds, hold client money, give trading signals or promise returns. [Confirm the wording against your licence status.]"
+        "body": "MKPips introduces traders to brokers and helps them compare options. We do not manage funds, hold client money, give trading signals or promise returns. [Confirm the wording against your licence status.]"
       },
       {
         "heading": "No investment advice",
@@ -204,7 +204,7 @@ INSERT INTO site_content (key, value) VALUES ('legalPages', '{
       },
       {
         "heading": "Compensation",
-        "body": "Partnerhub may receive compensation from partner brokers. [Describe the arrangements.]"
+        "body": "MKPips may receive compensation from partner brokers. [Describe the arrangements.]"
       },
       {
         "heading": "Liability and governing law",
@@ -279,7 +279,7 @@ ON CONFLICT (key) DO NOTHING;
 
 INSERT INTO site_content (key, value) VALUES ('faqs', '[
   {
-    "q": "What does Partnerhub charge?",
+    "q": "What does MKPips charge?",
     "a": "The first consultation is free. [Confirm whether any later service carries a fee, and list it here.]"
   },
   {
@@ -291,8 +291,8 @@ INSERT INTO site_content (key, value) VALUES ('faqs', '[
     "a": "It depends on where you live, because each broker can only accept clients from certain countries. The Broker Match tool shows what is available. If nothing fits, we will tell you plainly."
   },
   {
-    "q": "How is Partnerhub paid?",
-    "a": "Partnerhub may receive compensation from partner brokers. That is a potential conflict of interest, so you should know about it and ask us about it. Always compare the conditions yourself before you decide. [Describe your compensation model.]"
+    "q": "How is MKPips paid?",
+    "a": "MKPips may receive compensation from partner brokers. That is a potential conflict of interest, so you should know about it and ask us about it. Always compare the conditions yourself before you decide. [Describe your compensation model.]"
   },
   {
     "q": "Do you give trading advice or manage money?",
@@ -442,3 +442,8 @@ INSERT INTO learning_resources (id, kind, title, summary, topics, level, sort_or
   ('understanding-the-risks', 'webinar', 'Understanding the risks of CFD trading', 'A live session on how losses happen and how leverage affects them.',
    ARRAY['How leverage can magnify losses', 'What a stop order can and cannot do', 'Questions to ask yourself before you trade'], 'Beginner', 80)
 ON CONFLICT (id) DO NOTHING;
+
+-- Brand rename: updates the name in content that already exists, and changes nothing else.
+UPDATE site_content
+SET value = replace(value::text, 'Partnerhub', 'MKPips')::jsonb
+WHERE value::text LIKE '%Partnerhub%';

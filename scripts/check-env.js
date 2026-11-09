@@ -28,7 +28,7 @@ const url = process.env.DATABASE_URL || valueOf('DATABASE_URL').replace(/^["']|[
 
 if (!/^postgres(ql)?:\/\//.test(url)) {
   console.error(`
-${url ? 'DATABASE_URL in .env does not look like a Postgres connection string.' : 'DATABASE_URL is missing, so Partnerhub cannot start yet.'}
+${url ? 'DATABASE_URL in .env does not look like a Postgres connection string.' : 'DATABASE_URL is missing, so MKPips cannot start yet.'}
 
 Where to get it:
   1. Go to https://console.neon.tech and sign in. A free account is fine.

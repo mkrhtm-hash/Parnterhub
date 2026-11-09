@@ -99,7 +99,7 @@ export default function Footer() {
             <strong className="font-medium text-muted">General information only: </strong>
             {compliance.notAdvice}
           </p>
-          <p>© {new Date().getFullYear()} Partnerhub. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} MKPips. All rights reserved.</p>
         </div>
       </div>
     </footer>

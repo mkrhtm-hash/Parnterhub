@@ -119,7 +119,7 @@ export default function Book({ testMode = false }) {
   const siteData = useSiteData().data;
   const { consultation, countries, options } = testMode ? testBooking : siteData;
   const { experienceLevels } = options;
-  usePageMeta(testMode ? 'Test Booking Form' : 'Book a Consultation', 'Book a free consultation with Partnerhub. Pick a time and tell us what you need. We never ask for passwords, payment details or ID documents here.');
+  usePageMeta(testMode ? 'Test Booking Form' : 'Book a Consultation', 'Book a free consultation with MKPips. Pick a time and tell us what you need. We never ask for passwords, payment details or ID documents here.');
   const toast = useToast();
   const [params] = useSearchParams();
   const [date, setDate] = useState(null);
@@ -341,8 +341,8 @@ export default function Book({ testMode = false }) {
                 {form.consent && <Check className="size-3.5" aria-hidden="true" />}
               </span>
               <span className="text-muted">
-                I agree that Partnerhub may contact me about this request and handle my details as set out in the{' '}
-                <Link to="/privacy" className="font-medium text-ink underline underline-offset-2">Privacy Policy</Link>. I understand that CFDs carry a high risk of losing money and that Partnerhub may receive compensation from partner brokers.
+                I agree that MKPips may contact me about this request and handle my details as set out in the{' '}
+                <Link to="/privacy" className="font-medium text-ink underline underline-offset-2">Privacy Policy</Link>. I understand that CFDs carry a high risk of losing money and that MKPips may receive compensation from partner brokers.
               </span>
             </label>
             {errors.consent && <p id="consent-error" className="mt-2 flex gap-1.5 text-sm text-danger"><TriangleAlert className="mt-0.5 size-3.5 shrink-0" aria-hidden="true" />{errors.consent}</p>}

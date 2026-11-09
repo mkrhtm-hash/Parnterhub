@@ -64,7 +64,7 @@ export default function Services() {
       <PageHeader
         eyebrow="Services"
         title="Practical help, from your first question to your broker relationship."
-        intro="Partnerhub helps you choose and work with a regulated broker. Trading decisions, and the risks that come with them, remain yours."
+        intro="MKPips helps you choose and work with a regulated broker. Trading decisions, and the risks that come with them, remain yours."
       />
 
       <section className="shell grid gap-4 md:grid-cols-2">

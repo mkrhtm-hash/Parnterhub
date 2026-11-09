@@ -1,4 +1,4 @@
-# Partnerhub
+# MKPips
 
 Consultancy website for FX and CFD traders. React, Vite, Tailwind CSS, Framer Motion, React Router and lucide-react, with a Neon Postgres database behind functions in `/api`.
 

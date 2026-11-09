@@ -1,4 +1,4 @@
--- Partnerhub database schema. Safe to run repeatedly.
+-- MKPips database schema. Safe to run repeatedly.
 
 CREATE TABLE IF NOT EXISTS regulator_tiers (
   id      integer PRIMARY KEY,

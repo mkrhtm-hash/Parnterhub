@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { ChartLine, Handshake, LifeBuoy, Scale, UserRound } from 'lucide-react';
-import { HubMark } from '../ui/Logo';
+import { LogoMark } from '../ui/Logo';
 
 // Positions are percentages of the visual, which keeps it fluid at any width.
 const nodes = [
@@ -47,8 +47,8 @@ export default function HubVisual() {
         transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
         className="glass absolute top-1/2 left-1/2 flex size-[29%] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center gap-1 !rounded-full"
       >
-        <HubMark className="size-9" />
-        <span className="text-brand font-display text-sm font-semibold">Partnerhub</span>
+        <LogoMark className="size-9" />
+        <span className="text-brand font-display text-sm font-semibold">MKPips</span>
       </motion.div>
 
       {nodes.map((n, i) => (

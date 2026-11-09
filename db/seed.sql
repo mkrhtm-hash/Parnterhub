@@ -418,3 +418,19 @@ INSERT INTO site_content (key, value) VALUES ('options', '{
   ]
 }'::jsonb)
 ON CONFLICT (key) DO NOTHING;
+
+-- Outlines for the Learning page. Add a video or PDF link to the url column to make one playable.
+INSERT INTO learning_resources (id, kind, title, summary, topics, level, sort_order) VALUES
+  ('what-a-broker-does', 'video', 'What a broker actually does', 'A plain-English starting point for anyone new to FX and CFD trading.',
+   ARRAY['The difference between a broker and an exchange', 'How your order reaches the market', 'Who holds your money, and under which rules'], 'Beginner', 10),
+  ('how-cfds-work', 'video', 'How CFDs work', 'What you are really buying when you open a CFD position.',
+   ARRAY['What you own, and what you do not', 'How a position gains or loses value', 'Why most of the risk comes from position size'], 'Beginner', 20),
+  ('leverage-and-margin', 'video', 'Leverage and margin, including the risks', 'How leverage magnifies both gains and losses, and what a margin call means.',
+   ARRAY['How leverage and margin relate', 'What happens during a margin call', 'How negative balance protection works, where it applies'], 'Beginner', 30),
+  ('what-trading-costs', 'video', 'What trading really costs', 'The costs that do not appear in a headline spread.',
+   ARRAY['Spreads compared with commissions', 'Overnight financing charges', 'How to estimate the full cost of a trade'], 'Intermediate', 40),
+  ('verify-a-licence', 'ebook', 'How to verify a broker''s licence', 'A step-by-step guide to checking a broker on a regulator''s own register.',
+   ARRAY['Finding the right regulator and register', 'Matching the legal entity to your account', 'Common warning signs of an unlicensed firm'], 'Beginner', 50),
+  ('before-your-first-account', 'ebook', 'Before you open your first account', 'What to prepare and what to understand before you deposit any money.',
+   ARRAY['Documents brokers usually ask for', 'What suitability questions are for', 'Why practising on a demo account comes first'], 'Beginner', 60)
+ON CONFLICT (id) DO NOTHING;

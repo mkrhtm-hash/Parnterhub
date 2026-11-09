@@ -9,7 +9,7 @@ export const mainLinks = [
   { to: '/how-it-works', label: 'How It Works' },
   { to: '/broker-match', label: 'Broker Match' },
   { to: '/partners', label: 'Partners' },
-  { to: '/regulation', label: 'Regulation' },
+  { to: '/learning', label: 'Learning' },
   { to: '/about', label: 'About' },
 ];
 

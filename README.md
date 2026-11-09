@@ -40,6 +40,7 @@ Content now lives in the database, so edit it in the Neon dashboard under **Tabl
 |---|---|
 | Brokers and licences | `brokers`, `broker_licences` |
 | Regulators, tiers, countries | `regulators`, `regulator_tiers`, `countries` |
+| Learning page videos and ebooks | `learning_resources` |
 | Company, founder, risk percentage, legal pages, FAQ, time slots, form options | `site_content` (one JSON value per `key`) |
 
 For example, to set the risk percentage:
@@ -51,6 +52,14 @@ WHERE key = 'compliance';
 ```
 
 Bracketed text such as `[Legal entity name]` displays with a dashed gold highlight, so unfinished content is easy to spot.
+
+To publish a lesson, put its link in the `url` column. Until then it shows as "Coming soon". Videos can be YouTube or Vimeo links, or an `https://` link to an MP4. Ebooks can be an `https://` link to a PDF, or a PDF placed in `public/learning/` and written as `/learning/my-guide.pdf`:
+
+```sql
+UPDATE learning_resources
+SET url = 'https://www.youtube.com/watch?v=YOUR_VIDEO_ID', length_label = '8 min'
+WHERE id = 'how-cfds-work';
+```
 
 For a real broker, set `is_sample` to `false` and add `verify_url` if you can link directly to its register entry.
 

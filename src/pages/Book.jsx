@@ -191,7 +191,7 @@ export default function Book() {
             <strong className="font-semibold text-ink">{time}</strong>. We will confirm by email at {form.email.trim()}.
           </p>
           <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
-            <Button to="/regulation" variant="ghost">Read the regulation guide</Button>
+            <Button to="/learning" variant="ghost">Explore learning</Button>
             <Button to="/">Back to home</Button>
           </div>
         </motion.div>

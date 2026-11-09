@@ -76,3 +76,19 @@ CREATE TABLE IF NOT EXISTS consultations (
 CREATE INDEX IF NOT EXISTS consultations_created_at_idx ON consultations (created_at DESC);
 CREATE INDEX IF NOT EXISTS consultations_email_idx ON consultations (email);
 CREATE INDEX IF NOT EXISTS consultations_preferred_date_idx ON consultations (preferred_date);
+
+-- Videos and ebooks on the Learning page. A row with no url shows as "Coming soon".
+CREATE TABLE IF NOT EXISTS learning_resources (
+  id           text PRIMARY KEY,
+  kind         text NOT NULL CHECK (kind IN ('video', 'ebook')),
+  title        text NOT NULL,
+  summary      text NOT NULL,
+  topics       text[] NOT NULL DEFAULT '{}',
+  level        text NOT NULL DEFAULT 'Beginner',
+  length_label text,
+  url          text CHECK (url IS NULL OR url ~ '^(https://|/)'),
+  sort_order   integer NOT NULL DEFAULT 0,
+  published    boolean NOT NULL DEFAULT true,
+  created_at   timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS learning_resources_order_idx ON learning_resources (published, sort_order);

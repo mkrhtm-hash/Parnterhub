@@ -41,9 +41,9 @@ try {
   }
 
   console.log('\nRow counts:');
-  for (const table of ['regulator_tiers', 'regulators', 'countries', 'brokers', 'broker_licences', 'site_content', 'consultations']) {
+  for (const table of ['regulator_tiers', 'regulators', 'countries', 'brokers', 'broker_licences', 'site_content', 'learning_resources', 'consultations']) {
     const [{ count }] = await sql.query(`SELECT count(*)::int AS count FROM ${table}`);
-    console.log(`  ${table.padEnd(16)} ${count}`);
+    console.log(`  ${table.padEnd(18)} ${count}`);
   }
   console.log('\nDatabase is ready. Start the app with: npm run dev');
 } catch (error) {

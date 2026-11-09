@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, CalendarDays, Check, ChartLine, Compass, Globe, Handshake, LifeBuoy, Scale, ShieldCheck, TriangleAlert, X } from 'lucide-react';
+import { ArrowRight, CalendarDays, Check, ChartLine, Compass, Globe, GraduationCap, Handshake, LifeBuoy, ShieldCheck, TriangleAlert, X } from 'lucide-react';
 import NetworkCanvas from '../components/hero/NetworkCanvas';
 import HubVisual from '../components/hero/HubVisual';
 import Button from '../components/ui/Button';
@@ -190,12 +190,12 @@ export default function Home() {
           </Link>
         </Reveal>
         <Reveal delay={0.08}>
-          <Link to="/regulation" className="glass lift group block h-full p-7 md:p-10">
-            <IconTile icon={Scale} tone="gold" />
-            <h2 className="mt-6 text-2xl font-semibold md:text-3xl">Check any broker yourself in five minutes.</h2>
-            <p className="mt-3 leading-relaxed text-muted">How licences work, what protects you, and seven red flags to watch for.</p>
+          <Link to="/learning" className="glass lift group block h-full p-7 md:p-10">
+            <IconTile icon={GraduationCap} tone="gold" />
+            <h2 className="mt-6 text-2xl font-semibold md:text-3xl">Learn the basics before you risk real money.</h2>
+            <p className="mt-3 leading-relaxed text-muted">Short videos and ebooks, each showing exactly what you will learn.</p>
             <span className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-gold">
-              Read the regulation guide <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+              Explore learning <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
             </span>
           </Link>
         </Reveal>

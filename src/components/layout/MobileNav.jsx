@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { BookOpen, CalendarDays, CircleHelp, Compass, Ellipsis, Handshake, House, Layers, ListChecks, Scale, UserRound, X } from 'lucide-react';
+import { BookOpen, CalendarDays, CircleHelp, Compass, Ellipsis, GraduationCap, Handshake, House, Layers, ListChecks, UserRound, X } from 'lucide-react';
 
 const primary = [
   { to: '/', label: 'Home', Icon: House, end: true },
@@ -13,7 +13,7 @@ const primary = [
 const more = [
   { to: '/services', label: 'Services', Icon: Layers },
   { to: '/how-it-works', label: 'How It Works', Icon: ListChecks },
-  { to: '/regulation', label: 'Regulation Guide', Icon: Scale },
+  { to: '/learning', label: 'Learning', Icon: GraduationCap },
   { to: '/about', label: 'About', Icon: UserRound },
   { to: '/risk-disclosure', label: 'Risk Disclosure', Icon: BookOpen },
   { to: '/#faq', label: 'FAQ', Icon: CircleHelp },

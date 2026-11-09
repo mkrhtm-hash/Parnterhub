@@ -12,6 +12,7 @@ const Learning = lazy(() => import('./pages/Learning'));
 const About = lazy(() => import('./pages/About'));
 const Book = lazy(() => import('./pages/Book'));
 const Legal = lazy(() => import('./pages/Legal'));
+const Admin = lazy(() => import('./pages/Admin'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
 export default function App() {
@@ -33,6 +34,7 @@ export default function App() {
         <Route path="terms" element={<DataGate><Legal page="terms" /></DataGate>} />
         <Route path="risk-disclosure" element={<DataGate><Legal page="risk" /></DataGate>} />
         <Route path="cookies" element={<DataGate><Legal page="cookies" /></DataGate>} />
+        <Route path="admin" element={<Admin />} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>

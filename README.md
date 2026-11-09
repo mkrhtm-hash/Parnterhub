@@ -85,7 +85,7 @@ The booking form saves to the `consultations` table. To see requests, run this i
 SELECT * FROM consultations ORDER BY created_at DESC;
 ```
 
-No API route returns these rows. Nothing notifies you yet when a request arrives. To add an email or CRM notification, edit `api/consultations.js`.
+You can also read bookings and opinions at `/admin`, which is protected by the `ADMIN_PASSWORD` environment variable. Set it in `.env` and in Vercel. To change the password, update it in Vercel and redeploy. Only `/api/admin` returns these rows, and only after sign-in. Nothing notifies you yet when a request arrives. To add an email or CRM notification, edit `api/consultations.js`.
 
 ## Deploying
 

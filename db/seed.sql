@@ -433,8 +433,15 @@ INSERT INTO learning_resources (id, kind, title, summary, topics, level, sort_or
   ('verify-a-licence', 'ebook', 'How to verify a broker''s licence', 'A step-by-step guide to checking a broker on a regulator''s own register.',
    ARRAY['Finding the right regulator and register', 'Matching the legal entity to your account', 'Common warning signs of an unlicensed firm'], 'Beginner', 50),
   ('before-your-first-account', 'ebook', 'Before you open your first account', 'What to prepare and what to understand before you deposit any money.',
-   ARRAY['Documents brokers usually ask for', 'What suitability questions are for', 'Why practising on a demo account comes first'], 'Beginner', 60)
+   ARRAY['Documents brokers usually ask for', 'What suitability questions are for', 'Why practising on a demo account comes first'], 'Beginner', 60),
+  ('fx-cfd-basics', 'ebook', 'FX and CFD basics', 'The words, numbers and risks every beginner should understand before placing a trade.',
+   ARRAY['Currency pairs, pips and lot sizes', 'How leverage and margin work, with examples', 'Trading costs, order types and managing risk'], 'Beginner', 45)
 ON CONFLICT (id) DO NOTHING;
+
+-- The eBooks are read on the site (text in src/data/ebooks.js). Only fills in rows that have no link yet.
+UPDATE learning_resources SET url = '/learning/ebooks/' || id,
+  length_label = CASE id WHEN 'fx-cfd-basics' THEN '8 short pages' ELSE '6 short pages' END
+WHERE id IN ('fx-cfd-basics', 'verify-a-licence', 'before-your-first-account') AND url IS NULL;
 
 -- Webinar outlines. Set starts_at and url when a session is scheduled.
 INSERT INTO learning_resources (id, kind, title, summary, topics, level, sort_order) VALUES

@@ -165,7 +165,13 @@ function LessonCard({ item, onPlay }) {
             Watch
           </Button>
         )}
-        {item.url && item.kind !== 'video' && (
+        {item.url?.startsWith('/') && item.kind === 'ebook' && (
+          <Button to={item.url} className="!min-h-11 !py-2">
+            <BookOpen className="size-4" aria-hidden="true" />
+            Read eBook
+          </Button>
+        )}
+        {item.url && !item.url.startsWith('/') && item.kind !== 'video' && (
           <Button href={item.url} className="!min-h-11 !py-2">
             {item.kind === 'ebook' && <Download className="size-4" aria-hidden="true" />}
             {item.kind === 'ebook' ? 'Read eBook' : isPast ? 'Watch recording' : 'Register'}

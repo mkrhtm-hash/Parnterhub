@@ -9,6 +9,7 @@ const HowItWorks = lazy(() => import('./pages/HowItWorks'));
 const BrokerMatch = lazy(() => import('./pages/BrokerMatch'));
 const BrokerPartners = lazy(() => import('./pages/BrokerPartners'));
 const Learning = lazy(() => import('./pages/Learning'));
+const Ebook = lazy(() => import('./pages/Ebook'));
 const About = lazy(() => import('./pages/About'));
 const Book = lazy(() => import('./pages/Book'));
 const Legal = lazy(() => import('./pages/Legal'));
@@ -26,6 +27,7 @@ export default function App() {
         <Route path="partners" element={<DataGate><BrokerPartners /></DataGate>} />
         <Route path="learning" element={<Navigate to="/learning/videos" replace />} />
         <Route path="learning/:section" element={<DataGate><Learning /></DataGate>} />
+        <Route path="learning/ebooks/:bookId/:page?" element={<Ebook />} />
         <Route path="regulation" element={<Navigate to="/learning" replace />} />
         <Route path="about" element={<DataGate><About /></DataGate>} />
         <Route path="book" element={<DataGate testFormLink><Book /></DataGate>} />

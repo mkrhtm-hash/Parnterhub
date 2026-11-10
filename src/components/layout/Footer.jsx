@@ -71,6 +71,9 @@ export default function Footer() {
             <li>
               <Link to="/book" className="flex min-h-10 items-center hover:text-ink lg:inline-flex lg:min-h-0">Book a Consultation</Link>
             </li>
+            <li>
+              <Link to="/partner-with-us" className="flex min-h-10 items-center hover:text-ink lg:inline-flex lg:min-h-0">Partner with us</Link>
+            </li>
           </ul>
         </nav>
 

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { RotateCcw, Scale, SearchX, X } from 'lucide-react';
+import { ArrowRight, Handshake, RotateCcw, Scale, SearchX, X } from 'lucide-react';
 import BrokerCard from '../components/brokers/BrokerCard';
 import CompareDialog from '../components/brokers/CompareDialog';
 import Button from '../components/ui/Button';
@@ -86,7 +86,13 @@ export default function BrokerPartners() {
         eyebrow="Broker partners"
         title="Compare the details. Then verify them yourself."
         intro="Every listing shows the regulator, the licence number and a link to the regulator's register."
-      />
+      >
+        <Link to="/partner-with-us" className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-full border border-line bg-[var(--glass)] px-4 text-sm font-medium hover:border-blue/60">
+          <Handshake className="size-4 text-green" aria-hidden="true" />
+          Refer clients? <span className="text-blue">Partner with us</span>
+          <ArrowRight className="size-4 text-blue" aria-hidden="true" />
+        </Link>
+      </PageHeader>
 
       <section className="shell">
         <div className="mb-6 flex gap-3 rounded-2xl border border-dashed border-green/60 bg-green/8 p-4 text-sm leading-relaxed">

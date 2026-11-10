@@ -15,7 +15,7 @@ const DAY_LABELS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
 const pathMessages = {
   professional: 'I am a professional trader and would like to talk through my set-up.',
-  partner: 'I am interested in becoming an introducing partner.',
+  partner: 'I would like to become a partner and discuss a customised deal.',
 };
 
 const startOfDay = (d) => new Date(d.getFullYear(), d.getMonth(), d.getDate());

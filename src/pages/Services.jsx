@@ -52,8 +52,8 @@ const paths = [
     audience: 'Introducing partners',
     title: 'Build broker relationships properly.',
     text: 'If you introduce clients, we can talk through partner structures, disclosure and what to check with your local regulator before you start.',
-    cta: 'Discuss a partnership',
-    to: '/book?path=partner',
+    cta: 'See the partner programme',
+    to: '/partner-with-us',
   },
 ];
 

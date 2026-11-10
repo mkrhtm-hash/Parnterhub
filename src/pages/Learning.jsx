@@ -3,6 +3,7 @@ import { Navigate, NavLink, useParams } from 'react-router-dom';
 import { BookOpen, CalendarDays, ChartCandlestick, Check, Clock, Download, PlayCircle, Presentation, SearchX, X } from 'lucide-react';
 import Button from '../components/ui/Button';
 import OpinionForm from '../components/learning/OpinionForm';
+import LearningPathway from '../components/learning/LearningPathway';
 import Book from './Book';
 import { IconTile, PageHeader, Reveal } from '../components/ui/Primitives';
 import { expertSessions } from '../../shared/expertSessions';
@@ -10,6 +11,7 @@ import { usePageMeta } from '../hooks/usePageMeta';
 import { useCompliance, useSiteData } from '../context/SiteDataContext';
 
 const sections = [
+  { slug: 'start-here', label: 'Start here' },
   { slug: 'videos', label: 'Videos', kind: 'video' },
   { slug: 'ebooks', label: 'eBook', kind: 'ebook' },
   { slug: 'webinars', label: 'Webinar', kind: 'webinar' },
@@ -191,10 +193,10 @@ export default function Learning() {
   const { notAdvice } = useCompliance();
   const { section: slug } = useParams();
   const section = sections.find((s) => s.slug === slug);
-  usePageMeta(section ? `${section.label} | Learning` : 'Learning', 'Educational videos, ebooks and webinars on brokers, CFDs, leverage and trading costs, plus one-to-one sessions with a market expert.');
+  usePageMeta(section ? `${section.label} | Learning` : 'Learning', 'A step-by-step learning pathway with videos, ebooks and webinars on brokers, CFDs, leverage and trading costs, plus one-to-one sessions with a market expert.');
   const [video, setVideo] = useState(null);
 
-  if (!section) return <Navigate to="/learning/videos" replace />;
+  if (!section) return <Navigate to="/learning/start-here" replace />;
   const shown = learning.filter((item) => item.kind === section.kind);
 
   return (
@@ -206,7 +208,7 @@ export default function Learning() {
       />
 
       <section className="shell">
-        <nav aria-label="Learning sections" className="grid max-w-4xl grid-cols-2 gap-1 rounded-2xl border border-line bg-[var(--glass)] p-1.5 sm:grid-cols-3 lg:grid-cols-5">
+        <nav aria-label="Learning sections" className="grid max-w-5xl grid-cols-2 gap-1 rounded-2xl border border-line bg-[var(--glass)] p-1.5 sm:grid-cols-3 lg:grid-cols-6">
           {sections.map(({ slug: to, label }) => (
             <NavLink
               key={to}
@@ -219,7 +221,9 @@ export default function Learning() {
         </nav>
 
         <div className="mt-6">
-          {slug === 'market-expert' ? (
+          {slug === 'start-here' ? (
+            <LearningPathway />
+          ) : slug === 'market-expert' ? (
             <>
               <ExpertIntro />
               <Book expert />

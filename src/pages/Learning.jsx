@@ -4,7 +4,8 @@ import { BookOpen, CalendarDays, ChartCandlestick, Check, Clock, Download, PlayC
 import Button from '../components/ui/Button';
 import OpinionForm from '../components/learning/OpinionForm';
 import Book from './Book';
-import { IconTile, PageHeader, Reveal } from '../components/ui/Primitives';
+import { IconTile, isBlank, PageHeader, Reveal, withoutBlanks } from '../components/ui/Primitives';
+import { expertSession } from '../data/staticContent';
 import { usePageMeta } from '../hooks/usePageMeta';
 import { useCompliance, useSiteData } from '../context/SiteDataContext';
 
@@ -29,13 +30,34 @@ const expertTopics = [
   'Questions from your own learning so far',
 ];
 
+const expertSteps = [
+  'Pick a day and time, and tell us what you want to cover.',
+  'We email you to confirm the slot, the price and how to pay.',
+  'Your slot is booked once payment is received. Nothing is charged on this website.',
+];
+
 function ExpertIntro() {
+  const price = withoutBlanks(expertSession.pricePerSession);
   return (
     <Reveal className="glass mb-5 grid gap-6 p-6 md:grid-cols-[auto_1fr] md:p-8">
       <IconTile icon={ChartCandlestick} tone="green" />
       <div>
-        <h2 className="text-2xl font-semibold">A one-to-one session with a market expert</h2>
-        <p className="mt-2 leading-relaxed text-muted">Pick a time and tell us what you want to understand. An experienced member of our team will walk you through it on a call, in plain English.</p>
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <h2 className="text-2xl font-semibold">A paid one-to-one session with a market expert</h2>
+          <p className="rounded-full border border-green/50 bg-green/10 px-4 py-1.5 text-sm font-semibold text-green">
+            {isBlank(price) ? 'Price per session confirmed by email' : `${price} per session`}
+          </p>
+        </div>
+        <p className="mt-2 leading-relaxed text-muted">Tell us what you want to understand and an experienced member of our team will walk you through it on a call, in plain English.</p>
+        <h3 className="mt-5 text-xs font-semibold text-ink">How booking works</h3>
+        <ol className="mt-2 grid gap-2 text-sm text-muted sm:grid-cols-3">
+          {expertSteps.map((step, i) => (
+            <li key={step} className="flex gap-2">
+              <span className="bg-brand grid size-5 shrink-0 place-items-center rounded-full text-xs font-semibold">{i + 1}</span>
+              {step}
+            </li>
+          ))}
+        </ol>
         <h3 className="mt-5 text-xs font-semibold text-ink">You could cover</h3>
         <ul className="mt-2 grid gap-2 text-sm text-muted sm:grid-cols-2">
           {expertTopics.map((topic) => (

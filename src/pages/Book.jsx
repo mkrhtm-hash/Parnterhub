@@ -217,7 +217,10 @@ export default function Book({ testMode = false, expert = false }) {
           <h1 className="mt-6 text-3xl font-semibold md:text-4xl">Thanks, {form.name.trim().split(' ')[0]}.</h1>
           <p className="mt-3 leading-relaxed text-muted">
             You asked for {expert ? 'a session with a market expert' : `a ${consultation.durationMinutes}-minute call`} on <strong className="font-semibold text-ink">{longDate(date)}</strong> at{' '}
-            <strong className="font-semibold text-ink">{time}</strong>. We will confirm by email at {form.email.trim()}.
+            <strong className="font-semibold text-ink">{time}</strong>.{' '}
+            {expert
+              ? `We will email ${form.email.trim()} to confirm the slot, the price and how to pay. Your session is booked once payment is received.`
+              : `We will confirm by email at ${form.email.trim()}.`}
           </p>
           <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
             {expert ? <Button to="/learning/videos" variant="ghost">Watch our videos</Button> : <Button to="/learning" variant="ghost">Explore learning</Button>}

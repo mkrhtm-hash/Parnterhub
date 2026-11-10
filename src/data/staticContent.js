@@ -23,6 +23,15 @@ export const weDo = [
 
 export const weDont = ['Manage funds', 'Hold client money', 'Give trading signals', 'Promise returns'];
 
+/**
+ * The paid one-to-one session on the Learning page (Book with Market Expert tab).
+ * Set pricePerSession to the price as it should appear, for example 'USD 50'.
+ * While it is in square brackets the page shows "Price per session confirmed by email" instead.
+ */
+export const expertSession = {
+  pricePerSession: '[Price per session]',
+};
+
 /** Sample options for the test booking form at /book/test, which works without the database. */
 export const testBooking = {
   consultation: {

@@ -455,3 +455,7 @@ ON CONFLICT (id) DO NOTHING;
 UPDATE site_content
 SET value = replace(value::text, 'Partnerhub', 'MKPips')::jsonb
 WHERE value::text LIKE '%Partnerhub%';
+
+-- The four Learning videos are served from public/videos. Only fills in rows that have no link yet.
+UPDATE learning_resources SET url = '/videos/' || id || '.mp4', length_label = '1 min'
+WHERE id IN ('what-a-broker-does', 'how-cfds-work', 'leverage-and-margin', 'what-trading-costs') AND url IS NULL;

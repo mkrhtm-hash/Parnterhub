@@ -115,11 +115,11 @@ function VideoDialog({ video, onClose }) {
         {embed ? (
           <iframe src={embed} title={video.title} className="size-full" allow="encrypted-media; picture-in-picture; fullscreen" />
         ) : (
-          <video src={video.url} controls className="size-full" />
+          <video src={video.url} poster={video.url.replace(/\.mp4$/, '.jpg')} controls preload="metadata" className="size-full" />
         )}
       </div>
       <p className="px-4 py-3 text-xs leading-relaxed text-muted md:px-5">
-        The presenter in our videos is AI-generated. General education only, not investment advice.
+        The narration in our videos is computer-generated. General education only, not investment advice.
       </p>
     </dialog>
   );

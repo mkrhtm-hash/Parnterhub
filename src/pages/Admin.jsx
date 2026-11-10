@@ -74,7 +74,10 @@ function BookingCard({ item }) {
     <article className="glass p-5 md:p-6">
       <div className="flex flex-wrap items-start justify-between gap-2">
         <h2 className="min-w-0 break-words text-lg font-semibold">{item.name}</h2>
-        <span className="rounded-full border border-line px-3 py-1 text-xs font-medium capitalize text-muted">{item.status}</span>
+        <div className="flex flex-wrap gap-2">
+          {item.kind === 'market-expert' && <span className="rounded-full bg-green/12 px-3 py-1 text-xs font-medium text-green">Market expert session</span>}
+          <span className="rounded-full border border-line px-3 py-1 text-xs font-medium capitalize text-muted">{item.status}</span>
+        </div>
       </div>
       <p className="mt-1 text-sm font-medium text-blue">Call: {callDate(item.preferredDate)} at {item.preferredTime}</p>
       <div className="mt-3 flex flex-wrap gap-x-5">

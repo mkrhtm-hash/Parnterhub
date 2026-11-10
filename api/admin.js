@@ -38,7 +38,7 @@ export default route({
     const sql = getSql();
     const [bookings, opinions] = await Promise.all([
       sql`SELECT id, name, email, phone, country, experience, message,
-                 preferred_date::text AS "preferredDate", preferred_time AS "preferredTime", status, created_at AS "createdAt"
+                 preferred_date::text AS "preferredDate", preferred_time AS "preferredTime", status, kind, created_at AS "createdAt"
           FROM consultations ORDER BY created_at DESC LIMIT ${ROW_LIMIT}`,
       sql`SELECT id, name, topic, rating, message, created_at AS "createdAt"
           FROM learning_feedback ORDER BY created_at DESC LIMIT ${ROW_LIMIT}`,

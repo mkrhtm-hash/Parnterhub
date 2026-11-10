@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { Navigate, NavLink, useParams } from 'react-router-dom';
-import { BookOpen, CalendarDays, Check, Clock, Download, PlayCircle, Presentation, SearchX, X } from 'lucide-react';
+import { BookOpen, CalendarDays, ChartCandlestick, Check, Clock, Download, PlayCircle, Presentation, SearchX, X } from 'lucide-react';
 import Button from '../components/ui/Button';
 import OpinionForm from '../components/learning/OpinionForm';
+import Book from './Book';
 import { IconTile, PageHeader, Reveal } from '../components/ui/Primitives';
 import { usePageMeta } from '../hooks/usePageMeta';
 import { useCompliance, useSiteData } from '../context/SiteDataContext';
@@ -11,6 +12,7 @@ const sections = [
   { slug: 'videos', label: 'Videos', kind: 'video' },
   { slug: 'ebooks', label: 'eBook', kind: 'ebook' },
   { slug: 'webinars', label: 'Webinar', kind: 'webinar' },
+  { slug: 'market-expert', label: 'Book with Market Expert' },
   { slug: 'your-opinion', label: 'Your Opinion' },
 ];
 
@@ -19,6 +21,35 @@ const kinds = {
   ebook: { label: 'eBook', Icon: BookOpen, tone: 'green' },
   webinar: { label: 'Webinar', Icon: Presentation, tone: 'red' },
 };
+
+const expertTopics = [
+  'How a market such as gold, oil or a major currency pair tends to move, and why',
+  'Reading an economic calendar and what big announcements can do to prices',
+  'Spreads, swaps, leverage and margin, worked through with examples',
+  'Questions from your own learning so far',
+];
+
+function ExpertIntro() {
+  return (
+    <Reveal className="glass mb-5 grid gap-6 p-6 md:grid-cols-[auto_1fr] md:p-8">
+      <IconTile icon={ChartCandlestick} tone="green" />
+      <div>
+        <h2 className="text-2xl font-semibold">A one-to-one session with a market expert</h2>
+        <p className="mt-2 leading-relaxed text-muted">Pick a time and tell us what you want to understand. An experienced member of our team will walk you through it on a call, in plain English.</p>
+        <h3 className="mt-5 text-xs font-semibold text-ink">You could cover</h3>
+        <ul className="mt-2 grid gap-2 text-sm text-muted sm:grid-cols-2">
+          {expertTopics.map((topic) => (
+            <li key={topic} className="flex gap-2">
+              <Check className="mt-0.5 size-4 shrink-0 text-blue" aria-hidden="true" />
+              {topic}
+            </li>
+          ))}
+        </ul>
+        <p className="mt-5 rounded-2xl border border-line bg-[var(--glass)] p-4 text-xs leading-relaxed text-muted">Sessions are for education only. We will not tell you what to buy or sell, when to trade or how much to invest, and nothing said on the call is investment advice.</p>
+      </div>
+    </Reveal>
+  );
+}
 
 const webinarDate = (value) =>
   new Date(value).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
@@ -130,7 +161,7 @@ export default function Learning() {
   const { notAdvice } = useCompliance();
   const { section: slug } = useParams();
   const section = sections.find((s) => s.slug === slug);
-  usePageMeta(section ? `${section.label} | Learning` : 'Learning', 'Educational videos, ebooks and webinars on brokers, CFDs, leverage and trading costs, each showing what you will learn.');
+  usePageMeta(section ? `${section.label} | Learning` : 'Learning', 'Educational videos, ebooks and webinars on brokers, CFDs, leverage and trading costs, plus one-to-one sessions with a market expert.');
   const [video, setVideo] = useState(null);
 
   if (!section) return <Navigate to="/learning/videos" replace />;
@@ -145,12 +176,12 @@ export default function Learning() {
       />
 
       <section className="shell">
-        <nav aria-label="Learning sections" className="grid max-w-2xl grid-cols-2 gap-1 rounded-2xl border border-line bg-[var(--glass)] p-1.5 sm:grid-cols-4">
+        <nav aria-label="Learning sections" className="grid max-w-4xl grid-cols-2 gap-1 rounded-2xl border border-line bg-[var(--glass)] p-1.5 sm:grid-cols-3 lg:grid-cols-5">
           {sections.map(({ slug: to, label }) => (
             <NavLink
               key={to}
               to={`/learning/${to}`}
-              className={({ isActive }) => `flex min-h-11 items-center justify-center rounded-xl px-2 text-sm font-semibold transition-colors ${isActive ? 'bg-brand text-on-accent' : 'text-muted hover:text-ink'}`}
+              className={({ isActive }) => `flex min-h-11 items-center justify-center rounded-xl px-2 py-1.5 text-center text-sm leading-tight font-semibold transition-colors ${isActive ? 'bg-brand text-on-accent' : 'text-muted hover:text-ink'}`}
             >
               {label}
             </NavLink>
@@ -158,7 +189,12 @@ export default function Learning() {
         </nav>
 
         <div className="mt-6">
-          {!section.kind ? (
+          {slug === 'market-expert' ? (
+            <>
+              <ExpertIntro />
+              <Book expert />
+            </>
+          ) : !section.kind ? (
             <OpinionForm />
           ) : shown.length === 0 ? (
             <div className="glass p-10 text-center md:p-14">
@@ -179,7 +215,7 @@ export default function Learning() {
 
         <p className="mt-6 text-xs leading-relaxed text-faint">{notAdvice}</p>
 
-        <Reveal className="glass mt-10 flex flex-col items-start justify-between gap-5 p-7 md:flex-row md:items-center md:p-10">
+        {slug !== 'market-expert' && <Reveal className="glass mt-10 flex flex-col items-start justify-between gap-5 p-7 md:flex-row md:items-center md:p-10">
           <div>
             <h2 className="text-2xl font-semibold">Still unsure where to begin?</h2>
             <p className="mt-2 leading-relaxed text-muted">Tell us your experience and we will point you to the right starting place.</p>
@@ -188,7 +224,7 @@ export default function Learning() {
             <CalendarDays className="size-4" aria-hidden="true" />
             Book a call
           </Button>
-        </Reveal>
+        </Reveal>}
       </section>
 
       {video && <VideoDialog video={video} onClose={() => setVideo(null)} />}

@@ -73,6 +73,9 @@ CREATE TABLE IF NOT EXISTS consultations (
   status         text NOT NULL DEFAULT 'new' CHECK (status IN ('new', 'contacted', 'closed')),
   created_at     timestamptz NOT NULL DEFAULT now()
 );
+-- Which form the request came from: Book a Consultation, or the Book with Market Expert tab on Learning.
+ALTER TABLE consultations ADD COLUMN IF NOT EXISTS kind text NOT NULL DEFAULT 'consultation'
+  CHECK (kind IN ('consultation', 'market-expert'));
 CREATE INDEX IF NOT EXISTS consultations_created_at_idx ON consultations (created_at DESC);
 CREATE INDEX IF NOT EXISTS consultations_email_idx ON consultations (email);
 CREATE INDEX IF NOT EXISTS consultations_preferred_date_idx ON consultations (preferred_date);

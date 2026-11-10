@@ -115,11 +115,12 @@ function validate(form, date, time) {
   return errors;
 }
 
-export default function Book({ testMode = false }) {
+/** The booking form. expert: the Book with Market Expert tab on Learning, shown without a page header. */
+export default function Book({ testMode = false, expert = false }) {
   const siteData = useSiteData().data;
   const { consultation, countries, options } = testMode ? testBooking : siteData;
   const { experienceLevels } = options;
-  usePageMeta(testMode ? 'Test Booking Form' : 'Book a Consultation', 'Book a free consultation with MKPips. Pick a time and tell us what you need. We never ask for passwords, payment details or ID documents here.');
+  usePageMeta(expert ? false : testMode ? 'Test Booking Form' : 'Book a Consultation', 'Book a free consultation with MKPips. Pick a time and tell us what you need. We never ask for passwords, payment details or ID documents here.');
   const toast = useToast();
   const [params] = useSearchParams();
   const [date, setDate] = useState(null);
@@ -174,10 +175,10 @@ export default function Book({ testMode = false }) {
       return;
     }
     try {
-      await submitLead({ ...form, date: isoDate(date), time });
+      await submitLead({ ...form, date: isoDate(date), time, kind: expert ? 'market-expert' : 'consultation' });
       setStatus('success');
       toast(`Your request for ${longDate(date)} at ${time} is in.`);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (!expert) window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error) {
       setStatus('idle');
       if (error.fields) {
@@ -210,16 +211,16 @@ export default function Book({ testMode = false }) {
 
   if (status === 'success') {
     return (
-      <section className="shell pt-12 md:pt-24">
+      <section className={expert ? '' : 'shell pt-12 md:pt-24'}>
         <motion.div initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} className="glass mx-auto max-w-2xl p-8 text-center md:p-12">
           <CircleCheck className="mx-auto size-14 text-blue" aria-hidden="true" />
           <h1 className="mt-6 text-3xl font-semibold md:text-4xl">Thanks, {form.name.trim().split(' ')[0]}.</h1>
           <p className="mt-3 leading-relaxed text-muted">
-            You asked for a {consultation.durationMinutes}-minute call on <strong className="font-semibold text-ink">{longDate(date)}</strong> at{' '}
+            You asked for {expert ? 'a session with a market expert' : `a ${consultation.durationMinutes}-minute call`} on <strong className="font-semibold text-ink">{longDate(date)}</strong> at{' '}
             <strong className="font-semibold text-ink">{time}</strong>. We will confirm by email at {form.email.trim()}.
           </p>
           <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
-            <Button to="/learning" variant="ghost">Explore learning</Button>
+            {expert ? <Button to="/learning/videos" variant="ghost">Watch our videos</Button> : <Button to="/learning" variant="ghost">Explore learning</Button>}
             <Button to="/">Back to home</Button>
           </div>
         </motion.div>
@@ -230,7 +231,7 @@ export default function Book({ testMode = false }) {
   return (
     <>
       {testMode && <meta name="robots" content="noindex" />}
-      <PageHeader eyebrow={testMode ? 'Test booking form' : 'Book a consultation'} title="Let's talk it through." intro={`A free ${consultation.durationMinutes}-minute call. No pressure, and no obligation to open an account.`} />
+      {!expert && <PageHeader eyebrow={testMode ? 'Test booking form' : 'Book a consultation'} title="Let's talk it through." intro={`A free ${consultation.durationMinutes}-minute call. No pressure, and no obligation to open an account.`} />}
 
       {testMode && (
         <div className="shell mb-5">
@@ -241,7 +242,7 @@ export default function Book({ testMode = false }) {
         </div>
       )}
 
-      <form ref={formRef} onSubmit={onSubmit} noValidate className="shell grid items-start gap-5 lg:grid-cols-[0.9fr_1.1fr]">
+      <form ref={formRef} onSubmit={onSubmit} noValidate className={`${expert ? '' : 'shell '}grid items-start gap-5 lg:grid-cols-[0.9fr_1.1fr]`}>
         <div className="glass p-5 md:p-7 lg:sticky lg:top-24">
           <h2 className="mb-5 flex items-center gap-2 text-lg font-semibold">
             <CalendarDays className="size-5 text-blue" aria-hidden="true" />
@@ -322,7 +323,7 @@ export default function Book({ testMode = false }) {
             </select>
           </Field>
           <Field id="message" label="Message" optional>
-            <textarea {...fieldProps('message')} rows={4} placeholder="What would you like to talk about?" className="field resize-y" />
+            <textarea {...fieldProps('message')} rows={4} placeholder={expert ? 'Which markets or topics would you like to cover? For example gold, major currency pairs or reading an economic calendar.' : 'What would you like to talk about?'} className="field resize-y" />
           </Field>
 
           <div>
@@ -350,7 +351,7 @@ export default function Book({ testMode = false }) {
 
           <Button type="submit" disabled={status === 'sending'} className="w-full">
             {status === 'sending' ? <LoaderCircle className="size-4 animate-spin" aria-hidden="true" /> : <CalendarDays className="size-4" aria-hidden="true" />}
-            {status === 'sending' ? 'Sending your request' : testMode ? 'Send test request' : 'Request my free consultation'}
+            {status === 'sending' ? 'Sending your request' : testMode ? 'Send test request' : expert ? 'Request my expert session' : 'Request my free consultation'}
           </Button>
 
           <p className="flex gap-2 text-xs leading-relaxed text-faint">

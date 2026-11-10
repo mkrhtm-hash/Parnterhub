@@ -3,7 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { CalendarDays, Check, ChevronLeft, ChevronRight, CircleCheck, Clock, FlaskConical, Lock, LoaderCircle, TriangleAlert } from 'lucide-react';
 import Button from '../components/ui/Button';
-import { PageHeader, PlaceholderText } from '../components/ui/Primitives';
+import { isBlank, PageHeader, PlaceholderText } from '../components/ui/Primitives';
 import { usePageMeta } from '../hooks/usePageMeta';
 import { useToast } from '../context/ToastContext';
 import { submitLead } from '../services/leads';
@@ -267,7 +267,7 @@ export default function Book({ testMode = false }) {
                   <Clock className="size-5 text-emerald" aria-hidden="true" />
                   Choose a time
                 </h2>
-                <p className="mb-3 text-xs text-muted">Times shown in <PlaceholderText text={consultation.timezoneLabel} /></p>
+                {isBlank(consultation.timezoneLabel) ? <div className="mb-3" /> : <p className="mb-3 text-xs text-muted">Times shown in <PlaceholderText text={consultation.timezoneLabel} /></p>}
                 <div data-field="time" tabIndex={-1} className="grid grid-cols-3 gap-2 p-0.5 outline-none">
                   {consultation.timeSlots.map((slot) => (
                     <button

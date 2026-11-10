@@ -199,18 +199,6 @@
     color: var(--ink);
   }
 
-  .placeholder-tag {
-    display: inline;
-    padding: 0.05em 0.4em;
-    border-radius: 0.35em;
-    border: 1px dashed color-mix(in srgb, var(--gold) 70%, transparent);
-    background: color-mix(in srgb, var(--gold) 12%, transparent);
-    color: var(--gold);
-    font-weight: 500;
-    -webkit-box-decoration-break: clone;
-    box-decoration-break: clone;
-  }
-
   .ambient {
     position: fixed;
     inset: 0;

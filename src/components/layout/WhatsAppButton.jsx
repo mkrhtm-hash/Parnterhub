@@ -8,6 +8,9 @@ export default function WhatsAppButton() {
   const company = useSiteData().data?.company;
   // Hidden while the cookie banner is open, because they share the same corner on small screens.
   if (open || !company) return null;
+  // Stays hidden until a real number replaces the sample one, such as 10000000000, in the database.
+  const digits = String(company.whatsappNumber ?? '').replace(/\D/g, '');
+  if (digits.length < 8 || /^\d0+$/.test(digits)) return null;
   const href = `https://wa.me/${company.whatsappNumber}?text=${encodeURIComponent(company.whatsappMessage)}`;
   return (
     <motion.a

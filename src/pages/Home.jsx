@@ -6,7 +6,7 @@ import HubVisual from '../components/hero/HubVisual';
 import Button from '../components/ui/Button';
 import Accordion from '../components/ui/Accordion';
 import AnimatedCounter from '../components/ui/AnimatedCounter';
-import { IconTile, PlaceholderText, Reveal, SampleBadge, SectionHeading } from '../components/ui/Primitives';
+import { IconTile, isBlank, PlaceholderText, Reveal, SampleBadge, SectionHeading } from '../components/ui/Primitives';
 import { CardSkeleton, DataError } from '../components/ui/DataState';
 import { usePageMeta } from '../hooks/usePageMeta';
 import { useCompliance, useSiteData } from '../context/SiteDataContext';
@@ -83,7 +83,7 @@ export default function Home() {
             <TriangleAlert className="mt-px size-4 shrink-0 text-gold" aria-hidden="true" />
             <span>
               {compliance.riskWarning}{' '}
-              {compliance.retailLossPercent && (
+              {!isBlank(compliance.retailLossPercent) && (
                 <>
                   <PlaceholderText text={`${compliance.retailLossPercent}%`} /> {compliance.retailLossSentence}{' '}
                 </>

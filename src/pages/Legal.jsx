@@ -1,6 +1,6 @@
 import { Info } from 'lucide-react';
 import Button from '../components/ui/Button';
-import { PlaceholderText } from '../components/ui/Primitives';
+import { isBlank, PlaceholderText } from '../components/ui/Primitives';
 import { usePageMeta } from '../hooks/usePageMeta';
 import { useCookies } from '../context/CookieContext';
 import { useCompliance, useSiteData } from '../context/SiteDataContext';
@@ -17,7 +17,7 @@ export default function Legal({ page }) {
       <div className="mx-auto max-w-3xl">
         <p className="eyebrow mb-3">Legal</p>
         <h1 className="text-4xl font-semibold md:text-5xl">{title}</h1>
-        <p className="mt-3 text-sm text-faint">Last reviewed: <PlaceholderText text={company.lastLegalUpdate} /></p>
+        {!isBlank(company.lastLegalUpdate) && <p className="mt-3 text-sm text-faint">Last reviewed: <PlaceholderText text={company.lastLegalUpdate} /></p>}
         <p className="mt-6 flex gap-2 rounded-2xl border border-dashed border-gold/60 bg-gold/8 p-4 text-sm text-gold">
           <Info className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
           {intro}
@@ -25,12 +25,13 @@ export default function Legal({ page }) {
 
         {page === 'risk' && (
           <p className="mt-6 leading-relaxed font-medium">
-            {compliance.riskWarning} <PlaceholderText text={`${compliance.retailLossPercent}%`} /> {compliance.retailLossSentence}
+            {compliance.riskWarning}
+            {!isBlank(compliance.retailLossPercent) && <> <PlaceholderText text={`${compliance.retailLossPercent}%`} /> {compliance.retailLossSentence}</>}
           </p>
         )}
 
         <div className="prose-legal">
-          {sections.map(({ heading, body }) => (
+          {sections.filter(({ body }) => !isBlank(body)).map(({ heading, body }) => (
             <section key={heading}>
               <h2>{heading}</h2>
               <p><PlaceholderText text={body} /></p>

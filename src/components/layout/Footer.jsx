@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { TriangleAlert } from 'lucide-react';
 import Logo from '../ui/Logo';
-import { PlaceholderText } from '../ui/Primitives';
+import { isBlank, PlaceholderText } from '../ui/Primitives';
 import { useCookies } from '../../context/CookieContext';
 import { useCompliance, useSiteData } from '../../context/SiteDataContext';
 import { mainLinks } from './Navbar';
@@ -24,7 +24,7 @@ export default function Footer() {
         ['Registration no.', company.registrationNumber],
         ['Registered address', company.registeredAddress],
         ['Licence status', company.licenceStatus],
-      ]
+      ].filter(([, value]) => !isBlank(value))
     : [];
   return (
     <footer className="mt-20 border-t border-line pb-20 lg:pb-0">
@@ -34,7 +34,7 @@ export default function Footer() {
           <p>
             <strong className="font-semibold">Risk warning: </strong>
             {compliance.riskWarning}
-            {compliance.retailLossPercent && (
+            {!isBlank(compliance.retailLossPercent) && (
               <>
                 {' '}
                 <PlaceholderText text={`${compliance.retailLossPercent}%`} /> {compliance.retailLossSentence}
@@ -48,7 +48,7 @@ export default function Footer() {
         <div className="md:col-span-5">
           <Logo />
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted">The right broker starts with the right partner.</p>
-          <dl className="mt-6 grid gap-1.5 text-xs text-muted">
+          {details.length > 0 && <dl className="mt-6 grid gap-1.5 text-xs text-muted">
             {details.map(([label, value]) => (
               <div key={label} className="flex flex-wrap gap-x-2 gap-y-1">
                 <dt className="text-faint">{label}:</dt>
@@ -57,7 +57,7 @@ export default function Footer() {
                 </dd>
               </div>
             ))}
-          </dl>
+          </dl>}
         </div>
 
         <nav aria-label="Footer pages" className="md:col-span-3">

@@ -1,4 +1,3 @@
-import { Fragment } from 'react';
 import { motion } from 'framer-motion';
 import { FlaskConical } from 'lucide-react';
 
@@ -47,21 +46,20 @@ export function SampleBadge({ className = '' }) {
   );
 }
 
-/**
- * Prints text and gives any [bracketed placeholder] a dashed gold highlight,
- * so unfinished content is obvious anywhere it appears.
- */
+/** Removes unfilled [blanks] from database text, so visitors never see them. */
+export const withoutBlanks = (text) =>
+  String(text ?? '')
+    .replace(/\[[^\]]*\]/g, '')
+    .replace(/\s{2,}/g, ' ')
+    .replace(/\s+([.,;:])/g, '$1')
+    .trim();
+
+/** True when nothing real is left once the blanks are removed, for example "[XX]%". */
+export const isBlank = (text) => !/[\p{L}\p{N}]/u.test(withoutBlanks(text));
+
+/** Prints database text without its unfilled [blanks]. Filled-in text shows as normal. */
 export function PlaceholderText({ text }) {
-  const parts = String(text).split(/(\[[^\]]+\])/g);
-  return parts.map((part, i) =>
-    part.startsWith('[') && part.endsWith(']') ? (
-      <span key={i} className="placeholder-tag">
-        {part}
-      </span>
-    ) : (
-      <Fragment key={i}>{part}</Fragment>
-    ),
-  );
+  return withoutBlanks(text);
 }
 
 export function IconTile({ icon: Icon, tone = 'emerald' }) {

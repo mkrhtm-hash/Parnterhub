@@ -1,5 +1,6 @@
 import { getSql } from './_lib/db.js';
 import { route } from './_lib/handler.js';
+import { findExpertSession } from '../shared/expertSessions.js';
 
 const text = (value) => (typeof value === 'string' ? value.trim() : '');
 
@@ -52,10 +53,15 @@ export default route({
     }
 
     const kind = body.kind === 'market-expert' ? 'market-expert' : 'consultation';
+    // A market expert booking must name one of the listed prices. The price text is saved as the visitor saw it.
+    const session = kind === 'market-expert' ? findExpertSession(body.session) : null;
+    if (kind === 'market-expert' && !session) {
+      return res.status(400).json({ error: 'validation_failed', message: 'Please check the highlighted fields.', fields: { session: 'Please choose a session.' } });
+    }
     await sql`
-      INSERT INTO consultations (name, email, phone, country, experience, message, preferred_date, preferred_time, consent, kind)
+      INSERT INTO consultations (name, email, phone, country, experience, message, preferred_date, preferred_time, consent, kind, session_price)
       VALUES (${text(body.name)}, ${text(body.email)}, ${text(body.phone)}, ${text(body.country)}, ${text(body.experience)},
-              ${text(body.message)}, ${text(body.date)}, ${body.time}, true, ${kind})`;
+              ${text(body.message)}, ${text(body.date)}, ${body.time}, true, ${kind}, ${session?.price ?? ''})`;
 
     // Nothing about the request is sent back to the browser.
     return res.status(201).json({ ok: true });

@@ -76,6 +76,8 @@ CREATE TABLE IF NOT EXISTS consultations (
 -- Which form the request came from: Book a Consultation, or the Book with Market Expert tab on Learning.
 ALTER TABLE consultations ADD COLUMN IF NOT EXISTS kind text NOT NULL DEFAULT 'consultation'
   CHECK (kind IN ('consultation', 'market-expert'));
+-- The price option chosen for a market expert session (see shared/expertSessions.js). Empty for consultations.
+ALTER TABLE consultations ADD COLUMN IF NOT EXISTS session_price text NOT NULL DEFAULT '';
 CREATE INDEX IF NOT EXISTS consultations_created_at_idx ON consultations (created_at DESC);
 CREATE INDEX IF NOT EXISTS consultations_email_idx ON consultations (email);
 CREATE INDEX IF NOT EXISTS consultations_preferred_date_idx ON consultations (preferred_date);

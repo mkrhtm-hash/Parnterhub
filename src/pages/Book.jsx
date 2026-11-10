@@ -3,12 +3,13 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { CalendarDays, Check, ChevronLeft, ChevronRight, CircleCheck, Clock, FlaskConical, Lock, LoaderCircle, TriangleAlert } from 'lucide-react';
 import Button from '../components/ui/Button';
-import { isBlank, PageHeader, PlaceholderText } from '../components/ui/Primitives';
+import { isBlank, PageHeader, PlaceholderText, withoutBlanks } from '../components/ui/Primitives';
 import { usePageMeta } from '../hooks/usePageMeta';
 import { useToast } from '../context/ToastContext';
 import { submitLead } from '../services/leads';
 import { useSiteData } from '../context/SiteDataContext';
 import { testBooking } from '../data/staticContent';
+import { expertSessions, findExpertSession } from '../../shared/expertSessions';
 
 const DAY_LABELS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
@@ -100,8 +101,9 @@ function Field({ id, label, optional, error, children }) {
   );
 }
 
-function validate(form, date, time) {
+function validate(form, date, time, expert) {
   const errors = {};
+  if (expert && !form.session) errors.session = 'Please choose a session.';
   if (!date) errors.date = 'Please pick a day that suits you.';
   if (date && !time) errors.time = 'Please pick a time on that day.';
   if (form.name.trim().length < 2) errors.name = 'Please tell us your name.';
@@ -133,6 +135,7 @@ export default function Book({ testMode = false, expert = false }) {
     experience: '',
     message: pathMessages[params.get('path')] ?? '',
     consent: false,
+    session: '',
     website: '', // Hidden from people. Bots fill it in, and the server then discards the request.
   });
   const [errors, setErrors] = useState({});
@@ -156,9 +159,9 @@ export default function Book({ testMode = false, expert = false }) {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    const found = validate(form, date, time);
+    const found = validate(form, date, time, expert);
     setErrors(found);
-    const firstKey = ['date', 'time', 'name', 'email', 'phone', 'country', 'experience', 'consent'].find((k) => found[k]);
+    const firstKey = ['session', 'date', 'time', 'name', 'email', 'phone', 'country', 'experience', 'consent'].find((k) => found[k]);
     if (firstKey) {
       const target = formRef.current.querySelector(`[data-field="${firstKey}"]`) ?? formRef.current.querySelector(`#${firstKey}`);
       target?.scrollIntoView({ block: 'center', behavior: 'smooth' });
@@ -175,7 +178,8 @@ export default function Book({ testMode = false, expert = false }) {
       return;
     }
     try {
-      await submitLead({ ...form, date: isoDate(date), time, kind: expert ? 'market-expert' : 'consultation' });
+      const { session, ...details } = form;
+      await submitLead({ ...details, date: isoDate(date), time, ...(expert ? { kind: 'market-expert', session } : {}) });
       setStatus('success');
       toast(`Your request for ${longDate(date)} at ${time} is in.`);
       if (!expert) window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -216,10 +220,10 @@ export default function Book({ testMode = false, expert = false }) {
           <CircleCheck className="mx-auto size-14 text-blue" aria-hidden="true" />
           <h1 className="mt-6 text-3xl font-semibold md:text-4xl">Thanks, {form.name.trim().split(' ')[0]}.</h1>
           <p className="mt-3 leading-relaxed text-muted">
-            You asked for {expert ? 'a session with a market expert' : `a ${consultation.durationMinutes}-minute call`} on <strong className="font-semibold text-ink">{longDate(date)}</strong> at{' '}
+            You asked for {expert ? `a ${findExpertSession(form.session)?.price} session with a market expert` : `a ${consultation.durationMinutes}-minute call`} on <strong className="font-semibold text-ink">{longDate(date)}</strong> at{' '}
             <strong className="font-semibold text-ink">{time}</strong>.{' '}
             {expert
-              ? `We will email ${form.email.trim()} to confirm the slot, the price and how to pay. Your session is booked once payment is received.`
+              ? `We will email ${form.email.trim()} to confirm the slot and how to pay. Your session is booked once payment is received.`
               : `We will confirm by email at ${form.email.trim()}.`}
           </p>
           <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
@@ -246,6 +250,27 @@ export default function Book({ testMode = false, expert = false }) {
       )}
 
       <form ref={formRef} onSubmit={onSubmit} noValidate className={`${expert ? '' : 'shell '}grid items-start gap-5 lg:grid-cols-[0.9fr_1.1fr]`}>
+        {expert && (
+          <fieldset data-field="session" tabIndex={-1} className="glass p-5 outline-none md:p-7 lg:col-span-2" aria-describedby={errors.session ? 'session-error' : undefined}>
+            <legend className="sr-only">Choose your session</legend>
+            <h2 className="mb-1 text-lg font-semibold" aria-hidden="true">Choose your session</h2>
+            <p className="mb-4 text-sm text-muted">Prices are per session, in US dollars. You pay after we confirm your slot by email.</p>
+            <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+              {expertSessions.map((s) => {
+                const chosen = form.session === s.id;
+                return (
+                  <label key={s.id} className={`relative flex min-h-20 cursor-pointer flex-col items-center justify-center rounded-2xl border p-3 text-center transition-colors has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-blue ${chosen ? 'bg-brand border-transparent' : errors.session ? 'border-danger' : 'border-line hover:border-blue/60'}`}>
+                    <input type="radio" name="session" value={s.id} checked={chosen} onChange={update('session')} className="sr-only" />
+                    <span className="font-display text-2xl font-semibold">{s.price}</span>
+                    <span className={`text-xs ${chosen ? '' : 'text-muted'}`}>{isBlank(s.detail) ? 'per session' : withoutBlanks(s.detail)}</span>
+                    {chosen && <Check className="absolute top-2 right-2 size-4" aria-hidden="true" />}
+                  </label>
+                );
+              })}
+            </div>
+            {errors.session && <p id="session-error" className="mt-3 flex gap-1.5 text-sm text-danger"><TriangleAlert className="mt-0.5 size-3.5 shrink-0" aria-hidden="true" />{errors.session}</p>}
+          </fieldset>
+        )}
         <div className="glass p-5 md:p-7 lg:sticky lg:top-24">
           <h2 className="mb-5 flex items-center gap-2 text-lg font-semibold">
             <CalendarDays className="size-5 text-blue" aria-hidden="true" />

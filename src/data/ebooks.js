@@ -3,7 +3,8 @@
  * /learning/ebooks/<id>, one short page at a time, and can be printed or saved as a PDF.
  *
  * Block types: p (paragraph), h (small heading), list (bullets), steps (numbered),
- * note (highlighted key point), warn (risk callout), example (worked example: title + lines).
+ * note (highlighted key point), warn (risk callout), example (worked example: title + lines),
+ * diagram (a drawing from src/components/learning/EbookDiagrams.jsx, with a caption).
  * Worked examples use round, made-up numbers to show the arithmetic. They are not prices or forecasts.
  */
 
@@ -23,6 +24,7 @@ export const ebooks = [
           { p: 'CFDs are not limited to currencies. Brokers offer them on stock indices, individual shares, gold, oil and other markets. The same idea applies to all of them: you are exposed to price changes without owning the underlying asset.' },
           { h: 'Going long and going short' },
           { list: ['Buying, or going long, means you gain if the price rises and lose if it falls.', 'Selling, or going short, means you gain if the price falls and lose if it rises.', 'Being able to sell first is one reason CFDs are popular, and also one reason they need care.'] },
+          { diagram: 'long-short', caption: 'What happens to a long and a short position when the price moves.' },
           { warn: 'CFDs are complex and most retail accounts lose money trading them. This guide explains how they work. It does not suggest that you should trade.' },
         ],
       },
@@ -35,6 +37,7 @@ export const ebooks = [
           { list: ['Major pairs include the US dollar and another widely traded currency, such as EUR/USD, GBP/USD and USD/JPY.', 'Minor pairs, sometimes called crosses, leave out the US dollar, such as EUR/GBP or AUD/JPY.', 'Exotic pairs combine a major currency with one from a smaller or emerging economy. They often cost more to trade and can move sharply.'] },
           { h: 'Two prices, not one' },
           { p: 'A broker shows two prices for every market. The bid is the price at which you can sell. The ask, sometimes called the offer, is the price at which you can buy. The ask is always a little higher than the bid.' },
+          { diagram: 'quote', caption: 'How to read a currency quote.' },
           { example: { title: 'Reading a quote', lines: ['EUR/USD bid 1.0850, ask 1.0851', 'You buy at 1.0851 and could sell straight back at 1.0850.', 'That gap of 0.0001 is the spread, and it is the first cost of every trade.'] } },
         ],
       },
@@ -48,6 +51,7 @@ export const ebooks = [
           { h: 'What a pip is worth' },
           { p: 'The value of one pip depends on the pair and the size of your trade. For a pair where the US dollar is the quote currency, such as EUR/USD, one pip on a standard lot is worth 10 US dollars. On a mini lot it is 1 dollar, and on a micro lot 10 cents.' },
           { example: { title: 'A worked example', lines: ['You buy 0.1 lots of EUR/USD at 1.0850.', 'The price rises to 1.0880, a move of 30 pips.', '30 pips × 1 dollar per pip = a gain of 30 dollars, before costs.', 'If the price had fallen 30 pips instead, you would have lost 30 dollars, plus costs.'] } },
+          { diagram: 'pip-ladder', caption: 'A 30-pip move, and what one pip is worth at each lot size.' },
           { note: 'Position size controls how much each pip moves your account. Choosing a smaller size is the simplest way to keep any single trade from doing serious damage.' },
         ],
       },
@@ -56,9 +60,11 @@ export const ebooks = [
         blocks: [
           { p: 'Leverage lets you control a large position with a smaller deposit. The deposit is called margin. With leverage of 1:30, you put up one thirtieth of the position value, and the broker lets you control the full amount.' },
           { example: { title: 'How margin is worked out', lines: ['You open 0.1 lots of EUR/USD at 1.0850, a position worth about 10,850 dollars.', 'At 1:30 leverage, the margin is about 10,850 ÷ 30 = 362 dollars.', 'Every pip still moves your account by 1 dollar, as if you had paid the full 10,850.'] } },
+          { diagram: 'leverage', caption: 'Leverage changes the money you put up, not what each pip is worth.' },
           { p: 'This is the important part: leverage does not change how much a pip is worth. It only changes how much money you must put aside to open the trade. Gains and losses are calculated on the full position, so they can be large compared with the margin you used.' },
           { h: 'Margin calls and stop outs' },
           { list: ['Your equity is your balance plus or minus any open gains and losses.', 'If losses push your equity close to the margin you are using, the broker may send a margin call, which is a warning.', 'If equity falls further, the broker can close your positions automatically. This is called a stop out, and it can happen quickly in a fast market.'] },
+          { diagram: 'margin-levels', caption: 'An example margin scale. Your broker sets the real levels.' },
           { p: 'Regulators in several regions limit retail leverage, for example to 1:30 on major currency pairs. Some also require negative balance protection, which stops a retail account falling below zero. Check what applies to the broker entity you would use.' },
           { warn: 'Higher leverage means losses arrive faster. You can choose lower leverage than the maximum your broker offers.' },
         ],
@@ -70,6 +76,7 @@ export const ebooks = [
           { h: 'The main costs' },
           { list: ['Spread: the gap between the bid and the ask. You pay it each time you open a trade.', 'Commission: some account types charge a fixed fee per lot and offer a narrower spread in return.', 'Overnight financing, often called a swap: a charge, or occasionally a credit, for positions held past the broker\'s daily cut-off time.', 'Other fees: some brokers charge for currency conversion, inactive accounts or certain withdrawal methods.'] },
           { example: { title: 'Comparing two accounts', lines: ['Account A: spread of 1.2 pips, no commission.', 'Account B: spread of 0.2 pips plus 7 dollars commission per standard lot for the round trip.', 'On one standard lot, A costs 1.2 × 10 = 12 dollars. B costs 0.2 × 10 + 7 = 9 dollars.', 'The cheaper account depends on how much and how often you trade, so do the sum for your own size.'] } },
+          { diagram: 'costs', caption: 'The cheaper account depends on your trade size, so do the sum yourself.' },
           { h: 'Spreads can change' },
           { p: 'Spreads are often narrow when a market is busy and wider when it is quiet, such as late at night, or during major news. A spread quoted on a website is usually a typical or minimum figure, not a promise.' },
           { note: 'Ask each broker for its full list of charges, in writing, and check how swaps are calculated if you might hold positions for more than a day.' },
@@ -80,8 +87,10 @@ export const ebooks = [
         blocks: [
           { p: 'An order is an instruction to your broker. Knowing the main types helps you control when you enter and when you leave a position.' },
           { list: ['Market order: buy or sell straight away at the best price available.', 'Limit order: buy below the current price, or sell above it, only if the market reaches your level.', 'Stop order: buy above the current price, or sell below it, once the market moves through your level.', 'Stop-loss: an order attached to a trade that closes it if the price moves a set distance against you.', 'Take-profit: an order that closes a trade once it reaches a gain you chose in advance.'] },
+          { diagram: 'orders', caption: 'Where a stop-loss and a take-profit sit around a buy trade.' },
           { h: 'Slippage and gaps' },
           { p: 'Your order may be filled at a slightly different price from the one you saw. This is called slippage, and it is more likely in fast markets. Prices can also jump between one level and the next with no trading in between, for example after a weekend or a major announcement. That is called a gap.' },
+          { diagram: 'gap', caption: 'Why a stop-loss can close a trade at a worse price than you set.' },
           { warn: 'A standard stop-loss is not a guarantee. If the market gaps past your level, the trade closes at the next available price, which can mean a bigger loss than you planned. Some brokers offer guaranteed stops for an extra charge.' },
           { note: 'Decide where you would exit before you enter. Writing it down makes it easier to stick to when the price is moving.' },
         ],
@@ -93,6 +102,7 @@ export const ebooks = [
           { h: 'Habits that limit damage' },
           { steps: ['Only trade with money you can afford to lose completely, kept separate from savings and bills.', 'Decide the most you are willing to lose on one trade, for example a small share of your account, and size the position to match.', 'Set a stop-loss when you open the trade, not after the price has started moving against you.', 'Avoid opening several positions that all depend on the same thing, such as many trades against the US dollar.', 'Keep a simple journal: why you entered, where you planned to exit, and what actually happened.'] },
           { example: { title: 'Sizing a trade from your stop', lines: ['Account: 2,000 dollars. You decide to risk no more than 20 dollars on this trade.', 'Your stop-loss is 25 pips away on EUR/USD.', '20 dollars ÷ 25 pips = 0.80 dollars per pip, which is 0.08 lots.', 'The size comes from the risk you chose, not from how confident you feel.'] } },
+          { diagram: 'risk-sizing', caption: 'Work out the size from the risk you chose, not from how you feel.' },
           { h: 'Practise first' },
           { p: 'A demo account uses virtual money on a real platform. It is the place to learn the order screens, test how costs add up and make your first mistakes. Remember that demo trading feels calmer than real trading, and fills can differ.' },
         ],
@@ -120,6 +130,7 @@ export const ebooks = [
           { p: 'A licence means a financial regulator has authorised a company to offer certain services, and expects it to follow rules while it does. Those rules usually cover how client money is held, how complaints are handled, how much capital the firm keeps and how it describes risk.' },
           { h: 'What regulation does not do' },
           { list: ['It does not protect you from trading losses.', 'It does not mean a regulator recommends the broker.', 'Protection differs from one regulator to another, and some offer far more than others.'] },
+          { diagram: 'licence-covers', caption: 'A licence helps, but it is not a promise about results.' },
           { p: 'Even so, checking the licence is the single most useful thing you can do before sending money. It takes about fifteen minutes, and it rules out many of the firms that cause the worst problems.' },
           { note: 'Check the licence yourself, on the regulator\'s own website. A logo or licence number on a broker\'s site is a claim, not proof.' },
         ],
@@ -128,6 +139,7 @@ export const ebooks = [
         title: 'Find the right regulator',
         blocks: [
           { p: 'A broker brand often runs several companies in different countries, each with its own licence. What matters is the company that would actually hold your account, and the regulator that supervises that company.' },
+          { diagram: 'brand-entities', caption: 'One brand can mean very different companies and protection.' },
           { h: 'Where to look' },
           { list: ['The legal pages of the broker\'s website, usually at the very bottom of each page, should name each company, its registered address and its regulator.', 'The client agreement names the company you are contracting with.', 'Examples of well-known regulators include the FCA in the United Kingdom, ASIC in Australia, CySEC in Cyprus and the DFSA in the Dubai International Financial Centre.'] },
           { p: 'Once you know the regulator, go to its official website by typing the address yourself or using a search engine. Avoid links sent to you by the broker or by anyone promoting it.' },
@@ -137,6 +149,7 @@ export const ebooks = [
       {
         title: 'Search the register step by step',
         blocks: [
+          { diagram: 'register-steps', caption: 'The check at a glance. The steps below go into more detail.' },
           { steps: ['Open the regulator\'s public register, sometimes called a financial services register or licensee search.', 'Search by the company\'s legal name or licence number, not the brand name alone.', 'Check the firm\'s status says authorised, licensed or similar. Words such as revoked, cancelled or expired are a stop sign.', 'Read the permissions. Look for dealing in investments or derivatives with retail clients, or wording that matches the service you want.', 'Compare the registered address, phone number and website domain with the ones you are using. They should match.', 'Note any trading names listed. A brand you are using that does not appear may not be covered.'] },
           { example: { title: 'Writing down what you found', lines: ['Company: the legal name shown on the register', 'Regulator and licence number', 'Status and the date you checked', 'Permitted activities', 'Website domains listed'] } },
           { note: 'Save a screenshot of the register entry. If something goes wrong later, it shows what you relied on.' },
@@ -150,6 +163,7 @@ export const ebooks = [
           { list: ['Read the name of the company in the client agreement before you accept it.', 'Look at the account opening screens, emails and deposit pages for a company name.', 'Ask support in writing: which legal company will hold my account, and which regulator supervises it?'] },
           { h: 'Why it matters' },
           { p: 'Leverage limits, negative balance protection, compensation schemes and complaint routes all depend on the company and the regulator, not the brand. Two people using the same app can have very different protection.' },
+          { diagram: 'two-clients', caption: 'An example: the same app can come with very different protection.' },
           { note: 'If the answer is a company other than the one you checked, check that one too before depositing.' },
         ],
       },
@@ -160,6 +174,7 @@ export const ebooks = [
           { list: ['Claims of guaranteed or very high returns, or of trading with no risk.', 'Pressure to deposit quickly, or a bonus that disappears unless you add more money today.', 'Requests to send money to a personal bank account, an unrelated company or a crypto wallet.', 'An account manager who offers to trade on your behalf, or asks for remote access to your computer.', 'Contact details that differ from those on the regulator\'s register.', 'Fees, taxes or penalties that must be paid before a withdrawal is released.', 'A website that appeared recently, or that copies wording and pictures from a known broker.'] },
           { p: 'Many regulators publish warning lists of firms they believe are operating without permission. Search the firm\'s name and website on those lists as part of your check.' },
           { warn: 'Clone firms copy the name and licence number of a real broker. Contact the broker using the details shown on the register, not the details you were given, to confirm you are dealing with the real firm.' },
+          { diagram: 'clone', caption: 'A clone copies what is easy to copy. Contact details give it away.' },
         ],
       },
       {
@@ -169,6 +184,7 @@ export const ebooks = [
           { steps: ['I know the legal name of the company that will hold my account.', 'I found that company on its regulator\'s own register, and its status is active.', 'Its permissions cover the service I am using.', 'The website and contact details match the register.', 'The firm does not appear on a regulator\'s warning list.', 'I have saved screenshots of what I found.'] },
           { h: 'If something does not add up' },
           { list: ['Stop. Do not send more money, even if you are told it will unlock a withdrawal.', 'Keep every email, message and payment record.', 'Contact your bank or payment provider quickly. They may be able to help with recent payments.', 'Report the firm to the regulator it claims to be licensed by, and to your local authorities.', 'Be wary of anyone who contacts you offering to recover lost money for a fee. This is a common follow-up scam.'] },
+          { diagram: 'if-wrong', caption: 'What to do, in order, if something does not add up.' },
           { warn: 'This eBook is general education, not legal or investment advice. Rules differ by country, so check what applies where you live.' },
         ],
       },
@@ -185,6 +201,7 @@ export const ebooks = [
           { p: 'Opening a trading account takes minutes. Deciding whether you should takes longer, and it is worth doing first. A few honest answers now can save you money and stress later.' },
           { h: 'Questions to answer for yourself' },
           { list: ['Why do I want to trade, and what do I expect from it?', 'How much money could I lose completely without it affecting my bills, savings or family?', 'How much time can I give to learning and to watching open positions?', 'How do I usually react when I lose money?'] },
+          { diagram: 'money-buckets', caption: 'Only one of these is ever trading money.' },
           { p: 'If the honest answer to the second question is very little or nothing, trading leveraged products is probably not right for you at the moment. That is a perfectly sensible conclusion.' },
           { warn: 'Never trade with borrowed money, emergency savings or money set aside for essentials.' },
         ],
@@ -194,6 +211,7 @@ export const ebooks = [
         blocks: [
           { p: 'Regulated brokers must confirm who their clients are and where their money comes from. This is often called KYC, short for know your customer, and it is part of rules against fraud and money laundering. Expect to provide:' },
           { list: ['Proof of identity: a passport or national identity card, in date and clearly readable.', 'Proof of address: a recent utility bill or bank statement, usually from the last three to six months, showing your name and address.', 'Sometimes, information about your job, income and the source of the money you plan to deposit.'] },
+          { diagram: 'kyc-docs', caption: 'What brokers usually ask for, and why it is normal.' },
           { h: 'Keep your details safe' },
           { list: ['Upload documents only through the broker\'s own secure website or app.', 'Never send passwords or one-time codes to anyone, including people who say they work for the broker.', 'Be cautious if someone asks for documents over a messaging app or social media.'] },
           { note: 'A broker that asks for no documents at all is a warning sign, not a convenience.' },
@@ -204,6 +222,7 @@ export const ebooks = [
         blocks: [
           { p: 'During sign-up, many brokers ask about your knowledge of trading, your past experience and your finances. In several regions this is a legal requirement, sometimes called an appropriateness or suitability test.' },
           { p: 'The questions exist to check whether a complex product such as a CFD is appropriate for you. If your answers suggest it may not be, the broker may warn you, limit your leverage or decline the application.' },
+          { diagram: 'appropriateness', caption: 'How the experience questions work.' },
           { h: 'Answer honestly' },
           { list: ['Overstating your experience to pass the test removes a protection designed for you.', 'Some brokers reach out to clients whose answers show limited experience, which can be useful support.', 'If the broker warns you that a product may not suit you, take the warning seriously.'] },
           { note: 'Nobody else should fill in this form for you, or tell you which answers to give.' },
@@ -214,6 +233,7 @@ export const ebooks = [
         blocks: [
           { p: 'Brokers usually offer a few account types. The differences are mostly about how you pay for trades and what you can access.' },
           { list: ['Standard accounts usually build costs into a wider spread, with no separate commission.', 'Raw or ECN-style accounts usually have narrower spreads plus a commission per lot.', 'Some accounts have higher minimum deposits, or are only available to professional clients.'] },
+          { diagram: 'costs', caption: 'Example: how the two kinds of account charge for one standard lot.' },
           { h: 'Other choices you will make' },
           { list: ['Base currency: choosing the currency you deposit in can avoid conversion fees.', 'Leverage: if you can choose, start with a low setting. You can always change it later.', 'Platform: try the desktop and mobile versions to see which you find clear and comfortable.'] },
           { note: 'The cheapest account on paper is not always the best fit. Pick the one you understand and can check easily.' },
@@ -225,6 +245,7 @@ export const ebooks = [
           { p: 'Most brokers offer a free demo account with virtual money. Use it before you deposit. It is the cheapest place to make mistakes.' },
           { h: 'What to practise' },
           { steps: ['Opening and closing a trade, and changing its size.', 'Setting a stop-loss and a take-profit, and moving them.', 'Finding the spread, the swap and the margin for a trade before you place it.', 'Reading your account screen: balance, equity, margin used and free margin.', 'Following a written plan for a few weeks and recording every trade.'] },
+          { diagram: 'demo-path', caption: 'A steady route from demo to a small live account.' },
           { h: 'What a demo cannot teach you' },
           { p: 'Real money changes how people behave. Fear and hope feel much stronger when a loss is real. Fills and spreads can also differ between demo and live accounts. If you move to a live account, starting with a small size helps you adjust.' },
         ],
@@ -234,6 +255,7 @@ export const ebooks = [
         blocks: [
           { h: 'Moving money in and out' },
           { list: ['Pay from an account in your own name. Brokers usually return money to the same method it came from.', 'Check deposit and withdrawal fees, processing times and any minimum amounts before you pay.', 'Make a small test withdrawal early, so you know how the process works.', 'Keep records of every payment and every withdrawal request.'] },
+          { diagram: 'money-loop', caption: 'Money should leave from, and return to, an account in your name.' },
           { h: 'Final checklist' },
           { steps: ['I have checked the broker\'s licence on the regulator\'s own register.', 'I know which legal company holds my account.', 'I have read the client agreement and the list of charges.', 'I have practised on a demo account.', 'I am only depositing money I can afford to lose.', 'I know how I would make a complaint if I needed to.'] },
           { warn: 'This eBook is general education, not investment advice. CFDs carry a high risk of losing money rapidly due to leverage. Only trade if you understand how they work and can afford the risk.' },

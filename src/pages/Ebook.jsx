@@ -4,8 +4,10 @@ import Button from '../components/ui/Button';
 import { usePageMeta } from '../hooks/usePageMeta';
 import { useCompliance } from '../context/SiteDataContext';
 import { findEbook } from '../data/ebooks';
+import EbookDiagram from '../components/learning/EbookDiagrams';
 
 function Block({ block }) {
+  if (block.diagram) return <EbookDiagram name={block.diagram} caption={block.caption} />;
   if (block.h) return <h3 className="mt-7 text-lg font-semibold">{block.h}</h3>;
   if (block.p) return <p className="mt-4 leading-relaxed text-muted">{block.p}</p>;
   if (block.list) {
@@ -130,7 +132,7 @@ export default function Ebook() {
               <span className="bg-brand block h-full rounded-full transition-[width] duration-500" style={{ width: `${((index + 1) / total) * 100}%` }} />
             </span>
           </div>
-          <section className="glass p-6 md:p-10">
+          <section className="glass p-4 sm:p-6 md:p-10">
             <PageBody page={page} number={index + 1} />
           </section>
 

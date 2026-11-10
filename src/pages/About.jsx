@@ -44,7 +44,7 @@ export default function About() {
                 <h3 className="mt-7 mb-3 text-sm font-semibold">Career highlights</h3>
                 <ul className="flex flex-wrap gap-2 text-sm">
                   {highlights.map((highlight) => (
-                    <li key={highlight}><PlaceholderText text={highlight} /></li>
+                    <li key={highlight} className="rounded-full border border-line bg-[var(--glass)] px-3 py-1.5 text-muted"><PlaceholderText text={highlight} /></li>
                   ))}
                 </ul>
               </>

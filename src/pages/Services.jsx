@@ -2,28 +2,33 @@ import { ArrowRight, BriefcaseBusiness, Check, ChartLine, Compass, Handshake, Li
 import Button from '../components/ui/Button';
 import { IconTile, PageHeader, Reveal, SectionHeading } from '../components/ui/Primitives';
 import { usePageMeta } from '../hooks/usePageMeta';
+import ServiceMotion from '../components/services/ServiceMotion';
 
 const services = [
   {
     Icon: Compass,
+    motion: 'selection',
     title: 'Broker selection consulting',
     text: 'We turn your location, experience and priorities into a short list you can check yourself.',
     points: ['Availability in your country', 'Licence and legal entity check', 'A clear reason for every option'],
   },
   {
     Icon: Handshake,
+    motion: 'opening',
     title: 'Account opening support',
     text: 'Opening an account should not feel like guesswork. We explain each stage before you reach it.',
     points: ['What documents brokers usually ask for', 'What suitability questions mean', 'Who to contact if it stalls'],
   },
   {
     Icon: ChartLine,
+    motion: 'conditions',
     title: 'Trading conditions review',
     text: 'Headline spreads rarely tell the whole story. We look at what trading actually costs you.',
     points: ['Spreads and commissions', 'Leverage limits for your client type', 'Execution and order handling'],
   },
   {
     Icon: LifeBuoy,
+    motion: 'support',
     title: 'Ongoing relationship support',
     text: 'Our help does not stop once you open an account. If something goes wrong, you have someone to call.',
     points: ['Help escalating issues with your broker', 'Guidance on formal complaint routes', 'A check-in when your needs change'],
@@ -68,12 +73,15 @@ export default function Services() {
       />
 
       <section className="shell grid gap-4 md:grid-cols-2">
-        {services.map(({ Icon, title, text, points }, i) => (
-          <Reveal key={title} delay={i * 0.06} className="glass lift p-7 md:p-9">
-            <IconTile icon={Icon} tone={['blue', 'green', 'red'][i % 3]} />
-            <h2 className="mt-6 text-2xl font-semibold">{title}</h2>
-            <p className="mt-3 leading-relaxed text-muted">{text}</p>
-            <ul className="mt-5 grid gap-2.5 text-sm">
+        {services.map(({ Icon, motion: scene, title, text, points }, i) => (
+          <Reveal key={title} delay={i * 0.06} className="glass lift p-5 md:p-7">
+            <ServiceMotion name={scene} />
+            <div className="mt-6 flex items-center gap-3 px-2">
+              <IconTile icon={Icon} tone={['blue', 'green', 'red'][i % 3]} />
+              <h2 className="text-2xl font-semibold">{title}</h2>
+            </div>
+            <p className="mt-4 px-2 leading-relaxed text-muted">{text}</p>
+            <ul className="mt-5 grid gap-2.5 px-2 pb-2 text-sm">
               {points.map((point) => (
                 <li key={point} className="flex gap-2">
                   <Check className="mt-0.5 size-4 shrink-0 text-blue" aria-hidden="true" />

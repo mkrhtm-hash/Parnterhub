@@ -10,8 +10,9 @@
   --color-muted: var(--muted);
   --color-faint: var(--faint);
   --color-line: var(--line);
-  --color-emerald: var(--emerald);
-  --color-gold: var(--gold);
+  --color-blue: var(--blue);
+  --color-green: var(--green);
+  --color-red: var(--red);
   --color-danger: var(--danger);
   --color-on-accent: var(--on-accent);
 }
@@ -28,16 +29,17 @@
   --glass: rgb(255 255 255 / 0.045);
   --glass-hi: rgb(255 255 255 / 0.09);
   --glass-solid: rgb(13 24 49 / 0.92);
-  --emerald: #34d399;
-  --gold: #e8cb8a;
+  --blue: #5b9dff;
+  --green: #3ddc97;
+  --red: #ff6b7a;
   --danger: #fda4af;
-  --on-accent: #06121f;
+  --on-accent: #050b18;
   --shadow: 0 24px 60px -28px rgb(0 0 0 / 0.75);
-  --glow-1: rgb(52 211 153 / 0.14);
-  --glow-2: rgb(232 203 138 / 0.09);
-  --net-node: 52, 211, 153;
-  --net-line: 148, 190, 180;
-  --net-chart: 232, 203, 138;
+  --glow-1: rgb(91 157 255 / 0.16);
+  --glow-2: rgb(255 107 122 / 0.08);
+  --net-node: 91, 157, 255;
+  --net-line: 140, 170, 210;
+  --net-chart: 61, 220, 151;
 }
 
 [data-theme='light'] {
@@ -51,16 +53,17 @@
   --glass: rgb(255 255 255 / 0.72);
   --glass-hi: rgb(255 255 255 / 0.95);
   --glass-solid: rgb(255 255 255 / 0.95);
-  --emerald: #047857;
-  --gold: #7d590c;
+  --blue: #1d4ed8;
+  --green: #047857;
+  --red: #c8102e;
   --danger: #be123c;
   --on-accent: #ffffff;
   --shadow: 0 22px 50px -30px rgb(10 24 48 / 0.35);
-  --glow-1: rgb(4 120 87 / 0.1);
-  --glow-2: rgb(180 134 40 / 0.1);
-  --net-node: 4, 120, 87;
-  --net-line: 70, 100, 110;
-  --net-chart: 150, 108, 20;
+  --glow-1: rgb(29 78 216 / 0.1);
+  --glow-2: rgb(200 16 46 / 0.06);
+  --net-node: 29, 78, 216;
+  --net-line: 70, 90, 130;
+  --net-chart: 4, 120, 87;
 }
 
 @layer base {
@@ -100,7 +103,7 @@
   }
 
   :focus-visible {
-    outline: 2px solid var(--emerald);
+    outline: 2px solid var(--blue);
     border-radius: 6px;
   }
 
@@ -109,7 +112,7 @@
   }
 
   ::selection {
-    background: color-mix(in srgb, var(--emerald) 35%, transparent);
+    background: color-mix(in srgb, var(--blue) 35%, transparent);
   }
 }
 
@@ -143,20 +146,20 @@
   @media (hover: hover) {
     .lift:hover {
       transform: translateY(-4px);
-      border-color: color-mix(in srgb, var(--emerald) 45%, transparent);
+      border-color: color-mix(in srgb, var(--blue) 45%, transparent);
       background: var(--glass-hi);
     }
   }
 
   .text-brand {
-    background: linear-gradient(100deg, var(--emerald) 0%, var(--emerald) 25%, var(--gold) 100%);
+    background: linear-gradient(100deg, var(--blue) 0%, var(--blue) 30%, var(--green) 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
   }
 
   .bg-brand {
-    background: linear-gradient(100deg, var(--emerald), var(--gold));
+    background: linear-gradient(100deg, var(--blue), var(--green));
     color: var(--on-accent);
   }
 
@@ -165,7 +168,7 @@
     font-weight: 600;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--emerald);
+    color: var(--blue);
   }
 
   .field {
@@ -186,8 +189,8 @@
 
   .field:focus {
     outline: none;
-    border-color: var(--emerald);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--emerald) 22%, transparent);
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--blue) 22%, transparent);
   }
 
   .field[aria-invalid='true'] {

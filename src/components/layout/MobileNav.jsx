@@ -20,7 +20,7 @@ const more = [
 ];
 
 const tabClass = (active) =>
-  `flex min-h-14 flex-1 flex-col items-center justify-center gap-0.5 text-[11px] font-medium transition-colors ${active ? 'text-emerald' : 'text-muted'}`;
+  `flex min-h-14 flex-1 flex-col items-center justify-center gap-0.5 text-[11px] font-medium transition-colors ${active ? 'text-blue' : 'text-muted'}`;
 
 export default function MobileNav() {
   const [open, setOpen] = useState(false);
@@ -61,8 +61,8 @@ export default function MobileNav() {
               <ul className="grid grid-cols-2 gap-1">
                 {more.map(({ to, label, Icon }) => (
                   <li key={to}>
-                    <NavLink to={to} className="flex min-h-12 items-center gap-2.5 rounded-2xl px-3 text-sm font-medium hover:bg-emerald/10">
-                      <Icon className="size-4 text-emerald" aria-hidden="true" />
+                    <NavLink to={to} className="flex min-h-12 items-center gap-2.5 rounded-2xl px-3 text-sm font-medium hover:bg-blue/10">
+                      <Icon className="size-4 text-blue" aria-hidden="true" />
                       {label}
                     </NavLink>
                   </li>

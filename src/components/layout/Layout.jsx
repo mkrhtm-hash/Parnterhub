@@ -32,7 +32,7 @@ export default function Layout() {
     <>
       <a
         href="#main"
-        className="fixed top-2 left-2 z-[80] -translate-y-20 rounded-full bg-emerald px-4 py-2 text-sm font-semibold text-on-accent focus:translate-y-0"
+        className="fixed top-2 left-2 z-[80] -translate-y-20 rounded-full bg-blue px-4 py-2 text-sm font-semibold text-on-accent focus:translate-y-0"
       >
         Skip to content
       </a>

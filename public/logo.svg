@@ -1,27 +1,51 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="512" height="512" role="img" aria-label="MKPips logo">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="512" height="512" role="img" aria-label="MKPips logo">
   <defs>
-    <linearGradient id="g" gradientUnits="userSpaceOnUse" x1="5" y1="7" x2="27" y2="26">
-      <stop offset="0" stop-color="#34d399"/>
-      <stop offset="1" stop-color="#e8cb8a"/>
+    <linearGradient id="m" gradientUnits="userSpaceOnUse" x1="12" y1="15" x2="26" y2="33">
+      <stop offset="0" stop-color="#5b9dff"/>
+      <stop offset="1" stop-color="#3ddc97"/>
     </linearGradient>
+    <linearGradient id="k" gradientUnits="userSpaceOnUse" x1="26" y1="15" x2="36" y2="33">
+      <stop offset="0" stop-color="#3ddc97"/>
+      <stop offset="1" stop-color="#ff6b7a"/>
+    </linearGradient>
+    <radialGradient id="face" cx="0.38" cy="0.32" r="0.75">
+      <stop offset="0" stop-color="#5b9dff" stop-opacity="0.24"/>
+      <stop offset="1" stop-color="#5b9dff" stop-opacity="0.04"/>
+    </radialGradient>
   </defs>
 
-  <!-- The M is one route through the five service steps. -->
-  <path d="M5 26 9.5 7 16 18 22.5 7 27 26" fill="none" stroke="url(#g)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" pathLength="1" stroke-dasharray="1">
-    <animate attributeName="stroke-dashoffset" from="1" to="0" dur="1.2s" fill="freeze"/>
-  </path>
-
-  <g fill="url(#g)">
-    <circle cx="5" cy="26" r="2.8"><animate attributeName="r" values="2.8;2.8;3.8;2.8;2.8" keyTimes="0;.02;.05;.1;1" dur="8s" repeatCount="indefinite"/></circle>
-    <circle cx="9.5" cy="7" r="2.8"><animate attributeName="r" values="2.8;2.8;3.8;2.8;2.8" keyTimes="0;.1711;.2011;.2511;1" dur="8s" repeatCount="indefinite"/></circle>
-    <circle cx="16" cy="18" r="2.8"><animate attributeName="r" values="2.8;2.8;3.8;2.8;2.8" keyTimes="0;.27;.3;.35;1" dur="8s" repeatCount="indefinite"/></circle>
-    <circle cx="22.5" cy="7" r="2.8"><animate attributeName="r" values="2.8;2.8;3.8;2.8;2.8" keyTimes="0;.3689;.3989;.4489;1" dur="8s" repeatCount="indefinite"/></circle>
-    <circle cx="27" cy="26" r="2.8"><animate attributeName="r" values="2.8;2.8;3.8;2.8;2.8" keyTimes="0;.52;.55;.6;1" dur="8s" repeatCount="indefinite"/></circle>
+  <!-- Globe -->
+  <circle cx="24" cy="24" r="17.5" fill="url(#face)" stroke="#5b9dff" stroke-opacity="0.55" stroke-width="0.9"/>
+  <g fill="none" stroke="#5b9dff" stroke-opacity="0.28" stroke-width="0.6">
+    <ellipse cx="24" cy="24" rx="7.5" ry="17.5"/>
+    <ellipse cx="24" cy="24" rx="14" ry="17.5"/>
+    <path d="M8.2 16.5 Q24 21 39.8 16.5 M8.2 31.5 Q24 27 39.8 31.5"/>
   </g>
 
-  <!-- The pip that travels the route. -->
-  <circle r="1" fill="#ffffff" opacity="0">
-    <animateMotion path="M5 26 9.5 7 16 18 22.5 7 27 26" keyPoints="0;0;1;1" keyTimes="0;.05;.55;1" calcMode="linear" dur="8s" repeatCount="indefinite"/>
-    <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;.05;.55;.6;1" dur="8s" repeatCount="indefinite"/>
-  </circle>
+  <!-- Partner orbit: three connected nodes that circle the globe -->
+  <g>
+    <animateTransform attributeName="transform" type="rotate" from="0 24 24" to="360 24 24" dur="24s" repeatCount="indefinite"/>
+    <g fill="none" stroke-width="1.1" stroke-linecap="round" opacity="0.75">
+      <path d="M29.20 3.14 A21.5 21.5 0 0 1 44.67 29.93" stroke="#5b9dff"/>
+      <path d="M39.47 38.94 A21.5 21.5 0 0 1 8.53 38.94" stroke="#3ddc97"/>
+      <path d="M3.33 29.93 A21.5 21.5 0 0 1 18.80 3.14" stroke="#ff6b7a"/>
+    </g>
+    <circle cx="24" cy="2.5" r="3.3" fill="#5b9dff" opacity="0.25"/><circle cx="24" cy="2.5" r="2.1" fill="#5b9dff"/>
+    <circle cx="42.62" cy="34.75" r="3.3" fill="#3ddc97" opacity="0.25"/><circle cx="42.62" cy="34.75" r="2.1" fill="#3ddc97"/>
+    <circle cx="5.38" cy="34.75" r="3.3" fill="#ff6b7a" opacity="0.25"/><circle cx="5.38" cy="34.75" r="2.1" fill="#ff6b7a"/>
+  </g>
+
+  <!-- Engraved MK: cut shadow, face, bevel highlight -->
+  <g fill="none" stroke-width="3.8" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="6">
+    <g transform="translate(0 0.9)" opacity="0.55" stroke="#020611">
+      <path d="M12 33 L12 15 L19 25 L26 15 L26 33"/>
+      <path d="M35 15 L26 25.5 M29.6 21.4 L36 33"/>
+    </g>
+    <path d="M12 33 L12 15 L19 25 L26 15 L26 33" stroke="url(#m)"/>
+    <path d="M35 15 L26 25.5 M29.6 21.4 L36 33" stroke="url(#k)"/>
+    <g transform="translate(-0.45 -0.6)" opacity="0.35" stroke="#ffffff" stroke-width="0.7">
+      <path d="M12 33 L12 15 L19 25 L26 15 L26 33"/>
+      <path d="M35 15 L26 25.5 M29.6 21.4 L36 33"/>
+    </g>
+  </g>
 </svg>

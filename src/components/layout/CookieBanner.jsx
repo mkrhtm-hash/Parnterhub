@@ -28,7 +28,7 @@ export default function CookieBanner() {
           style={{ background: 'var(--glass-solid)' }}
         >
           <div className="flex gap-3">
-            <Cookie className="mt-0.5 size-5 shrink-0 text-gold" aria-hidden="true" />
+            <Cookie className="mt-0.5 size-5 shrink-0 text-green" aria-hidden="true" />
             <p className="text-sm leading-relaxed text-muted">
               We use essential browser storage to run this site. Optional cookies would load only if you accept.{' '}
               <Link to="/cookies" className="font-medium text-ink underline underline-offset-2">Cookie Policy</Link>

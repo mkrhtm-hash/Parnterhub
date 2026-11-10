@@ -45,11 +45,11 @@ function Calendar({ consultation, selected, onSelect }) {
   return (
     <div>
       <div className="mb-3 flex items-center justify-between">
-        <button type="button" aria-label="Previous month" disabled={!canGoBack} onClick={() => move(-1)} className="grid size-11 place-items-center rounded-full border border-line enabled:hover:border-emerald/60 disabled:opacity-30">
+        <button type="button" aria-label="Previous month" disabled={!canGoBack} onClick={() => move(-1)} className="grid size-11 place-items-center rounded-full border border-line enabled:hover:border-blue/60 disabled:opacity-30">
           <ChevronLeft className="size-4" aria-hidden="true" />
         </button>
         <p className="font-display font-semibold" aria-live="polite">{view.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })}</p>
-        <button type="button" aria-label="Next month" disabled={!canGoForward} onClick={() => move(1)} className="grid size-11 place-items-center rounded-full border border-line enabled:hover:border-emerald/60 disabled:opacity-30">
+        <button type="button" aria-label="Next month" disabled={!canGoForward} onClick={() => move(1)} className="grid size-11 place-items-center rounded-full border border-line enabled:hover:border-blue/60 disabled:opacity-30">
           <ChevronRight className="size-4" aria-hidden="true" />
         </button>
       </div>
@@ -71,7 +71,7 @@ function Calendar({ consultation, selected, onSelect }) {
               aria-label={longDate(date)}
               onClick={() => onSelect(date)}
               className={`aspect-square min-h-10 rounded-xl text-sm font-medium transition-colors ${
-                active ? 'bg-brand' : disabled ? 'text-faint/45' : 'hover:bg-emerald/15'
+                active ? 'bg-brand' : disabled ? 'text-faint/45' : 'hover:bg-blue/15'
               }`}
             >
               {date.getDate()}
@@ -193,7 +193,7 @@ export default function Book({ testMode = false }) {
     return (
       <section className="shell pt-12 md:pt-24">
         <motion.div initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} className="glass mx-auto max-w-2xl p-8 text-center md:p-12">
-          <FlaskConical className="mx-auto size-14 text-gold" aria-hidden="true" />
+          <FlaskConical className="mx-auto size-14 text-green" aria-hidden="true" />
           <h1 className="mt-6 text-3xl font-semibold md:text-4xl">Test complete</h1>
           <p className="mt-3 leading-relaxed text-muted">
             The form accepted a test request for <strong className="font-semibold text-ink">{longDate(date)}</strong> at{' '}
@@ -212,7 +212,7 @@ export default function Book({ testMode = false }) {
     return (
       <section className="shell pt-12 md:pt-24">
         <motion.div initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} className="glass mx-auto max-w-2xl p-8 text-center md:p-12">
-          <CircleCheck className="mx-auto size-14 text-emerald" aria-hidden="true" />
+          <CircleCheck className="mx-auto size-14 text-blue" aria-hidden="true" />
           <h1 className="mt-6 text-3xl font-semibold md:text-4xl">Thanks, {form.name.trim().split(' ')[0]}.</h1>
           <p className="mt-3 leading-relaxed text-muted">
             You asked for a {consultation.durationMinutes}-minute call on <strong className="font-semibold text-ink">{longDate(date)}</strong> at{' '}
@@ -234,8 +234,8 @@ export default function Book({ testMode = false }) {
 
       {testMode && (
         <div className="shell mb-5">
-          <p className="flex gap-3 rounded-2xl border border-dashed border-gold/60 bg-gold/10 p-4 text-sm leading-relaxed text-ink">
-            <FlaskConical className="mt-0.5 size-4 shrink-0 text-gold" aria-hidden="true" />
+          <p className="flex gap-3 rounded-2xl border border-dashed border-green/60 bg-green/10 p-4 text-sm leading-relaxed text-ink">
+            <FlaskConical className="mt-0.5 size-4 shrink-0 text-green" aria-hidden="true" />
             <span><strong className="font-semibold">Test mode.</strong> This form works without the database. Nothing you enter is sent or saved, and no call is booked.</span>
           </p>
         </div>
@@ -244,7 +244,7 @@ export default function Book({ testMode = false }) {
       <form ref={formRef} onSubmit={onSubmit} noValidate className="shell grid items-start gap-5 lg:grid-cols-[0.9fr_1.1fr]">
         <div className="glass p-5 md:p-7 lg:sticky lg:top-24">
           <h2 className="mb-5 flex items-center gap-2 text-lg font-semibold">
-            <CalendarDays className="size-5 text-emerald" aria-hidden="true" />
+            <CalendarDays className="size-5 text-blue" aria-hidden="true" />
             Choose a day
           </h2>
           <div data-field="date" tabIndex={-1} className="outline-none">
@@ -264,7 +264,7 @@ export default function Book({ testMode = false }) {
             {date && (
               <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
                 <h2 className="mt-6 mb-1 flex items-center gap-2 text-lg font-semibold">
-                  <Clock className="size-5 text-emerald" aria-hidden="true" />
+                  <Clock className="size-5 text-blue" aria-hidden="true" />
                   Choose a time
                 </h2>
                 {isBlank(consultation.timezoneLabel) ? <div className="mb-3" /> : <p className="mb-3 text-xs text-muted">Times shown in <PlaceholderText text={consultation.timezoneLabel} /></p>}
@@ -278,7 +278,7 @@ export default function Book({ testMode = false }) {
                         setTime(slot);
                         setErrors(({ time: _t, ...rest }) => rest);
                       }}
-                      className={`min-h-11 rounded-xl border text-sm font-medium tabular-nums transition-colors ${time === slot ? 'bg-brand border-transparent' : 'border-line hover:border-emerald/60'}`}
+                      className={`min-h-11 rounded-xl border text-sm font-medium tabular-nums transition-colors ${time === slot ? 'bg-brand border-transparent' : 'border-line hover:border-blue/60'}`}
                     >
                       {slot}
                     </button>
@@ -337,7 +337,7 @@ export default function Book({ testMode = false }) {
                 aria-describedby={errors.consent ? 'consent-error' : undefined}
                 className="peer sr-only"
               />
-              <span className={`mt-0.5 grid size-5 shrink-0 place-items-center rounded-md border peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-emerald ${form.consent ? 'bg-brand border-transparent' : errors.consent ? 'border-danger' : 'border-faint'}`}>
+              <span className={`mt-0.5 grid size-5 shrink-0 place-items-center rounded-md border peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-blue ${form.consent ? 'bg-brand border-transparent' : errors.consent ? 'border-danger' : 'border-faint'}`}>
                 {form.consent && <Check className="size-3.5" aria-hidden="true" />}
               </span>
               <span className="text-muted">

@@ -52,7 +52,7 @@ export default function CompareDialog({ open, brokers, onClose }) {
           <h2 id="compare-title" className="text-xl font-semibold md:text-2xl">Compare brokers</h2>
           {brokers.some((b) => b.isSample) && <SampleBadge />}
         </div>
-        <button type="button" onClick={onClose} aria-label="Close comparison" className="grid size-11 shrink-0 place-items-center rounded-full border border-line hover:border-emerald/60">
+        <button type="button" onClick={onClose} aria-label="Close comparison" className="grid size-11 shrink-0 place-items-center rounded-full border border-line hover:border-blue/60">
           <X className="size-4" aria-hidden="true" />
         </button>
       </div>

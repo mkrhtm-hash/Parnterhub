@@ -29,7 +29,7 @@ function Option({ selected, onClick, title, hint, multi }) {
       aria-pressed={selected}
       onClick={onClick}
       className={`flex min-h-14 w-full items-center justify-between gap-3 rounded-2xl border p-4 text-left transition-colors ${
-        selected ? 'border-emerald bg-emerald/12' : 'border-line bg-[var(--glass)] hover:border-emerald/50'
+        selected ? 'border-blue bg-blue/12' : 'border-line bg-[var(--glass)] hover:border-blue/50'
       }`}
     >
       <span>
@@ -127,7 +127,7 @@ function StepBody({ stepKey, answers, set, onLimit }) {
 function NoResults({ icon: Icon, title, text, onRestart }) {
   return (
     <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="glass mx-auto max-w-2xl p-8 text-center md:p-12">
-      <span className="mx-auto grid size-14 place-items-center rounded-2xl bg-gold/12 text-gold">
+      <span className="mx-auto grid size-14 place-items-center rounded-2xl bg-green/12 text-green">
         <Icon className="size-6" aria-hidden="true" />
       </span>
       <h2 className="mt-6 text-2xl font-semibold md:text-3xl">{title}</h2>
@@ -199,7 +199,7 @@ function Results({ answers, onRestart }) {
           >
             <div className="flex items-center justify-between gap-2">
               <span className="text-brand font-display text-sm font-semibold">Match {rank}</span>
-              <span className="rounded-full bg-emerald/12 px-2.5 py-1 text-xs font-medium text-emerald">{fit}</span>
+              <span className="rounded-full bg-blue/12 px-2.5 py-1 text-xs font-medium text-blue">{fit}</span>
             </div>
             <h3 className="mt-3 text-xl font-semibold">{broker.name}</h3>
             <p className="mt-1 text-sm text-muted">
@@ -210,7 +210,7 @@ function Results({ answers, onRestart }) {
             <ul className="mt-2 grid gap-2 text-sm leading-relaxed text-muted">
               {why.map((reason) => (
                 <li key={reason} className="flex gap-2">
-                  <Check className="mt-1 size-3.5 shrink-0 text-emerald" aria-hidden="true" />
+                  <Check className="mt-1 size-3.5 shrink-0 text-blue" aria-hidden="true" />
                   {reason}
                 </li>
               ))}
@@ -222,7 +222,7 @@ function Results({ answers, onRestart }) {
                 <ul className="mt-2 grid gap-2 text-sm leading-relaxed text-muted">
                   {checks.map((check) => (
                     <li key={check} className="flex gap-2">
-                      <CircleAlert className="mt-1 size-3.5 shrink-0 text-gold" aria-hidden="true" />
+                      <CircleAlert className="mt-1 size-3.5 shrink-0 text-red" aria-hidden="true" />
                       {check}
                     </li>
                   ))}

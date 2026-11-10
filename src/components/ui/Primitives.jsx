@@ -39,7 +39,7 @@ export function PageHeader({ eyebrow, title, intro, children }) {
 
 export function SampleBadge({ className = '' }) {
   return (
-    <span className={`inline-flex items-center gap-1 rounded-full border border-dashed border-gold/60 bg-gold/10 px-2.5 py-0.5 text-xs font-medium text-gold ${className}`}>
+    <span className={`inline-flex items-center gap-1 rounded-full border border-dashed border-green/60 bg-green/10 px-2.5 py-0.5 text-xs font-medium text-green ${className}`}>
       <FlaskConical className="size-3" aria-hidden="true" />
       Sample data
     </span>
@@ -62,10 +62,11 @@ export function PlaceholderText({ text }) {
   return withoutBlanks(text);
 }
 
-export function IconTile({ icon: Icon, tone = 'emerald' }) {
+export function IconTile({ icon: Icon, tone = 'blue' }) {
   const tones = {
-    emerald: 'bg-emerald/12 text-emerald',
-    gold: 'bg-gold/12 text-gold',
+    blue: 'bg-blue/12 text-blue',
+    green: 'bg-green/12 text-green',
+    red: 'bg-red/12 text-red',
   };
   return (
     <span className={`inline-flex size-11 shrink-0 items-center justify-center rounded-2xl ${tones[tone]}`}>

@@ -89,7 +89,7 @@ export default function BrokerPartners() {
       />
 
       <section className="shell">
-        <div className="mb-6 flex gap-3 rounded-2xl border border-dashed border-gold/60 bg-gold/8 p-4 text-sm leading-relaxed">
+        <div className="mb-6 flex gap-3 rounded-2xl border border-dashed border-green/60 bg-green/8 p-4 text-sm leading-relaxed">
           <SampleBadge className="h-fit shrink-0" />
           <p className="text-muted">
             These brokers are fictional examples, and their figures and licence numbers are made up. The regulators are real, but they have no connection to these listings, and the sample numbers will not appear on their registers.
@@ -107,7 +107,7 @@ export default function BrokerPartners() {
             Showing {shown.length} of {brokers.length} brokers
           </p>
           {hasFilters && (
-            <button type="button" onClick={() => setFilters(noFilters)} className="inline-flex min-h-11 items-center gap-1.5 text-sm font-medium text-emerald">
+            <button type="button" onClick={() => setFilters(noFilters)} className="inline-flex min-h-11 items-center gap-1.5 text-sm font-medium text-blue">
               <RotateCcw className="size-3.5" aria-hidden="true" />
               Clear filters
             </button>
@@ -116,7 +116,7 @@ export default function BrokerPartners() {
 
         {shown.length === 0 ? (
           <div className="glass p-10 text-center md:p-14">
-            <SearchX className="mx-auto size-8 text-gold" aria-hidden="true" />
+            <SearchX className="mx-auto size-8 text-green" aria-hidden="true" />
             <h2 className="mt-4 text-xl font-semibold">No brokers match that combination</h2>
             <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-muted">Try removing a filter, or tell us what you are looking for and we will see what is possible.</p>
             <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
@@ -155,7 +155,7 @@ export default function BrokerPartners() {
                       type="button"
                       onClick={() => toggleCompare(b.id)}
                       aria-label={`Remove ${b.name} from comparison`}
-                      className="inline-flex min-h-9 items-center gap-1 rounded-full border border-line px-3 text-xs font-medium hover:border-emerald/60"
+                      className="inline-flex min-h-9 items-center gap-1 rounded-full border border-line px-3 text-xs font-medium hover:border-blue/60"
                     >
                       {b.name.replace('Sample Broker ', '')}
                       <X className="size-3" aria-hidden="true" />

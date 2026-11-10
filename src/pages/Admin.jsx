@@ -76,7 +76,7 @@ function BookingCard({ item }) {
         <h2 className="min-w-0 break-words text-lg font-semibold">{item.name}</h2>
         <span className="rounded-full border border-line px-3 py-1 text-xs font-medium capitalize text-muted">{item.status}</span>
       </div>
-      <p className="mt-1 text-sm font-medium text-emerald">Call: {callDate(item.preferredDate)} at {item.preferredTime}</p>
+      <p className="mt-1 text-sm font-medium text-blue">Call: {callDate(item.preferredDate)} at {item.preferredTime}</p>
       <div className="mt-3 flex flex-wrap gap-x-5">
         <a href={`mailto:${item.email}`} className="inline-flex min-h-11 min-w-0 items-center gap-2 break-all text-sm underline underline-offset-2">
           <Mail className="size-4 shrink-0" aria-hidden="true" />
@@ -107,7 +107,7 @@ function OpinionCard({ item }) {
       <p className="mt-1 flex flex-wrap items-center gap-x-3 text-xs text-muted">
         {when(item.createdAt)}
         {item.rating && (
-          <span className="inline-flex items-center gap-1 text-gold">
+          <span className="inline-flex items-center gap-1 text-green">
             <Star className="size-3.5 fill-current" aria-hidden="true" />
             {item.rating} out of 5
           </span>

@@ -47,7 +47,7 @@ function Stats() {
       {items.map(({ Icon, value, suffix, label, sample }) => (
         <div key={label} className="glass lift !rounded-2xl p-5">
           <div className="flex items-center justify-between gap-2">
-            <Icon className="size-5 text-emerald" aria-hidden="true" />
+            <Icon className="size-5 text-blue" aria-hidden="true" />
             {sample && <SampleBadge />}
           </div>
           <dd className="text-brand mt-3 font-display text-4xl font-semibold">
@@ -78,9 +78,9 @@ export default function Home() {
           <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-bg to-transparent" />
         </div>
 
-        <div className="border-b border-line bg-gold/8">
+        <div className="border-b border-line bg-red/8">
           <p className="shell flex gap-2 py-2.5 text-xs leading-relaxed">
-            <TriangleAlert className="mt-px size-4 shrink-0 text-gold" aria-hidden="true" />
+            <TriangleAlert className="mt-px size-4 shrink-0 text-red" aria-hidden="true" />
             <span>
               {compliance.riskWarning}{' '}
               {!isBlank(compliance.retailLossPercent) && (
@@ -129,7 +129,7 @@ export default function Home() {
         <div className="flex flex-wrap items-end justify-between gap-6">
           <SectionHeading eyebrow="What we do" title="Experience you can talk to, not just a list of brokers." />
           <Reveal>
-            <Link to="/services" className="inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-emerald">
+            <Link to="/services" className="inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-blue">
               All services <ArrowRight className="size-4" aria-hidden="true" />
             </Link>
           </Reveal>
@@ -137,7 +137,7 @@ export default function Home() {
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {services.map(({ Icon, title, text }, i) => (
             <Reveal key={title} delay={i * 0.07} className="glass lift p-6">
-              <IconTile icon={Icon} tone={i % 2 ? 'gold' : 'emerald'} />
+              <IconTile icon={Icon} tone={['blue', 'green', 'red'][i % 3]} />
               <h3 className="mt-5 text-lg font-semibold">{title}</h3>
               <p className="mt-2 text-sm leading-relaxed text-muted">{text}</p>
             </Reveal>
@@ -158,18 +158,18 @@ export default function Home() {
             </div>
             <div className="grid gap-6 sm:grid-cols-2">
               <div>
-                <h3 className="mb-3 text-sm font-semibold text-emerald">We do</h3>
+                <h3 className="mb-3 text-sm font-semibold text-blue">We do</h3>
                 <ul className="grid gap-3 text-sm">
                   {weDo.slice(0, 4).map((item) => (
-                    <li key={item} className="flex gap-2"><Check className="mt-0.5 size-4 shrink-0 text-emerald" aria-hidden="true" />{item}</li>
+                    <li key={item} className="flex gap-2"><Check className="mt-0.5 size-4 shrink-0 text-blue" aria-hidden="true" />{item}</li>
                   ))}
                 </ul>
               </div>
               <div>
-                <h3 className="mb-3 text-sm font-semibold text-gold">We don't</h3>
+                <h3 className="mb-3 text-sm font-semibold text-red">We don't</h3>
                 <ul className="grid gap-3 text-sm">
                   {weDont.map((item) => (
-                    <li key={item} className="flex gap-2"><X className="mt-0.5 size-4 shrink-0 text-gold" aria-hidden="true" />{item}</li>
+                    <li key={item} className="flex gap-2"><X className="mt-0.5 size-4 shrink-0 text-red" aria-hidden="true" />{item}</li>
                   ))}
                 </ul>
               </div>
@@ -184,17 +184,17 @@ export default function Home() {
             <IconTile icon={Compass} />
             <h2 className="mt-6 text-2xl font-semibold md:text-3xl">Six questions. Three brokers worth a closer look.</h2>
             <p className="mt-3 leading-relaxed text-muted">Each match explains why it fits you, and what you should check.</p>
-            <span className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-emerald">
+            <span className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-blue">
               Find my broker match <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
             </span>
           </Link>
         </Reveal>
         <Reveal delay={0.08}>
           <Link to="/learning" className="glass lift group block h-full p-7 md:p-10">
-            <IconTile icon={GraduationCap} tone="gold" />
+            <IconTile icon={GraduationCap} tone="green" />
             <h2 className="mt-6 text-2xl font-semibold md:text-3xl">Learn the basics before you risk real money.</h2>
             <p className="mt-3 leading-relaxed text-muted">Short videos and ebooks, each showing exactly what you will learn.</p>
-            <span className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-gold">
+            <span className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-green">
               Explore learning <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
             </span>
           </Link>

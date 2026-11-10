@@ -36,7 +36,7 @@ export function DataError({ compact = false, testFormLink = false }) {
   const { retry } = useSiteData();
   return (
     <div role="alert" className={`glass mx-auto max-w-2xl text-center ${compact ? 'p-6' : 'p-8 md:p-12'}`}>
-      <span className="mx-auto grid size-14 place-items-center rounded-2xl bg-gold/12 text-gold">
+      <span className="mx-auto grid size-14 place-items-center rounded-2xl bg-green/12 text-green">
         <DatabaseZap className="size-6" aria-hidden="true" />
       </span>
       <h2 className="mt-5 text-xl font-semibold md:text-2xl">We cannot reach our database right now</h2>

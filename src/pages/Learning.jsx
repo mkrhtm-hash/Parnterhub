@@ -15,9 +15,9 @@ const sections = [
 ];
 
 const kinds = {
-  video: { label: 'Video', Icon: PlayCircle, tone: 'emerald' },
-  ebook: { label: 'eBook', Icon: BookOpen, tone: 'gold' },
-  webinar: { label: 'Webinar', Icon: Presentation, tone: 'emerald' },
+  video: { label: 'Video', Icon: PlayCircle, tone: 'blue' },
+  ebook: { label: 'eBook', Icon: BookOpen, tone: 'green' },
+  webinar: { label: 'Webinar', Icon: Presentation, tone: 'red' },
 };
 
 const webinarDate = (value) =>
@@ -55,7 +55,7 @@ function VideoDialog({ video, onClose }) {
     >
       <div className="flex items-center justify-between gap-3 p-4 md:p-5">
         <h2 id="video-title" className="text-lg font-semibold md:text-xl">{video.title}</h2>
-        <button type="button" onClick={onClose} aria-label="Close video" className="grid size-11 shrink-0 place-items-center rounded-full border border-line hover:border-emerald/60">
+        <button type="button" onClick={onClose} aria-label="Close video" className="grid size-11 shrink-0 place-items-center rounded-full border border-line hover:border-blue/60">
           <X className="size-4" aria-hidden="true" />
         </button>
       </div>
@@ -89,7 +89,7 @@ function LessonCard({ item, onPlay }) {
       <ul className="mt-2 mb-6 grid gap-2 text-sm text-muted">
         {item.topics.map((topic) => (
           <li key={topic} className="flex gap-2">
-            <Check className="mt-0.5 size-4 shrink-0 text-emerald" aria-hidden="true" />
+            <Check className="mt-0.5 size-4 shrink-0 text-blue" aria-hidden="true" />
             {topic}
           </li>
         ))}
@@ -105,7 +105,7 @@ function LessonCard({ item, onPlay }) {
           <span />
         )}
         {!item.url && (
-          <span className="inline-flex min-h-11 items-center rounded-full border border-dashed border-gold/60 bg-gold/10 px-4 text-xs font-medium text-gold">{item.kind === 'webinar' ? 'Date to be announced' : 'Coming soon'}</span>
+          <span className="inline-flex min-h-11 items-center rounded-full border border-dashed border-green/60 bg-green/10 px-4 text-xs font-medium text-green">{item.kind === 'webinar' ? 'Date to be announced' : 'Coming soon'}</span>
         )}
         {item.url && item.kind === 'video' && (
           <Button onClick={() => onPlay(item)} className="!min-h-11 !py-2">
@@ -162,7 +162,7 @@ export default function Learning() {
             <OpinionForm />
           ) : shown.length === 0 ? (
             <div className="glass p-10 text-center md:p-14">
-              <SearchX className="mx-auto size-8 text-gold" aria-hidden="true" />
+              <SearchX className="mx-auto size-8 text-green" aria-hidden="true" />
               <h2 className="mt-4 text-xl font-semibold">Nothing here yet</h2>
               <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-muted">New lessons will appear here as soon as they are ready.</p>
             </div>

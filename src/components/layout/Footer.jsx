@@ -28,9 +28,9 @@ export default function Footer() {
     : [];
   return (
     <footer className="mt-20 border-t border-line pb-20 lg:pb-0">
-      <section aria-label="Risk warning" className="border-b border-line bg-gold/8">
+      <section aria-label="Risk warning" className="border-b border-line bg-red/8">
         <div className="shell flex gap-3 py-5 text-sm leading-relaxed">
-          <TriangleAlert className="mt-0.5 size-5 shrink-0 text-gold" aria-hidden="true" />
+          <TriangleAlert className="mt-0.5 size-5 shrink-0 text-red" aria-hidden="true" />
           <p>
             <strong className="font-semibold">Risk warning: </strong>
             {compliance.riskWarning}

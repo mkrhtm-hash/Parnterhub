@@ -57,7 +57,7 @@ export default function About() {
         <SectionHeading eyebrow="Career timeline" title="15+ years in FX and CFD sales." />
         <ol ref={lineRef} className="relative mt-10 grid max-w-3xl gap-8">
           <div className="absolute top-2 bottom-2 left-[7px] w-px bg-line" aria-hidden="true" />
-          <motion.div className="absolute top-2 bottom-2 left-[7px] w-px origin-top bg-gradient-to-b from-emerald to-gold" style={{ scaleY }} aria-hidden="true" />
+          <motion.div className="absolute top-2 bottom-2 left-[7px] w-px origin-top bg-gradient-to-b from-blue via-green to-red" style={{ scaleY }} aria-hidden="true" />
           {timeline.map(({ period, title, detail }, i) => (
             <Reveal as="li" key={period} delay={i * 0.04} className="relative pl-10">
               <span className="bg-brand absolute top-1 left-0 size-[15px] rounded-full ring-4 ring-bg" aria-hidden="true" />
@@ -74,7 +74,7 @@ export default function About() {
         <div className="mt-10 grid gap-4 md:grid-cols-3">
           {values.map(({ Icon, title, text }, i) => (
             <Reveal key={title} delay={i * 0.08} className="glass lift p-7">
-              <IconTile icon={Icon} tone={i === 1 ? 'gold' : 'emerald'} />
+              <IconTile icon={Icon} tone={['blue', 'green', 'red'][i % 3]} />
               <h3 className="mt-5 text-xl font-semibold">{title}</h3>
               <p className="mt-3 text-sm leading-relaxed text-muted">{text}</p>
             </Reveal>

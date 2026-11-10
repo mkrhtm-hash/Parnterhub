@@ -4,8 +4,8 @@ const base =
   'inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition duration-300 disabled:cursor-not-allowed disabled:opacity-50';
 
 const variants = {
-  primary: 'bg-brand shadow-[0_10px_34px_-12px_var(--emerald)] hover:-translate-y-0.5 hover:shadow-[0_16px_40px_-10px_var(--emerald)]',
-  ghost: 'border border-line bg-[var(--glass)] text-ink backdrop-blur hover:-translate-y-0.5 hover:border-emerald/60',
+  primary: 'bg-brand shadow-[0_10px_34px_-12px_var(--blue)] hover:-translate-y-0.5 hover:shadow-[0_16px_40px_-10px_var(--blue)]',
+  ghost: 'border border-line bg-[var(--glass)] text-ink backdrop-blur hover:-translate-y-0.5 hover:border-blue/60',
   quiet: 'text-muted hover:text-ink',
 };
 

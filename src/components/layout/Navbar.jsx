@@ -24,7 +24,7 @@ export default function Navbar() {
               key={to}
               to={to}
               className={({ isActive }) =>
-                `rounded-full px-3 py-2 text-sm font-medium whitespace-nowrap transition-colors ${isActive ? 'bg-emerald/12 text-emerald' : 'text-muted hover:text-ink'}`
+                `rounded-full px-3 py-2 text-sm font-medium whitespace-nowrap transition-colors ${isActive ? 'bg-blue/12 text-blue' : 'text-muted hover:text-ink'}`
               }
             >
               {label}

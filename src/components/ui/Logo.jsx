@@ -2,102 +2,104 @@ import { useId } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 
-// The M is one route through the five service steps, in the order a client moves through them.
-const steps = [
-  { label: 'Your goals', x: 5, y: 26 },
-  { label: 'Regulation check', x: 9.5, y: 7 },
-  { label: 'Trading conditions', x: 16, y: 18 },
-  { label: 'Account opening', x: 22.5, y: 7 },
-  { label: 'Ongoing support', x: 27, y: 26 },
+// An engraved MK monogram inside a globe. The M's right leg is also the K's stem.
+// Three partner nodes (blue, green, red) circle the globe on a connected orbit.
+const M_PATH = 'M12 33 L12 15 L19 25 L26 15 L26 33';
+const K_PATH = 'M35 15 L26 25.5 M29.6 21.4 L36 33';
+const ORBIT_R = 21.5;
+const NODES = [
+  { angle: -90, color: 'var(--blue)' },
+  { angle: 30, color: 'var(--green)' },
+  { angle: 150, color: 'var(--red)' },
 ];
-const route = `M${steps.map(({ x, y }) => `${x} ${y}`).join(' L')}`;
+const at = (angle) => {
+  const r = (angle * Math.PI) / 180;
+  return { x: 24 + ORBIT_R * Math.cos(r), y: 24 + ORBIT_R * Math.sin(r) };
+};
 
-const LOOP_SECONDS = 8;
-const ENTRANCE_SECONDS = 1.4;
-const TRAVEL_START = 0.05;
-const TRAVEL_END = 0.55;
+// Short arcs that link each node to the next, so the ring reads as a connected network.
+const links = NODES.map(({ angle }, i) => {
+  const from = at(angle + 14);
+  const to = at(NODES[(i + 1) % NODES.length].angle - 14 + (i === NODES.length - 1 ? 360 : 0));
+  return `M${from.x.toFixed(2)} ${from.y.toFixed(2)} A${ORBIT_R} ${ORBIT_R} 0 0 1 ${to.x.toFixed(2)} ${to.y.toFixed(2)}`;
+});
 
-// Where each step falls in the loop, so the pip keeps a steady speed along the route.
-const distances = steps.reduce((sum, step, i) => {
-  if (i === 0) return [0];
-  return [...sum, sum[i - 1] + Math.hypot(step.x - steps[i - 1].x, step.y - steps[i - 1].y)];
-}, []);
-const arrivals = distances.map((d) => TRAVEL_START + (TRAVEL_END - TRAVEL_START) * (d / distances[distances.length - 1]));
-
-const loop = { duration: LOOP_SECONDS, repeat: Infinity, ease: 'linear', delay: ENTRANCE_SECONDS };
-const pipPath = { ...loop, times: [0, ...arrivals, 1] };
-
-function Step({ x, y, index, fill }) {
-  const at = arrivals[index];
+function Letters({ id, draw }) {
+  const stroke = { fill: 'none', strokeWidth: 3.8, strokeLinecap: 'square', strokeLinejoin: 'miter', strokeMiterlimit: 6 };
+  const Path = draw ? motion.path : 'path';
+  const anim = (delay) => (draw ? { initial: { pathLength: 0 }, animate: { pathLength: 1 }, transition: { duration: 0.9, delay, ease: 'easeInOut' } } : {});
   return (
-    <motion.g initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: index * 0.16, duration: 0.35, ease: 'backOut' }}>
-      <motion.circle
-        cx={x}
-        cy={y}
-        r="2.8"
-        fill={fill}
-        animate={{ scale: [1, 1, 1.35, 1, 1] }}
-        transition={{ ...loop, times: [0, at - 0.03, at, at + 0.05, 1] }}
-      />
-    </motion.g>
+    <>
+      {/* Cut shadow: sits a little lower so the letters look carved into the face. */}
+      <g transform="translate(0 0.9)" opacity="0.55">
+        <Path d={M_PATH} stroke="#020611" {...stroke} {...anim(0)} />
+        <Path d={K_PATH} stroke="#020611" {...stroke} {...anim(0.35)} />
+      </g>
+      <Path d={M_PATH} stroke={`url(#${id}-m)`} {...stroke} {...anim(0)} />
+      <Path d={K_PATH} stroke={`url(#${id}-k)`} {...stroke} {...anim(0.35)} />
+      {/* Bevel highlight along the top edge of each stroke. */}
+      <g transform="translate(-0.45 -0.6)" opacity="0.35">
+        <Path d={M_PATH} stroke="#ffffff" {...stroke} strokeWidth="0.7" {...anim(0.1)} />
+        <Path d={K_PATH} stroke="#ffffff" {...stroke} strokeWidth="0.7" {...anim(0.45)} />
+      </g>
+    </>
   );
 }
 
-export function LogoMark({ className = 'size-7' }) {
-  const id = useId();
+function Orbit() {
+  return (
+    <>
+      {links.map((d, i) => (
+        <path key={d} d={d} fill="none" stroke={NODES[i].color} strokeWidth="1.1" strokeLinecap="round" opacity="0.75" />
+      ))}
+      {NODES.map(({ angle, color }) => {
+        const { x, y } = at(angle);
+        return (
+          <g key={angle}>
+            <circle cx={x} cy={y} r="3.3" fill={color} opacity="0.25" />
+            <circle cx={x} cy={y} r="2.1" fill={color} />
+          </g>
+        );
+      })}
+    </>
+  );
+}
+
+export function LogoMark({ className = 'size-8' }) {
+  const id = useId().replace(/:/g, '');
   const reduced = useReducedMotion();
-  const stroke = `url(#${id})`;
-  const fill = stroke;
 
   return (
-    <svg viewBox="0 0 32 32" className={className} aria-hidden="true">
+    <svg viewBox="0 0 48 48" className={className} aria-hidden="true">
       <defs>
-        <linearGradient id={id} gradientUnits="userSpaceOnUse" x1="5" y1="7" x2="27" y2="26">
-          <stop offset="0" stopColor="var(--emerald)" />
-          <stop offset="1" stopColor="var(--gold)" />
+        <linearGradient id={`${id}-m`} gradientUnits="userSpaceOnUse" x1="12" y1="15" x2="26" y2="33">
+          <stop offset="0" stopColor="var(--blue)" />
+          <stop offset="1" stopColor="var(--green)" />
         </linearGradient>
+        <linearGradient id={`${id}-k`} gradientUnits="userSpaceOnUse" x1="26" y1="15" x2="36" y2="33">
+          <stop offset="0" stopColor="var(--green)" />
+          <stop offset="1" stopColor="var(--red)" />
+        </linearGradient>
+        <radialGradient id={`${id}-face`} cx="0.38" cy="0.32" r="0.75">
+          <stop offset="0" stopColor="var(--blue)" stopOpacity="0.24" />
+          <stop offset="1" stopColor="var(--blue)" stopOpacity="0.04" />
+        </radialGradient>
       </defs>
 
-      {reduced ? (
-        <>
-          <path d={route} fill="none" stroke={stroke} strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />
-          {steps.map(({ label, x, y }) => (
-            <circle key={label} cx={x} cy={y} r="2.8" fill={fill} />
-          ))}
-        </>
-      ) : (
-        <>
-          <motion.path
-            d={route}
-            fill="none"
-            stroke={stroke}
-            strokeWidth="2.6"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            initial={{ pathLength: 0 }}
-            animate={{ pathLength: 1 }}
-            transition={{ duration: 1.2, ease: 'easeInOut' }}
-          />
-          {steps.map(({ label, x, y }, index) => (
-            <Step key={label} x={x} y={y} index={index} fill={fill} />
-          ))}
-          <motion.circle
-            r="1"
-            fill="#ffffff"
-            initial={{ cx: steps[0].x, cy: steps[0].y, opacity: 0 }}
-            animate={{
-              cx: [steps[0].x, ...steps.map((s) => s.x), steps[4].x],
-              cy: [steps[0].y, ...steps.map((s) => s.y), steps[4].y],
-              opacity: [0, 1, 1, 0, 0],
-            }}
-            transition={{
-              cx: pipPath,
-              cy: pipPath,
-              opacity: { ...loop, times: [0, TRAVEL_START, TRAVEL_END, TRAVEL_END + 0.05, 1] },
-            }}
-          />
-        </>
-      )}
+      {/* Globe: face, outline, two meridians and two parallels. */}
+      <circle cx="24" cy="24" r="17.5" fill={`url(#${id}-face)`} stroke="var(--blue)" strokeOpacity="0.55" strokeWidth="0.9" />
+      <g fill="none" stroke="var(--blue)" strokeOpacity="0.28" strokeWidth="0.6">
+        <ellipse cx="24" cy="24" rx="7.5" ry="17.5" />
+        <ellipse cx="24" cy="24" rx="14" ry="17.5" />
+        <path d="M8.2 16.5 Q24 21 39.8 16.5 M8.2 31.5 Q24 27 39.8 31.5" />
+      </g>
+
+      <g>
+        {!reduced && <animateTransform attributeName="transform" type="rotate" from="0 24 24" to="360 24 24" dur="24s" repeatCount="indefinite" />}
+        <Orbit />
+      </g>
+
+      <Letters id={id} draw={!reduced} />
     </svg>
   );
 }

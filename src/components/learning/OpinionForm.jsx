@@ -49,7 +49,7 @@ export default function OpinionForm() {
   if (status === 'sent') {
     return (
       <div className="glass mx-auto max-w-2xl p-8 text-center md:p-12">
-        <CircleCheck className="mx-auto size-10 text-emerald" aria-hidden="true" />
+        <CircleCheck className="mx-auto size-10 text-blue" aria-hidden="true" />
         <h2 className="mt-4 text-2xl font-semibold">Thank you for telling us.</h2>
         <p className="mt-2 leading-relaxed text-muted">Your opinion helps us decide what to teach next.</p>
         <Button variant="ghost" className="mt-6" onClick={() => setStatus('idle')}>Share another opinion</Button>
@@ -86,7 +86,7 @@ export default function OpinionForm() {
               aria-label={`${n} out of 5`}
               aria-pressed={form.rating === n}
               onClick={() => setForm((f) => ({ ...f, rating: f.rating === n ? null : n }))}
-              className="grid size-11 place-items-center rounded-xl text-gold transition-colors hover:bg-gold/10"
+              className="grid size-11 place-items-center rounded-xl text-green transition-colors hover:bg-green/10"
             >
               <Star className={`size-6 ${form.rating >= n ? 'fill-current' : ''}`} aria-hidden="true" />
             </button>

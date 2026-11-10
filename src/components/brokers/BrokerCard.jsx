@@ -16,7 +16,7 @@ export function VerifyLink({ licence, verifyUrl }) {
       href={verifyUrl ?? regulator.registerUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className="inline-flex min-h-10 items-center gap-1 text-xs font-medium text-emerald underline-offset-2 hover:underline lg:min-h-0"
+      className="inline-flex min-h-10 items-center gap-1 text-xs font-medium text-blue underline-offset-2 hover:underline lg:min-h-0"
     >
       Verify on {regulator.code}'s register
       <ExternalLink className="size-3" aria-hidden="true" />
@@ -39,7 +39,7 @@ export default function BrokerCard({ broker, selected, onToggleCompare }) {
   const { regulators } = useSiteData().data;
   const instrumentLabel = useInstrumentLabel();
   return (
-    <article className={`glass lift flex h-full flex-col p-6 ${selected ? '!border-emerald' : ''}`}>
+    <article className={`glass lift flex h-full flex-col p-6 ${selected ? '!border-blue' : ''}`}>
       <div className="flex items-start justify-between gap-3">
         <h3 className="text-lg font-semibold">{broker.name}</h3>
         {broker.isSample && <SampleBadge className="shrink-0" />}
@@ -86,7 +86,7 @@ export default function BrokerCard({ broker, selected, onToggleCompare }) {
           aria-pressed={selected}
           onClick={() => onToggleCompare(broker.id)}
           className={`flex min-h-11 w-full items-center justify-center gap-2 rounded-full border text-sm font-semibold transition-colors ${
-            selected ? 'border-emerald bg-emerald/12 text-emerald' : 'border-line hover:border-emerald/60'
+            selected ? 'border-blue bg-blue/12 text-blue' : 'border-line hover:border-blue/60'
           }`}
         >
           {selected ? <Check className="size-4" aria-hidden="true" /> : <Plus className="size-4" aria-hidden="true" />}

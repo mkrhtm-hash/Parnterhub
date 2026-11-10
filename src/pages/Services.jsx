@@ -70,13 +70,13 @@ export default function Services() {
       <section className="shell grid gap-4 md:grid-cols-2">
         {services.map(({ Icon, title, text, points }, i) => (
           <Reveal key={title} delay={i * 0.06} className="glass lift p-7 md:p-9">
-            <IconTile icon={Icon} tone={i === 1 || i === 2 ? 'gold' : 'emerald'} />
+            <IconTile icon={Icon} tone={['blue', 'green', 'red'][i % 3]} />
             <h2 className="mt-6 text-2xl font-semibold">{title}</h2>
             <p className="mt-3 leading-relaxed text-muted">{text}</p>
             <ul className="mt-5 grid gap-2.5 text-sm">
               {points.map((point) => (
                 <li key={point} className="flex gap-2">
-                  <Check className="mt-0.5 size-4 shrink-0 text-emerald" aria-hidden="true" />
+                  <Check className="mt-0.5 size-4 shrink-0 text-blue" aria-hidden="true" />
                   {point}
                 </li>
               ))}
@@ -91,7 +91,7 @@ export default function Services() {
           {paths.map(({ Icon, audience, title, text, cta, to }, i) => (
             <Reveal key={audience} delay={i * 0.08} className="glass lift flex flex-col p-7">
               <div className="flex items-center gap-3">
-                <IconTile icon={Icon} tone={i === 1 ? 'gold' : 'emerald'} />
+                <IconTile icon={Icon} tone={['blue', 'green', 'red'][i % 3]} />
                 <p className="text-sm font-semibold">{audience}</p>
               </div>
               <h3 className="mt-6 text-xl font-semibold">{title}</h3>

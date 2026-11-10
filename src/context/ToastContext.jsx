@@ -5,8 +5,8 @@ import { CircleCheck, Info, TriangleAlert, X } from 'lucide-react';
 const ToastContext = createContext(null);
 
 const styles = {
-  success: { Icon: CircleCheck, color: 'text-emerald' },
-  info: { Icon: Info, color: 'text-gold' },
+  success: { Icon: CircleCheck, color: 'text-blue' },
+  info: { Icon: Info, color: 'text-green' },
   error: { Icon: TriangleAlert, color: 'text-danger' },
 };
 

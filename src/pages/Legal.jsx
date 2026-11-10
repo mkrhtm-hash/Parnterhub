@@ -18,7 +18,7 @@ export default function Legal({ page }) {
         <p className="eyebrow mb-3">Legal</p>
         <h1 className="text-4xl font-semibold md:text-5xl">{title}</h1>
         {!isBlank(company.lastLegalUpdate) && <p className="mt-3 text-sm text-faint">Last reviewed: <PlaceholderText text={company.lastLegalUpdate} /></p>}
-        <p className="mt-6 flex gap-2 rounded-2xl border border-dashed border-gold/60 bg-gold/8 p-4 text-sm text-gold">
+        <p className="mt-6 flex gap-2 rounded-2xl border border-dashed border-green/60 bg-green/8 p-4 text-sm text-green">
           <Info className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
           {intro}
         </p>

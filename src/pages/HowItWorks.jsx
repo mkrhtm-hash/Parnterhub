@@ -27,7 +27,7 @@ export default function HowItWorks() {
         <ol ref={timelineRef} className="relative mx-auto grid max-w-3xl gap-6 md:gap-8">
           <div className="absolute top-3 bottom-3 left-[1.35rem] w-px bg-line md:left-[1.85rem]" aria-hidden="true" />
           <motion.div
-            className="absolute top-3 bottom-3 left-[1.35rem] w-px origin-top bg-gradient-to-b from-emerald to-gold md:left-[1.85rem]"
+            className="absolute top-3 bottom-3 left-[1.35rem] w-px origin-top bg-gradient-to-b from-blue via-green to-red md:left-[1.85rem]"
             style={{ scaleY }}
             aria-hidden="true"
           />
@@ -37,7 +37,7 @@ export default function HowItWorks() {
                 {i + 1}
               </span>
               <div className="glass lift p-6 md:p-7">
-                <Icon className="size-5 text-emerald" aria-hidden="true" />
+                <Icon className="size-5 text-blue" aria-hidden="true" />
                 <h2 className="mt-3 text-xl font-semibold md:text-2xl">{title}</h2>
                 <p className="mt-2 leading-relaxed text-muted">{text}</p>
               </div>
@@ -53,16 +53,16 @@ export default function HowItWorks() {
             <h2 className="mt-5 text-2xl font-semibold md:text-3xl">What we do</h2>
             <ul className="mt-5 grid gap-3">
               {weDo.map((item) => (
-                <li key={item} className="flex gap-3"><Check className="mt-1 size-4 shrink-0 text-emerald" aria-hidden="true" />{item}</li>
+                <li key={item} className="flex gap-3"><Check className="mt-1 size-4 shrink-0 text-blue" aria-hidden="true" />{item}</li>
               ))}
             </ul>
           </Reveal>
           <Reveal delay={0.08} className="glass p-7 md:p-9">
-            <IconTile icon={X} tone="gold" />
+            <IconTile icon={X} tone="red" />
             <h2 className="mt-5 text-2xl font-semibold md:text-3xl">What we don't do</h2>
             <ul className="mt-5 grid gap-3">
               {weDont.map((item) => (
-                <li key={item} className="flex gap-3"><X className="mt-1 size-4 shrink-0 text-gold" aria-hidden="true" />{item}</li>
+                <li key={item} className="flex gap-3"><X className="mt-1 size-4 shrink-0 text-red" aria-hidden="true" />{item}</li>
               ))}
             </ul>
             <p className="mt-6 border-t border-line pt-5 text-sm leading-relaxed text-muted">

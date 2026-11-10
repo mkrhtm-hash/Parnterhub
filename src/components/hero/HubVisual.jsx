@@ -18,12 +18,12 @@ export default function HubVisual() {
       <svg viewBox="0 0 100 100" className="absolute inset-0 size-full overflow-visible">
         <defs>
           <linearGradient id="hub-line" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stopColor="var(--emerald)" />
-            <stop offset="1" stopColor="var(--gold)" />
+            <stop offset="0" stopColor="var(--blue)" />
+            <stop offset="1" stopColor="var(--green)" />
           </linearGradient>
           <radialGradient id="hub-glow">
-            <stop offset="0" stopColor="var(--emerald)" stopOpacity="0.34" />
-            <stop offset="1" stopColor="var(--emerald)" stopOpacity="0" />
+            <stop offset="0" stopColor="var(--blue)" stopOpacity="0.34" />
+            <stop offset="1" stopColor="var(--blue)" stopOpacity="0" />
           </radialGradient>
         </defs>
         <circle cx="50" cy="50" r="30" fill="url(#hub-glow)" />
@@ -34,7 +34,7 @@ export default function HubVisual() {
             <path d={`M50 50 L${n.x} ${n.y}`} stroke="url(#hub-line)" strokeOpacity="0.35" strokeWidth="0.35" gradientUnits="userSpaceOnUse" />
             <motion.circle
               r="0.9"
-              fill="var(--gold)"
+              fill={['var(--blue)', 'var(--green)', 'var(--red)'][i % 3]}
               animate={{ cx: [50, n.x, 50], cy: [50, n.y, 50], opacity: [0, 1, 0] }}
               transition={{ duration: 7, delay: i * 1.4, repeat: Infinity, ease: 'easeInOut' }}
             />
@@ -66,7 +66,7 @@ export default function HubVisual() {
             className="flex items-center gap-2 rounded-2xl border border-line px-3 py-2 text-xs font-medium whitespace-nowrap shadow-lg backdrop-blur-xl"
             style={{ background: 'var(--glass-solid)' }}
           >
-            <n.Icon className="size-4 text-emerald" />
+            <n.Icon className="size-4 text-blue" />
             {n.label}
           </motion.div>
         </motion.div>

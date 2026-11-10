@@ -24,7 +24,7 @@ export default function About() {
 
   return (
     <>
-      <PageHeader eyebrow="About" title="Built on 18 years of conversations with traders." intro="MKPips exists because choosing a broker should not depend on who has the loudest advert." />
+      <PageHeader eyebrow="About" title="Built on 15+ years of conversations with traders." intro="MKPips exists because choosing a broker should not depend on who has the loudest advert." />
 
       <section className="shell">
         <Reveal className={`glass grid gap-8 p-6 md:p-10 ${founder.photo ? 'md:grid-cols-[17rem_1fr]' : ''}`}>
@@ -54,7 +54,7 @@ export default function About() {
       </section>
 
       {timeline.length > 0 && <section className="shell pt-16 md:pt-28">
-        <SectionHeading eyebrow="Career timeline" title="18 years in FX and CFD sales." />
+        <SectionHeading eyebrow="Career timeline" title="15+ years in FX and CFD sales." />
         <ol ref={lineRef} className="relative mt-10 grid max-w-3xl gap-8">
           <div className="absolute top-2 bottom-2 left-[7px] w-px bg-line" aria-hidden="true" />
           <motion.div className="absolute top-2 bottom-2 left-[7px] w-px origin-top bg-gradient-to-b from-emerald to-gold" style={{ scaleY }} aria-hidden="true" />

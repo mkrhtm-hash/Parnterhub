@@ -102,7 +102,7 @@ export default function Home() {
               The right broker starts with the <span className="text-brand">right partner.</span>
             </motion.h1>
             <motion.p custom={2} variants={rise} initial="hidden" animate="show" className="mt-5 max-w-xl text-base leading-relaxed text-muted sm:text-lg">
-              Access trusted, regulated FX and CFD brokers, guided by 18 years of industry experience.
+              Access trusted, regulated FX and CFD brokers, guided by 15+ years of industry experience.
             </motion.p>
             <motion.div custom={3} variants={rise} initial="hidden" animate="show" className="mt-7 flex flex-col gap-3 sm:flex-row">
               <Button to="/book">

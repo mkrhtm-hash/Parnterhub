@@ -106,41 +106,42 @@ INSERT INTO site_content (key, value) VALUES ('company', '{
   "phone": "[+00 000 000 0000]",
   "whatsappNumber": "10000000000",
   "whatsappMessage": "Hello MKPips, I would like to ask about finding a regulated broker.",
-  "yearsExperience": 18,
+  "yearsExperience": 15,
   "lastLegalUpdate": "[Date of last legal review]"
 }'::jsonb)
 ON CONFLICT (key) DO NOTHING;
 
 INSERT INTO site_content (key, value) VALUES ('founder', '{
-  "name": "[Founder name]",
-  "role": "[Founder title]",
+  "name": "Muhammad Kaleem",
+  "role": "Founder, MKPips",
   "photo": null,
-  "bio": "[Two or three sentences in your own words: how you started in FX and CFD sales, what you saw clients struggle with, and why you set up MKPips.]",
+  "bio": "Muhammad Kaleem has spent more than 15 years on the sales side of FX and CFD brokerage in Dubai, at firms including Neomarkets, SquaredFinancial, ATFX, Hantec Markets, AxiCorp and Alpari. He has looked after retail and high-net-worth traders, and built introducing broker and partner networks across the Middle East and South-East Asia. He set up MKPips to help traders reach regulated brokers with clear information and no pressure.",
   "highlights": [
-    "[Career highlight 1]",
-    "[Career highlight 2]",
-    "[Career highlight 3]"
+    "15+ years in Dubai''s FX and CFD industry",
+    "Sales leadership across MENA and South-East Asia",
+    "Built introducing broker and affiliate networks",
+    "Looked after 300+ active traders at ATFX MENA"
   ],
   "timeline": [
     {
-      "period": "Years 1 to 4",
-      "title": "[First role and company]",
-      "detail": "[What you did and what you learned]"
+      "period": "2008 to 2013",
+      "title": "Account management",
+      "detail": "Account Manager at Orion Holding Overseas, then Senior Account Manager at One Financial Markets."
     },
     {
-      "period": "Years 5 to 9",
-      "title": "[Next role and company]",
-      "detail": "[Markets, clients or teams you worked with]"
+      "period": "2013 to 2018",
+      "title": "Sales and premium clients",
+      "detail": "Sales Manager at Hantec Markets, Senior Sales Associate at Alpari ME, then Premium Client Manager at AxiCorp."
     },
     {
-      "period": "Years 10 to 14",
-      "title": "[Senior role and company]",
-      "detail": "[Responsibility or area you led]"
+      "period": "2018 to 2023",
+      "title": "Regional sales and client relationships",
+      "detail": "Regional Sales at Hantec Markets, then Senior Relationship Manager at ATFX MENA, looking after 300+ active traders."
     },
     {
-      "period": "Years 15 to 18",
-      "title": "[Most recent role and company]",
-      "detail": "[What led you to start MKPips]"
+      "period": "2023 to today",
+      "title": "Business development leadership",
+      "detail": "Head of Business Development SEA at SquaredFinancial, now Sales Director SEA at Neomarkets."
     }
   ]
 }'::jsonb)

@@ -118,6 +118,9 @@ function VideoDialog({ video, onClose }) {
           <video src={video.url} controls className="size-full" />
         )}
       </div>
+      <p className="px-4 py-3 text-xs leading-relaxed text-muted md:px-5">
+        The presenter in our videos is AI-generated. General education only, not investment advice.
+      </p>
     </dialog>
   );
 }

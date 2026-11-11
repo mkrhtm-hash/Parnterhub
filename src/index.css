@@ -225,6 +225,12 @@
   }
 }
 
+/* Logos that come in a light-background and a dark-background version. */
+[data-theme='light'] .logo-on-dark,
+:root:not([data-theme='light']) .logo-on-light {
+  display: none;
+}
+
 /* Printing or saving an eBook as PDF: black on white, without the site's header, footer or floating buttons. */
 @media print {
   :root,

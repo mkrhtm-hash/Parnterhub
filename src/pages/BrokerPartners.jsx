@@ -98,7 +98,7 @@ export default function BrokerPartners() {
         <div className="mb-6 flex gap-3 rounded-2xl border border-dashed border-green/60 bg-green/8 p-4 text-sm leading-relaxed">
           <SampleBadge className="h-fit shrink-0" />
           <p className="text-muted">
-            These brokers are fictional examples, and their figures and licence numbers are made up. The regulators are real, but they have no connection to these listings, and the sample numbers will not appear on their registers.
+            Neomarkets is a real broker that MKPips works with: its details come from its own website, and you can check its licence on the regulator's register. The other brokers are fictional examples with made-up figures and licence numbers that will not appear on any register.
           </p>
         </div>
 

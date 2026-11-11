@@ -30,6 +30,8 @@ export default route({
         availableIn: b.available_in,
         strengths: b.strengths,
         suitedTo: b.suited_to,
+        logo: b.logo ?? undefined,
+        highlights: b.highlights ?? [],
       })),
     );
   },

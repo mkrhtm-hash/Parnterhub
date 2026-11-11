@@ -1,5 +1,6 @@
 import { Check, ExternalLink, Plus } from 'lucide-react';
 import { SampleBadge } from '../ui/Primitives';
+import SmileCoin from './SmileCoin';
 import { useSiteData } from '../../context/SiteDataContext';
 
 export function useInstrumentLabel() {
@@ -40,10 +41,32 @@ export default function BrokerCard({ broker, selected, onToggleCompare }) {
   const instrumentLabel = useInstrumentLabel();
   return (
     <article className={`glass lift flex h-full flex-col p-6 ${selected ? '!border-blue' : ''}`}>
-      <div className="flex items-start justify-between gap-3">
-        <h3 className="text-lg font-semibold">{broker.name}</h3>
+      <div className="flex min-h-8 items-center justify-between gap-3">
+        {broker.logo ? (
+          <h3 className="text-lg font-semibold">
+            <span className="sr-only">{broker.name}</span>
+            <img src={`${broker.logo}-on-dark.svg`} alt="" className="logo-on-dark h-8 w-auto" />
+            <img src={`${broker.logo}-on-light.svg`} alt="" className="logo-on-light h-8 w-auto" />
+          </h3>
+        ) : (
+          <h3 className="text-lg font-semibold">{broker.name}</h3>
+        )}
         {broker.isSample && <SampleBadge className="shrink-0" />}
       </div>
+
+      {broker.highlights?.length > 0 && (
+        <ul className="mt-4 grid gap-2">
+          {broker.highlights.map(({ title, note }) => (
+            <li key={title} className="flex items-center gap-3 rounded-2xl border border-[#e8b73a]/40 bg-gradient-to-r from-[#f6c945]/14 to-transparent p-2.5 pr-3">
+              <SmileCoin className="size-10 shrink-0" />
+              <span>
+                <span className="block text-sm font-semibold">{title}</span>
+                {note && <span className="block text-xs leading-snug text-muted">{note}</span>}
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
 
       <ul className="mt-4 grid gap-3">
         {broker.licences.map((licence) => (

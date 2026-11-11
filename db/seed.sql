@@ -14,6 +14,7 @@ INSERT INTO regulators (code, name, jurisdiction, tier, register_url, segregatio
   ('MAS', 'Monetary Authority of Singapore', 'Singapore', 1, 'https://eservices.mas.gov.sg/fid', 'Customer money must be held in trust accounts.', 'Check with the firm. Do not assume it applies.', 'No general scheme for CFD clients.'),
   ('CySEC', 'Cyprus Securities and Exchange Commission', 'Cyprus (EU)', 2, 'https://www.cysec.gov.cy/en-GB/entities/investment-firms/cypriot/', 'EU MiFID rules require client funds to be safeguarded.', 'Required for retail CFD clients.', 'The Investor Compensation Fund may cover eligible claims, subject to limits.'),
   ('FSCA', 'Financial Sector Conduct Authority', 'South Africa', 2, 'https://www.fsca.co.za/', 'Check how the firm holds client funds.', 'Check with the firm. Do not assume it applies.', 'No general scheme for CFD clients.'),
+  ('FSC', 'Financial Services Commission', 'Mauritius', 3, 'https://opr.fscmauritius.org/ords/opr/r/fsc-opr/fsc-online-public-register-opr', 'Check how the firm holds client funds.', 'Check with the firm. Do not assume it applies.', 'No general scheme for CFD clients.'),
   ('FSA', 'Financial Services Authority', 'Seychelles', 3, 'https://fsaseychelles.sc/', 'Check how the firm holds client funds.', 'Check with the firm. Do not assume it applies.', 'No general scheme for CFD clients.')
 ON CONFLICT (code) DO NOTHING;
 
@@ -43,10 +44,6 @@ INSERT INTO countries (code, name, home_regulator, sort_order) VALUES
 ON CONFLICT (code) DO NOTHING;
 
 INSERT INTO brokers (id, name, is_sample, min_deposit, spreads, commission, support, platforms, instruments, available_in, strengths, suited_to, sort_order) VALUES
-  ('aster', 'Sample Broker Aster', true, 100, 'EUR/USD from 0.9 pips', 'None on the standard account', 'Named contact, weekdays',
-   ARRAY['MT4', 'MT5'], ARRAY['forex', 'indices', 'commodities', 'shares'],
-   ARRAY['GB', 'DE', 'FR', 'ES', 'IT', 'NL', 'IE', 'CY', 'PL'],
-   ARRAY['regulation', 'support', 'education'], ARRAY['new', 'some'], 0),
   ('birch', 'Sample Broker Birch', true, 200, 'EUR/USD from 0.1 pips', '$7 per lot, round turn', 'Live chat, 24/5',
    ARRAY['MT5', 'cTrader'], ARRAY['forex', 'indices', 'commodities'],
    ARRAY['GB', 'AU', 'SG', 'ZA', 'AE', 'NG', 'KE', 'MY', 'TH'],
@@ -78,8 +75,6 @@ INSERT INTO brokers (id, name, is_sample, min_deposit, spreads, commission, supp
 ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO broker_licences (broker_id, regulator_code, licence_number, sort_order) VALUES
-  ('aster', 'FCA', 'SAMPLE-FCA-0001', 0),
-  ('aster', 'CySEC', 'SAMPLE-CY-0001', 1),
   ('birch', 'FCA', 'SAMPLE-FCA-0002', 0),
   ('birch', 'ASIC', 'SAMPLE-AS-0002', 1),
   ('birch', 'FSCA', 'SAMPLE-ZA-0002', 2),
@@ -459,3 +454,17 @@ WHERE value::text LIKE '%Partnerhub%';
 -- The four Learning videos are served from public/videos. Only fills in rows that have no link yet.
 UPDATE learning_resources SET url = '/videos/' || id || '.mp4', length_label = '1 min'
 WHERE id IN ('what-a-broker-does', 'how-cfds-work', 'leverage-and-margin', 'what-trading-costs') AND url IS NULL;
+
+-- Neomarkets: a real broker MKPips works with. It replaces the first sample listing (Sample Broker Aster).
+-- Figures from neomarkets.com (account types, deposit and withdrawal, partnership pages), checked 11 Nov 2026.
+DELETE FROM brokers WHERE id = 'aster';
+INSERT INTO brokers (id, name, is_sample, min_deposit, spreads, commission, support, verify_url, platforms, instruments, available_in, strengths, suited_to, sort_order, logo, highlights) VALUES
+  ('neomarkets', 'Neomarkets', false, 20, 'EUR/USD from 0.9 pips', 'None on standard MT5 accounts', 'Personal manager',
+   'https://opr.fscmauritius.org/ords/opr/r/fsc-opr/fsc-online-public-register-opr',
+   ARRAY['MT5', 'NeoTrade'], ARRAY['forex', 'indices', 'commodities', 'shares'],
+   ARRAY['AE', 'OTHER'], ARRAY['costs', 'support'], ARRAY['new', 'some'], 0, '/brokers/neomarkets',
+   '[{"title": "Rebates up to 60%", "note": "Partner revenue share, as published by Neomarkets"}, {"title": "Withdrawal 100% Trusted", "note": "Card withdrawals within one business day, no commission (per Neomarkets)"}]'::jsonb)
+ON CONFLICT (id) DO NOTHING;
+INSERT INTO broker_licences (broker_id, regulator_code, licence_number, sort_order) VALUES
+  ('neomarkets', 'FSC', 'GB22200517', 0)
+ON CONFLICT DO NOTHING;

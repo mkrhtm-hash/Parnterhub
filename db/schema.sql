@@ -43,6 +43,10 @@ CREATE TABLE IF NOT EXISTS brokers (
   sort_order   integer NOT NULL DEFAULT 0
 );
 
+-- Logo files in public/brokers (<logo>-on-dark.svg and <logo>-on-light.svg) and short highlights [{title, note}].
+ALTER TABLE brokers ADD COLUMN IF NOT EXISTS logo text;
+ALTER TABLE brokers ADD COLUMN IF NOT EXISTS highlights jsonb NOT NULL DEFAULT '[]'::jsonb;
+
 CREATE TABLE IF NOT EXISTS broker_licences (
   broker_id      text NOT NULL REFERENCES brokers (id) ON DELETE CASCADE,
   regulator_code text NOT NULL REFERENCES regulators (code),

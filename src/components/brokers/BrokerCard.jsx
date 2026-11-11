@@ -92,6 +92,12 @@ export default function BrokerCard({ broker, selected, onToggleCompare }) {
           <dt className="text-xs text-faint">Typical spreads</dt>
           <dd className="mt-0.5 font-medium">{broker.spreads}</dd>
         </div>
+        {broker.leverage && (
+          <div className="col-span-2">
+            <dt className="text-xs text-faint">Leverage</dt>
+            <dd className="mt-0.5 font-medium">{broker.leverage}</dd>
+          </div>
+        )}
       </dl>
 
       <div className="mt-5 grid gap-3">

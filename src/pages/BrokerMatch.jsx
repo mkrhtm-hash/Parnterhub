@@ -205,6 +205,7 @@ function Results({ answers, onRestart }) {
             <p className="mt-1 text-sm text-muted">
               {broker.licences.map((l) => regulators[l.regulator].code).join(' · ')} · from ${broker.minDeposit.toLocaleString('en-US')}
             </p>
+            {broker.leverage && <p className="mt-0.5 text-sm text-muted">Leverage: {broker.leverage}</p>}
 
             <h4 className="mt-5 text-sm font-semibold">Why this fits you</h4>
             <ul className="mt-2 grid gap-2 text-sm leading-relaxed text-muted">

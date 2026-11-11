@@ -22,6 +22,7 @@ export default route({
         licences: b.licences,
         minDeposit: b.min_deposit,
         spreads: b.spreads,
+        leverage: b.leverage || undefined,
         commission: b.commission,
         support: b.support,
         verifyUrl: b.verify_url ?? undefined,

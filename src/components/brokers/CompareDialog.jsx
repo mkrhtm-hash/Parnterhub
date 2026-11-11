@@ -22,6 +22,7 @@ const buildRows = (regulators, instrumentLabel) => [
   },
   { label: 'Minimum deposit', render: (b) => money(b.minDeposit) },
   { label: 'Typical spreads', render: (b) => b.spreads },
+  { label: 'Leverage', render: (b) => b.leverage ?? 'Not stated' },
   { label: 'Commission', render: (b) => b.commission },
   { label: 'Platforms', render: (b) => b.platforms.join(', ') },
   { label: 'Instruments', render: (b) => b.instruments.map(instrumentLabel).join(', ') },

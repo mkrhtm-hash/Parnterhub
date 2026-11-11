@@ -481,3 +481,17 @@ INSERT INTO broker_licences (broker_id, regulator_code, licence_number, sort_ord
   ('hantec', 'FSC', 'C114013940', 0, 'Hantec Markets Ltd',
    'Level 2, Suite 201, The Catalyst, 40 Silicon Avenue, Ebene 72201, Republic of Mauritius')
 ON CONFLICT DO NOTHING;
+
+-- Leverage. Real brokers: as published (neomarkets.com account types; hmarkets.com Global, Cent and Pro accounts), checked 11 Nov 2026.
+-- Sample brokers: fictional figures in line with their sample regulators. Only fills rows that have no leverage yet.
+UPDATE brokers SET leverage = v.leverage FROM (VALUES
+  ('neomarkets', 'Up to 1:500 (PRO account up to 1:100)'),
+  ('hantec', 'Up to 1:500'),
+  ('cedar', 'Up to 1:30 for retail clients'),
+  ('dune', 'Up to 1:30 (EU), up to 1:500 (Seychelles)'),
+  ('ember', 'Up to 1:30 for retail clients'),
+  ('fjord', 'Up to 1:30 for retail clients'),
+  ('grove', 'Up to 1:400'),
+  ('harbor', 'Up to 1:20 for retail clients')
+) AS v (id, leverage)
+WHERE brokers.id = v.id AND brokers.leverage = '';

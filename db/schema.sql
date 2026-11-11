@@ -55,6 +55,10 @@ CREATE TABLE IF NOT EXISTS broker_licences (
   PRIMARY KEY (broker_id, regulator_code)
 );
 CREATE INDEX IF NOT EXISTS broker_licences_regulator_idx ON broker_licences (regulator_code);
+-- The company that holds the licence, its registered address and a direct register link. Optional.
+ALTER TABLE broker_licences ADD COLUMN IF NOT EXISTS entity text;
+ALTER TABLE broker_licences ADD COLUMN IF NOT EXISTS address text;
+ALTER TABLE broker_licences ADD COLUMN IF NOT EXISTS verify_url text;
 
 -- Company details, founder profile, legal text, FAQ and form options. One JSON value per key.
 CREATE TABLE IF NOT EXISTS site_content (

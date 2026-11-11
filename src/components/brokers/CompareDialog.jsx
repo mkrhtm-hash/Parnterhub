@@ -12,6 +12,7 @@ const buildRows = (regulators, instrumentLabel) => [
         {b.licences.map((l) => (
           <li key={l.regulator}>
             <p className="font-medium">{regulators[l.regulator].code}</p>
+            {l.entity && <p className="text-xs text-muted">{l.entity}</p>}
             <p className="mb-1 font-mono text-xs break-all text-faint">{l.number}</p>
             <VerifyLink licence={l} verifyUrl={b.verifyUrl} />
           </li>

@@ -459,12 +459,17 @@ WHERE id IN ('what-a-broker-does', 'how-cfds-work', 'leverage-and-margin', 'what
 -- Figures from neomarkets.com (account types, deposit and withdrawal, partnership pages), checked 11 Nov 2026.
 DELETE FROM brokers WHERE id = 'aster';
 INSERT INTO brokers (id, name, is_sample, min_deposit, spreads, commission, support, verify_url, platforms, instruments, available_in, strengths, suited_to, sort_order, logo, highlights) VALUES
-  ('neomarkets', 'Neomarkets', false, 20, 'EUR/USD from 0.9 pips', 'None on standard MT5 accounts', 'Personal manager',
-   'https://opr.fscmauritius.org/ords/opr/r/fsc-opr/fsc-online-public-register-opr',
+  ('neomarkets', 'Neomarkets', false, 20, 'EUR/USD from 0.9 pips', 'None on standard MT5 accounts', 'Personal manager', NULL,
    ARRAY['MT5', 'NeoTrade'], ARRAY['forex', 'indices', 'commodities', 'shares'],
    ARRAY['AE', 'OTHER'], ARRAY['costs', 'support'], ARRAY['new', 'some'], 0, '/brokers/neomarkets',
    '[{"title": "Rebates up to 60%", "note": "Partner revenue share, as published by Neomarkets"}, {"title": "Withdrawal 100% Trusted", "note": "Card withdrawals within one business day, no commission (per Neomarkets)"}]'::jsonb)
 ON CONFLICT (id) DO NOTHING;
-INSERT INTO broker_licences (broker_id, regulator_code, licence_number, sort_order) VALUES
-  ('neomarkets', 'FSC', 'GB22200517', 0)
+INSERT INTO regulators (code, name, jurisdiction, tier, register_url, segregation, negative_balance, compensation) VALUES
+  ('SCA', 'Securities and Commodities Authority', 'United Arab Emirates', 2, 'https://www.sca.gov.ae/', 'Check how the firm holds client funds.', 'Check with the firm. Do not assume it applies.', 'No general scheme for CFD clients.')
+ON CONFLICT (code) DO NOTHING;
+INSERT INTO broker_licences (broker_id, regulator_code, licence_number, sort_order, entity, address) VALUES
+  ('neomarkets', 'FSC', 'GB22200517', 0, 'Neomarkets Group Ltd',
+   'Suite 201, 2nd Floor, The Catalyst, 40 Silicon Ave, Ebene 72201, Republic of Mauritius'),
+  ('neomarkets', 'SCA', '20200000285', 1, 'Neomarkets Mena for Financial Consultation & Financial Analysis',
+   'Office 1112, Floor 11, The Onyx Tower 2, Al Thanya Third, Greens, Dubai, United Arab Emirates')
 ON CONFLICT DO NOTHING;

@@ -80,7 +80,7 @@ export default function CompareDialog({ open, brokers, onClose }) {
         </table>
       </div>
       <p className="border-t border-line p-5 text-xs leading-relaxed text-faint">
-        Fictional sample data, shown for illustration. Sample licence numbers will not appear on any regulator's register. Real figures vary by account type, entity and market conditions.
+        Brokers marked Sample data are fictional, shown for illustration, and their licence numbers will not appear on any regulator's register. Real figures vary by account type, entity and market conditions.
       </p>
     </dialog>
   );

@@ -234,7 +234,7 @@ function Results({ answers, onRestart }) {
       </div>
 
       <p className="mt-5 text-xs leading-relaxed text-faint">
-        This is an illustration using fictional sample brokers. It is general information, not investment advice or a personal recommendation. Check any licence on the regulator's own register before opening an account.
+        Results can include fictional sample brokers, marked Sample data. It is general information, not investment advice or a personal recommendation. Check any licence on the regulator's own register before opening an account.
       </p>
 
       <div className="mt-6 flex flex-col gap-3 sm:flex-row">

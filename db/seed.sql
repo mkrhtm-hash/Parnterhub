@@ -44,10 +44,6 @@ INSERT INTO countries (code, name, home_regulator, sort_order) VALUES
 ON CONFLICT (code) DO NOTHING;
 
 INSERT INTO brokers (id, name, is_sample, min_deposit, spreads, commission, support, platforms, instruments, available_in, strengths, suited_to, sort_order) VALUES
-  ('birch', 'Sample Broker Birch', true, 200, 'EUR/USD from 0.1 pips', '$7 per lot, round turn', 'Live chat, 24/5',
-   ARRAY['MT5', 'cTrader'], ARRAY['forex', 'indices', 'commodities'],
-   ARRAY['GB', 'AU', 'SG', 'ZA', 'AE', 'NG', 'KE', 'MY', 'TH'],
-   ARRAY['costs', 'execution'], ARRAY['some', 'experienced', 'professional'], 1),
   ('cedar', 'Sample Broker Cedar', true, 1000, 'EUR/USD from 0.0 pips', '$5 per lot, round turn', 'Dedicated desk, 24/5',
    ARRAY['MT5', 'cTrader'], ARRAY['forex', 'indices', 'commodities', 'shares'],
    ARRAY['GB', 'DE', 'FR', 'ES', 'IT', 'NL', 'IE', 'CY', 'PL'],
@@ -75,9 +71,6 @@ INSERT INTO brokers (id, name, is_sample, min_deposit, spreads, commission, supp
 ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO broker_licences (broker_id, regulator_code, licence_number, sort_order) VALUES
-  ('birch', 'FCA', 'SAMPLE-FCA-0002', 0),
-  ('birch', 'ASIC', 'SAMPLE-AS-0002', 1),
-  ('birch', 'FSCA', 'SAMPLE-ZA-0002', 2),
   ('cedar', 'FCA', 'SAMPLE-FCA-0003', 0),
   ('dune', 'CySEC', 'SAMPLE-CY-0004', 0),
   ('dune', 'FSA', 'SAMPLE-SC-0004', 1),
@@ -472,4 +465,19 @@ INSERT INTO broker_licences (broker_id, regulator_code, licence_number, sort_ord
    'Suite 201, 2nd Floor, The Catalyst, 40 Silicon Ave, Ebene 72201, Republic of Mauritius'),
   ('neomarkets', 'SCA', '20200000285', 1, 'Neomarkets Mena for Financial Consultation & Financial Analysis',
    'Office 1112, Floor 11, The Onyx Tower 2, Al Thanya Third, Greens, Dubai, United Arab Emirates')
+ON CONFLICT DO NOTHING;
+
+-- Hantec Markets: a real broker MKPips works with. It replaces the second sample listing (Sample Broker Birch).
+-- Figures from hmarkets.com (Global account, funding and policies pages) and hpartners.com, checked 11 Nov 2026.
+-- Hantec says its service is not for residents of the US, the UAE or Japan, or of Iran, Myanmar, North Korea and Russia.
+DELETE FROM brokers WHERE id = 'birch';
+INSERT INTO brokers (id, name, is_sample, min_deposit, spreads, commission, support, verify_url, platforms, instruments, available_in, strengths, suited_to, sort_order, logo, highlights) VALUES
+  ('hantec', 'Hantec Markets', false, 10, 'From 0.1 pips, floating', 'From $0 on the Global account', '24/7 human support', NULL,
+   ARRAY['MT4', 'MT5', 'Hantec WebTrader', 'Hantec Mobile App'], ARRAY['forex', 'indices', 'commodities', 'shares', 'crypto'],
+   ARRAY['ZA', 'NG', 'KE', 'MY', 'TH', 'OTHER'], ARRAY['costs', 'support'], ARRAY['new', 'some', 'experienced'], 1, '/brokers/hantec',
+   '[{"title": "Rebates up to 70%", "note": "IB rebate per lot traded, as published by Hantec Partners"}, {"title": "Withdrawal 100% Trusted", "note": "Withdrawals processed in as little as 5 minutes, no broker fees (per Hantec Markets)"}]'::jsonb)
+ON CONFLICT (id) DO NOTHING;
+INSERT INTO broker_licences (broker_id, regulator_code, licence_number, sort_order, entity, address) VALUES
+  ('hantec', 'FSC', 'C114013940', 0, 'Hantec Markets Ltd',
+   'Level 2, Suite 201, The Catalyst, 40 Silicon Avenue, Ebene 72201, Republic of Mauritius')
 ON CONFLICT DO NOTHING;

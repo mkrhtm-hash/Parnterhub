@@ -38,7 +38,7 @@ export default function BrokerPartners() {
       })),
     [brokers, regulators],
   );
-  usePageMeta('Broker Partners', 'Filter and compare broker partners by regulator, platform and instrument, with a link to verify each licence. Currently showing fictional sample data.');
+  usePageMeta('Broker Partners', 'Filter and compare broker partners by regulator, platform and instrument, with a link to verify each licence. Listings marked Sample data are fictional.');
   const toast = useToast();
   const [params, setParams] = useSearchParams();
   const [filters, setFilters] = useState(noFilters);
@@ -98,7 +98,7 @@ export default function BrokerPartners() {
         <div className="mb-6 flex gap-3 rounded-2xl border border-dashed border-green/60 bg-green/8 p-4 text-sm leading-relaxed">
           <SampleBadge className="h-fit shrink-0" />
           <p className="text-muted">
-            Neomarkets is a real broker that MKPips works with: its details come from its own website, and you can check its licence on the regulator's register. The other brokers are fictional examples with made-up figures and licence numbers that will not appear on any register.
+            Neomarkets and Hantec Markets are real brokers that MKPips works with: their details come from their own websites, and you can check each licence on the regulator's register. The other brokers are fictional examples with made-up figures and licence numbers that will not appear on any register.
           </p>
         </div>
 

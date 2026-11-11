@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, CalendarDays, Check, ChartLine, Compass, Globe, GraduationCap, Handshake, LifeBuoy, ShieldCheck, TriangleAlert, X } from 'lucide-react';
+import { ArrowRight, CalendarDays, ChartLine, Compass, Globe, GraduationCap, Handshake, LifeBuoy, ShieldCheck, TriangleAlert } from 'lucide-react';
 import NetworkCanvas from '../components/hero/NetworkCanvas';
 import HubVisual from '../components/hero/HubVisual';
 import Button from '../components/ui/Button';
@@ -11,6 +11,7 @@ import { CardSkeleton, DataError } from '../components/ui/DataState';
 import { usePageMeta } from '../hooks/usePageMeta';
 import { useCompliance, useSiteData } from '../context/SiteDataContext';
 import { weDo, weDont } from '../data/staticContent';
+import StanceList from '../components/ui/StanceList';
 
 const rise = {
   hidden: { opacity: 0, y: 22 },
@@ -159,19 +160,11 @@ export default function Home() {
             <div className="grid gap-6 sm:grid-cols-2">
               <div>
                 <h3 className="mb-3 text-sm font-semibold text-blue">We do</h3>
-                <ul className="grid gap-3 text-sm">
-                  {weDo.slice(0, 4).map((item) => (
-                    <li key={item} className="flex gap-2"><Check className="mt-0.5 size-4 shrink-0 text-blue" aria-hidden="true" />{item}</li>
-                  ))}
-                </ul>
+                <StanceList items={weDo.slice(0, 4)} kind="do" />
               </div>
               <div>
                 <h3 className="mb-3 text-sm font-semibold text-red">We don't</h3>
-                <ul className="grid gap-3 text-sm">
-                  {weDont.map((item) => (
-                    <li key={item} className="flex gap-2"><X className="mt-0.5 size-4 shrink-0 text-red" aria-hidden="true" />{item}</li>
-                  ))}
-                </ul>
+                <StanceList items={weDont} kind="dont" />
               </div>
             </div>
           </div>

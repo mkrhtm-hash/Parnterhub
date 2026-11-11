@@ -5,6 +5,7 @@ import Button from '../components/ui/Button';
 import { IconTile, PageHeader, Reveal } from '../components/ui/Primitives';
 import { usePageMeta } from '../hooks/usePageMeta';
 import { weDo, weDont } from '../data/staticContent';
+import StanceList from '../components/ui/StanceList';
 
 const steps = [
   { Icon: PhoneCall, title: 'Discovery call', text: 'A free conversation about where you are, what you want to trade and any problems you have had before.' },
@@ -51,20 +52,12 @@ export default function HowItWorks() {
           <Reveal className="glass p-7 md:p-9">
             <IconTile icon={Check} />
             <h2 className="mt-5 text-2xl font-semibold md:text-3xl">What we do</h2>
-            <ul className="mt-5 grid gap-3">
-              {weDo.map((item) => (
-                <li key={item} className="flex gap-3"><Check className="mt-1 size-4 shrink-0 text-blue" aria-hidden="true" />{item}</li>
-              ))}
-            </ul>
+            <div className="mt-6"><StanceList items={weDo} kind="do" large /></div>
           </Reveal>
           <Reveal delay={0.08} className="glass p-7 md:p-9">
             <IconTile icon={X} tone="red" />
             <h2 className="mt-5 text-2xl font-semibold md:text-3xl">What we don't do</h2>
-            <ul className="mt-5 grid gap-3">
-              {weDont.map((item) => (
-                <li key={item} className="flex gap-3"><X className="mt-1 size-4 shrink-0 text-red" aria-hidden="true" />{item}</li>
-              ))}
-            </ul>
+            <div className="mt-6"><StanceList items={weDont} kind="dont" large /></div>
             <p className="mt-6 border-t border-line pt-5 text-sm leading-relaxed text-muted">
               If anyone claiming to be from MKPips offers to do these things, please do not proceed. Contact us directly.
             </p>

@@ -19,7 +19,7 @@ export function VerifyLink({ licence, verifyUrl }) {
       rel="noopener noreferrer"
       className="inline-flex min-h-10 items-center gap-1 text-xs font-medium text-blue underline-offset-2 hover:underline lg:min-h-0"
     >
-      Verify on {regulator.code}'s register
+      {licence.kind === 'registration' ? 'See the registration details' : `Verify on ${regulator.code}'s register`}
       <ExternalLink className="size-3" aria-hidden="true" />
       <span className="sr-only">(opens in a new tab)</span>
     </a>
@@ -75,8 +75,8 @@ export default function BrokerCard({ broker, selected, onToggleCompare }) {
               {regulators[licence.regulator].code}
               <span className="font-normal text-muted"> · {regulators[licence.regulator].jurisdiction}</span>
             </p>
-            {licence.entity && <p className="mt-1 text-xs text-ink/85">Licensed as {licence.entity}</p>}
-            <p className="mt-0.5 mb-1.5 font-mono text-xs break-all text-faint">Licence no. {licence.number}</p>
+            {licence.entity && <p className="mt-1 text-xs text-ink/85">{licence.kind === 'registration' ? 'Registered as' : 'Licensed as'} {licence.entity}</p>}
+            <p className="mt-0.5 mb-1.5 font-mono text-xs break-all text-faint">{licence.kind === 'registration' ? 'Registration no.' : 'Licence no.'} {licence.number}</p>
             {licence.address && <p className="mb-1.5 text-xs leading-relaxed text-faint">{licence.address}</p>}
             <VerifyLink licence={licence} verifyUrl={broker.verifyUrl} />
           </li>

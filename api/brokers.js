@@ -7,7 +7,7 @@ export default route({
     const rows = await sql`
       SELECT b.*,
              COALESCE(
-               (SELECT json_agg(json_build_object('regulator', l.regulator_code, 'number', l.licence_number, 'entity', l.entity, 'address', l.address, 'verifyUrl', l.verify_url) ORDER BY l.sort_order)
+               (SELECT json_agg(json_build_object('regulator', l.regulator_code, 'number', l.licence_number, 'entity', l.entity, 'address', l.address, 'verifyUrl', l.verify_url, 'kind', l.kind) ORDER BY l.sort_order)
                 FROM broker_licences l WHERE l.broker_id = b.id),
                '[]'::json
              ) AS licences

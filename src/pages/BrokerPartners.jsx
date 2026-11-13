@@ -98,7 +98,7 @@ export default function BrokerPartners() {
         <div className="mb-6 flex gap-3 rounded-2xl border border-dashed border-green/60 bg-green/8 p-4 text-sm leading-relaxed">
           <SampleBadge className="h-fit shrink-0" />
           <p className="text-muted">
-            Neomarkets and Hantec Markets are real brokers that MKPips works with: their details come from their own websites, and you can check each licence on the regulator's register. The other brokers are fictional examples with made-up figures and licence numbers that will not appear on any register.
+            Neomarkets, Hantec Markets and ZYZ Capital are real brokers that MKPips works with: their details come from their own websites. ZYZ Capital shows a company registration in Saint Lucia rather than a regulator's licence. The other brokers are fictional examples with made-up figures and licence numbers that will not appear on any register.
           </p>
         </div>
 

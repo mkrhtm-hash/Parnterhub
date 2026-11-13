@@ -61,6 +61,8 @@ CREATE INDEX IF NOT EXISTS broker_licences_regulator_idx ON broker_licences (reg
 ALTER TABLE broker_licences ADD COLUMN IF NOT EXISTS entity text;
 ALTER TABLE broker_licences ADD COLUMN IF NOT EXISTS address text;
 ALTER TABLE broker_licences ADD COLUMN IF NOT EXISTS verify_url text;
+-- 'licence' for a regulator's licence, 'registration' for a company registration that is not a financial licence.
+ALTER TABLE broker_licences ADD COLUMN IF NOT EXISTS kind text NOT NULL DEFAULT 'licence';
 
 -- Company details, founder profile, legal text, FAQ and form options. One JSON value per key.
 CREATE TABLE IF NOT EXISTS site_content (

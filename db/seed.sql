@@ -44,10 +44,6 @@ INSERT INTO countries (code, name, home_regulator, sort_order) VALUES
 ON CONFLICT (code) DO NOTHING;
 
 INSERT INTO brokers (id, name, is_sample, min_deposit, spreads, commission, support, platforms, instruments, available_in, strengths, suited_to, sort_order) VALUES
-  ('cedar', 'Sample Broker Cedar', true, 1000, 'EUR/USD from 0.0 pips', '$5 per lot, round turn', 'Dedicated desk, 24/5',
-   ARRAY['MT5', 'cTrader'], ARRAY['forex', 'indices', 'commodities', 'shares'],
-   ARRAY['GB', 'DE', 'FR', 'ES', 'IT', 'NL', 'IE', 'CY', 'PL'],
-   ARRAY['regulation', 'costs', 'execution'], ARRAY['experienced', 'professional'], 2),
   ('dune', 'Sample Broker Dune', true, 50, 'EUR/USD from 1.2 pips', 'None on the standard account', 'Email and chat, weekdays',
    ARRAY['MT4'], ARRAY['forex', 'commodities', 'crypto'],
    ARRAY['ZA', 'DE', 'FR', 'ES', 'IT', 'NL', 'IE', 'CY', 'PL', 'AE', 'NG', 'KE', 'MY', 'TH'],
@@ -71,7 +67,6 @@ INSERT INTO brokers (id, name, is_sample, min_deposit, spreads, commission, supp
 ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO broker_licences (broker_id, regulator_code, licence_number, sort_order) VALUES
-  ('cedar', 'FCA', 'SAMPLE-FCA-0003', 0),
   ('dune', 'CySEC', 'SAMPLE-CY-0004', 0),
   ('dune', 'FSA', 'SAMPLE-SC-0004', 1),
   ('ember', 'FCA', 'SAMPLE-FCA-0005', 0),
@@ -487,7 +482,6 @@ ON CONFLICT DO NOTHING;
 UPDATE brokers SET leverage = v.leverage FROM (VALUES
   ('neomarkets', 'Up to 1:500 (PRO account up to 1:100)'),
   ('hantec', 'Up to 1:500'),
-  ('cedar', 'Up to 1:30 for retail clients'),
   ('dune', 'Up to 1:30 (EU), up to 1:500 (Seychelles)'),
   ('ember', 'Up to 1:30 for retail clients'),
   ('fjord', 'Up to 1:30 for retail clients'),
@@ -495,3 +489,24 @@ UPDATE brokers SET leverage = v.leverage FROM (VALUES
   ('harbor', 'Up to 1:20 for retail clients')
 ) AS v (id, leverage)
 WHERE brokers.id = v.id AND brokers.leverage = '';
+
+-- ZYZ Capital: a broker MKPips works with. It replaces the third sample listing (Sample Broker Cedar).
+-- From zyzcapitalltd.com (account types, licence and registration, partnership, regional restrictions), checked 13 Nov 2026.
+-- ZYZ publishes no regulator licence: it is a Saint Lucia International Business Company, so its listing shows a registration, not a licence.
+-- Leverage and the rebate are not published by ZYZ; they are the figures ZYZ gave MKPips.
+DELETE FROM brokers WHERE id = 'cedar';
+INSERT INTO regulators (code, name, jurisdiction, tier, register_url, segregation, negative_balance, compensation) VALUES
+  ('IBC', 'Registrar of International Business Companies', 'Saint Lucia', 3, 'https://www.zyzcapitalltd.com/license-regulation/', 'Company registration only, not a financial services licence. Check how the firm holds client funds.', 'Check with the firm. Do not assume it applies.', 'No compensation scheme.')
+ON CONFLICT (code) DO NOTHING;
+INSERT INTO brokers (id, name, is_sample, min_deposit, spreads, commission, support, verify_url, platforms, instruments, available_in, strengths, suited_to, sort_order, logo, highlights, leverage) VALUES
+  ('zyz', 'ZYZ Capital', false, 10, 'From 1.2 pips (Standard), 0.0 pips (Pro)', '$0 on the Standard account', '24/7 support', NULL,
+   ARRAY['MT5'], ARRAY['forex', 'indices', 'commodities'],
+   ARRAY['AE', 'NG', 'ZA', 'MY', 'OTHER'], ARRAY['lowDeposit', 'support'], ARRAY['new', 'some', 'experienced'], 2, '/brokers/zyz',
+   '[{"title": "Rebates up to 70%", "note": "IB rebate agreed with MKPips; ZYZ sets partner terms individually"}, {"title": "Withdrawal 100% Trusted", "note": "Instant withdrawals, returned only to your verified deposit method (per ZYZ Capital)"}]'::jsonb,
+   'Up to 1:500 (as advised by ZYZ Capital)')
+ON CONFLICT (id) DO NOTHING;
+INSERT INTO broker_licences (broker_id, regulator_code, licence_number, sort_order, entity, address, verify_url, kind) VALUES
+  ('zyz', 'IBC', '2024-00712', 0, 'ZYZ Capital Limited',
+   'Ground Floor, The Sotheby Building, Rodney Village, Rodney Bay, Gros-Islet, Saint Lucia',
+   'https://www.zyzcapitalltd.com/license-regulation/', 'registration')
+ON CONFLICT DO NOTHING;

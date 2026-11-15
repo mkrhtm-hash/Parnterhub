@@ -86,7 +86,7 @@ Visitors can switch between English, Urdu (اردو) and Arabic (العربية)
 | Urdu and Arabic wording | `src/i18n/ur.json`, `src/i18n/ar.json` |
 | Every English string the site shows | `src/i18n/source.json` (where each one is used: `source-where.json`) |
 | Switching, fonts and right-to-left | `src/i18n/I18nContext.jsx`, `src/index.css` |
-| Urdu and Arabic videos | `public/videos/<id>.ur.mp4` and `<id>.ar.mp4`: narrated in Urdu or Arabic (Microsoft neural voices), with on-screen text and subtitles in that language |
+| Urdu and Arabic videos | `public/videos/<id>.ur.mp4` and `<id>.ar.mp4`: narrated in Urdu (voice: Gul) or Arabic (voice: Zariyah), Microsoft neural voices, with on-screen text and subtitles in that language |
 
 English is the source. Each translation is stored under a short code made from the English text, so anything without a translation simply shows in English. That includes database content: if you change a FAQ answer or broker note in Neon, the Urdu and Arabic pages show the new English until it is translated.
 

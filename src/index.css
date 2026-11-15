@@ -231,6 +231,50 @@
   display: none;
 }
 
+/*
+ * Urdu and Arabic. The site switches to right-to-left (see src/i18n). Arabic uses IBM Plex Sans Arabic and
+ * Urdu uses Noto Nastaliq Urdu, which needs taller lines. Letter-spacing is removed because it breaks the
+ * joins between Arabic-script letters. Licence numbers (font-mono) and the MKPips wordmark keep their fonts.
+ */
+html[lang='ar'] :where(body, h1, h2, h3, h4, button, input, select, textarea, .font-display, .font-sans) {
+  font-family: 'IBM Plex Sans Arabic', 'Inter', ui-sans-serif, system-ui, sans-serif;
+}
+html[lang='ur'] :where(body, h1, h2, h3, h4, button, input, select, textarea, .font-display, .font-sans) {
+  font-family: 'Noto Nastaliq Urdu', 'Inter', ui-sans-serif, system-ui, sans-serif;
+}
+html[lang='ar'] .font-display,
+html[lang='ur'] .font-display,
+html[lang='ar'] .font-sans,
+html[lang='ur'] .font-sans {
+  font-family: inherit;
+}
+html[lang] .font-latin {
+  font-family: 'Sora', ui-sans-serif, system-ui, sans-serif;
+}
+html[lang='ar'] *,
+html[lang='ur'] * {
+  letter-spacing: 0 !important;
+}
+html[lang='ar'] body {
+  line-height: 1.7;
+}
+html[lang='ur'] body {
+  line-height: 2;
+}
+html[lang='ur'] :is(p, li, span, a, button, label, dd, dt, legend, figcaption, summary, td, th, option) {
+  line-height: 2 !important;
+}
+html[lang='ur'] :is(h1, h2, h3, h4) {
+  line-height: 1.75 !important;
+}
+html[lang='ar'] :is(h1, h2, h3, h4) {
+  line-height: 1.45 !important;
+}
+/* Arrows and chevrons point the way the page reads. */
+[dir='rtl'] :is(.lucide-arrow-right, .lucide-arrow-left, .lucide-chevron-right, .lucide-chevron-left, .lucide-move-right) {
+  transform: scaleX(-1);
+}
+
 /* Printing or saving an eBook as PDF: black on white, without the site's header, footer or floating buttons. */
 @media print {
   :root,

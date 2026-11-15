@@ -1,4 +1,6 @@
+import { useMemo } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
+import { useI18n } from '../i18n/I18nContext';
 import { ArrowLeft, ArrowRight, BookOpen, CalendarDays, Check, Lightbulb, Printer, TriangleAlert } from 'lucide-react';
 import Button from '../components/ui/Button';
 import { usePageMeta } from '../hooks/usePageMeta';
@@ -7,6 +9,7 @@ import { findEbook } from '../data/ebooks';
 import EbookDiagram from '../components/learning/EbookDiagrams';
 
 function Block({ block }) {
+  const { t } = useI18n();
   if (block.diagram) return <EbookDiagram name={block.diagram} caption={block.caption} />;
   if (block.h) return <h3 className="mt-7 text-lg font-semibold">{block.h}</h3>;
   if (block.p) return <p className="mt-4 leading-relaxed text-muted">{block.p}</p>;
@@ -48,7 +51,7 @@ function Block({ block }) {
     return (
       <p className="mt-5 flex gap-3 rounded-2xl border border-blue/40 bg-blue/8 p-4 text-sm leading-relaxed text-ink">
         <Lightbulb className="mt-0.5 size-4 shrink-0 text-blue" aria-hidden="true" />
-        <span><strong className="font-semibold">Key point: </strong>{block.note}</span>
+        <span><strong className="font-semibold">{t('Key point:')} </strong>{block.note}</span>
       </p>
     );
   }
@@ -64,9 +67,10 @@ function Block({ block }) {
 }
 
 function PageBody({ page, number }) {
+  const { t } = useI18n();
   return (
     <>
-      <p className="eyebrow">Page {number}</p>
+      <p className="eyebrow">{t('Page {n}', { n: number })}</p>
       <h2 className="mt-2 text-2xl font-semibold md:text-3xl">{page.title}</h2>
       {page.blocks.map((block, i) => <Block key={i} block={block} />)}
     </>
@@ -76,11 +80,13 @@ function PageBody({ page, number }) {
 /** Reads one eBook a page at a time, at /learning/ebooks/:bookId/:page. */
 export default function Ebook() {
   const { bookId, page: pageParam = '1' } = useParams();
-  const book = findEbook(bookId);
+  const { t, tr } = useI18n();
+  // The eBook text comes from src/data/ebooks.js and is shown in the visitor's language.
+  const book = useMemo(() => tr(findEbook(bookId)), [tr, bookId]);
   const { notAdvice } = useCompliance();
   const index = Number(pageParam) - 1;
   const page = book?.pages[index];
-  usePageMeta(book ? `${book.title}${page ? `, page ${index + 1}` : ''} | eBook` : 'eBook', book?.subtitle);
+  usePageMeta(book ? `${book.title}${page ? `, ${t('page {n}', { n: index + 1 })}` : ''} | ${t('eBook')}` : 'eBook', book?.subtitle);
 
   if (!book) return <Navigate to="/learning/ebooks" replace />;
   if (!page) return <Navigate to={`/learning/ebooks/${book.id}`} replace />;
@@ -92,19 +98,19 @@ export default function Ebook() {
       <div className="print:hidden">
         <Link to="/learning/ebooks" className="inline-flex min-h-11 items-center gap-2 text-sm font-medium text-muted hover:text-ink">
           <ArrowLeft className="size-4" aria-hidden="true" />
-          All eBooks
+          {t('All eBooks')}
         </Link>
       </div>
 
       <div className="mt-4 max-w-3xl">
-        <p className="eyebrow flex items-center gap-2"><BookOpen className="size-4" aria-hidden="true" />MKPips eBook</p>
+        <p className="eyebrow flex items-center gap-2"><BookOpen className="size-4" aria-hidden="true" />{t('MKPips eBook')}</p>
         <h1 className="mt-3 text-4xl font-semibold md:text-5xl">{book.title}</h1>
         <p className="mt-4 text-lg leading-relaxed text-muted">{book.subtitle}</p>
       </div>
 
       <div className="mt-10 grid items-start gap-6 lg:grid-cols-[16rem_1fr] print:hidden">
-        <nav aria-label="Contents" className="glass p-4 lg:sticky lg:top-24">
-          <p className="px-2 pb-2 text-xs font-semibold tracking-wide text-faint uppercase">Contents</p>
+        <nav aria-label={t('Contents')} className="glass p-4 lg:sticky lg:top-24">
+          <p className="px-2 pb-2 text-xs font-semibold tracking-wide text-faint uppercase">{t('Contents')}</p>
           <ol className="grid gap-0.5">
             {book.pages.map((p, i) => (
               <li key={p.title}>
@@ -113,7 +119,7 @@ export default function Ebook() {
                   aria-current={i === index ? 'page' : undefined}
                   className={`flex min-h-11 items-center gap-2.5 rounded-xl px-2 py-1.5 text-sm leading-snug transition-colors ${i === index ? 'bg-blue/12 font-semibold text-blue' : 'text-muted hover:text-ink'}`}
                 >
-                  <span className="w-4 shrink-0 text-right tabular-nums">{i + 1}</span>
+                  <span className="w-4 shrink-0 text-end tabular-nums">{i + 1}</span>
                   {p.title}
                 </Link>
               </li>
@@ -121,13 +127,13 @@ export default function Ebook() {
           </ol>
           <button type="button" onClick={() => window.print()} className="mt-3 flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-line text-sm font-medium hover:border-blue/60">
             <Printer className="size-4" aria-hidden="true" />
-            Print or save as PDF
+            {t('Print or save as PDF')}
           </button>
         </nav>
 
         <div>
           <div className="mb-3 flex items-center gap-3 text-xs text-muted">
-            <span className="tabular-nums">Page {index + 1} of {total}</span>
+            <span className="tabular-nums">{t('Page {n} of {total}', { n: index + 1, total })}</span>
             <span className="h-1 flex-1 overflow-hidden rounded-full bg-line" aria-hidden="true">
               <span className="bg-brand block h-full rounded-full transition-[width] duration-500" style={{ width: `${((index + 1) / total) * 100}%` }} />
             </span>
@@ -140,18 +146,18 @@ export default function Ebook() {
             {index > 0 ? (
               <Button to={href(index - 1)} variant="ghost">
                 <ArrowLeft className="size-4" aria-hidden="true" />
-                Previous
+                {t('Previous')}
               </Button>
             ) : <span />}
             {index < total - 1 ? (
               <Button to={href(index + 1)}>
-                Next: {book.pages[index + 1].title}
+                {t('Next: {title}', { title: book.pages[index + 1].title })}
                 <ArrowRight className="size-4" aria-hidden="true" />
               </Button>
             ) : (
               <Button to="/learning/market-expert">
                 <CalendarDays className="size-4" aria-hidden="true" />
-                Ask a market expert
+                {t('Ask a market expert')}
               </Button>
             )}
           </div>
@@ -166,7 +172,7 @@ export default function Ebook() {
             <PageBody page={p} number={i + 1} />
           </section>
         ))}
-        <p className="mt-10 text-xs">{notAdvice} © MKPips. Written for MKPips readers.</p>
+        <p className="mt-10 text-xs">{notAdvice} {t('© MKPips. Written for MKPips readers.')}</p>
       </div>
     </article>
   );

@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { FlaskConical } from 'lucide-react';
+import { useT } from '../../i18n/I18nContext';
 
 /** Fades content up as it scrolls into view. */
 export function Reveal({ children, delay = 0, className = '', as = 'div' }) {
@@ -17,13 +18,16 @@ export function Reveal({ children, delay = 0, className = '', as = 'div' }) {
   );
 }
 
+// Plain-string eyebrows, titles and intros are translated here, so pages can pass English.
 export function SectionHeading({ eyebrow, title, intro, align = 'left', as: Heading = 'h2', className = '' }) {
   const centered = align === 'center';
+  const t = useT();
+  const tx = (v) => (typeof v === 'string' ? t(v) : v);
   return (
     <Reveal className={`${centered ? 'mx-auto text-center' : ''} max-w-3xl ${className}`}>
-      {eyebrow && <p className="eyebrow mb-3">{eyebrow}</p>}
-      <Heading className="text-3xl font-semibold leading-[1.12] md:text-5xl">{title}</Heading>
-      {intro && <p className="mt-4 text-base leading-relaxed text-muted md:text-lg">{intro}</p>}
+      {eyebrow && <p className="eyebrow mb-3">{tx(eyebrow)}</p>}
+      <Heading className="text-3xl font-semibold leading-[1.12] md:text-5xl">{tx(title)}</Heading>
+      {intro && <p className="mt-4 text-base leading-relaxed text-muted md:text-lg">{tx(intro)}</p>}
     </Reveal>
   );
 }
@@ -38,10 +42,11 @@ export function PageHeader({ eyebrow, title, intro, children }) {
 }
 
 export function SampleBadge({ className = '' }) {
+  const t = useT();
   return (
     <span className={`inline-flex items-center gap-1 rounded-full border border-dashed border-green/60 bg-green/10 px-2.5 py-0.5 text-xs font-medium text-green ${className}`}>
       <FlaskConical className="size-3" aria-hidden="true" />
-      Sample data
+      {t('Sample data')}
     </span>
   );
 }

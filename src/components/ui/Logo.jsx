@@ -1,6 +1,7 @@
 import { useId } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { useT } from '../../i18n/I18nContext';
 
 // An engraved MK monogram inside a globe. The M's right leg is also the K's stem.
 // Three partner nodes (blue, green, red) circle the globe on a connected orbit.
@@ -105,10 +106,11 @@ export function LogoMark({ className = 'size-8' }) {
 }
 
 export default function Logo({ className = '' }) {
+  const t = useT();
   return (
-    <Link to="/" aria-label="MKPips home" className={`inline-flex min-h-11 items-center gap-2 ${className}`}>
+    <Link to="/" aria-label={t('MKPips home')} className={`inline-flex min-h-11 items-center gap-2 ${className}`}>
       <LogoMark />
-      <span className="text-brand font-display text-xl font-bold tracking-tight">MKPips</span>
+      <span className="text-brand font-latin font-display text-xl font-bold tracking-tight" dir="ltr">MKPips</span>
     </Link>
   );
 }

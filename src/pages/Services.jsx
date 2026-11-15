@@ -3,6 +3,7 @@ import Button from '../components/ui/Button';
 import { IconTile, PageHeader, Reveal, SectionHeading } from '../components/ui/Primitives';
 import { usePageMeta } from '../hooks/usePageMeta';
 import ServiceMotion from '../components/services/ServiceMotion';
+import { useT } from '../i18n/I18nContext';
 
 const services = [
   {
@@ -64,6 +65,7 @@ const paths = [
 
 export default function Services() {
   usePageMeta('Services', 'Broker selection, account opening support, trading conditions reviews and ongoing relationship support for FX and CFD traders.');
+  const t = useT();
   return (
     <>
       <PageHeader
@@ -78,14 +80,14 @@ export default function Services() {
             <ServiceMotion name={scene} />
             <div className="mt-6 flex items-center gap-3 px-2">
               <IconTile icon={Icon} tone={['blue', 'green', 'red'][i % 3]} />
-              <h2 className="text-2xl font-semibold">{title}</h2>
+              <h2 className="text-2xl font-semibold">{t(title)}</h2>
             </div>
-            <p className="mt-4 px-2 leading-relaxed text-muted">{text}</p>
+            <p className="mt-4 px-2 leading-relaxed text-muted">{t(text)}</p>
             <ul className="mt-5 grid gap-2.5 px-2 pb-2 text-sm">
               {points.map((point) => (
                 <li key={point} className="flex gap-2">
                   <Check className="mt-0.5 size-4 shrink-0 text-blue" aria-hidden="true" />
-                  {point}
+                  {t(point)}
                 </li>
               ))}
             </ul>
@@ -100,12 +102,12 @@ export default function Services() {
             <Reveal key={audience} delay={i * 0.08} className="glass lift flex flex-col p-7">
               <div className="flex items-center gap-3">
                 <IconTile icon={Icon} tone={['blue', 'green', 'red'][i % 3]} />
-                <p className="text-sm font-semibold">{audience}</p>
+                <p className="text-sm font-semibold">{t(audience)}</p>
               </div>
-              <h3 className="mt-6 text-xl font-semibold">{title}</h3>
-              <p className="mt-3 mb-6 flex-1 text-sm leading-relaxed text-muted">{text}</p>
+              <h3 className="mt-6 text-xl font-semibold">{t(title)}</h3>
+              <p className="mt-3 mb-6 flex-1 text-sm leading-relaxed text-muted">{t(text)}</p>
               <Button to={to} variant="ghost" className="w-full">
-                {cta}
+                {t(cta)}
                 <ArrowRight className="size-4" aria-hidden="true" />
               </Button>
             </Reveal>

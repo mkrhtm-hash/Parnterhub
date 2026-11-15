@@ -9,6 +9,7 @@ import { IconTile, PageHeader, Reveal } from '../components/ui/Primitives';
 import { expertSessions } from '../../shared/expertSessions';
 import { usePageMeta } from '../hooks/usePageMeta';
 import { useCompliance, useSiteData } from '../context/SiteDataContext';
+import { useI18n } from '../i18n/I18nContext';
 
 const sections = [
   { slug: 'start-here', label: 'Start here' },
@@ -39,43 +40,44 @@ const expertSteps = [
 ];
 
 function ExpertIntro() {
+  const { t } = useI18n();
   return (
     <Reveal className="glass mb-5 grid gap-6 p-6 md:grid-cols-[auto_1fr] md:p-8">
       <IconTile icon={ChartCandlestick} tone="green" />
       <div>
         <div className="flex flex-wrap items-start justify-between gap-3">
-          <h2 className="text-2xl font-semibold">A paid one-to-one session with a market expert</h2>
+          <h2 className="text-2xl font-semibold">{t('A paid one-to-one session with a market expert')}</h2>
           <p className="rounded-full border border-green/50 bg-green/10 px-4 py-1.5 text-sm font-semibold text-green">
-            From {expertSessions[0].price} per session
+            {t('From {price} per session', { price: expertSessions[0].price })}
           </p>
         </div>
-        <p className="mt-2 leading-relaxed text-muted">Tell us what you want to understand and an experienced member of our team will walk you through it on a call, in plain English.</p>
-        <h3 className="mt-5 text-xs font-semibold text-ink">How booking works</h3>
+        <p className="mt-2 leading-relaxed text-muted">{t('Tell us what you want to understand and an experienced member of our team will walk you through it on a call, in plain English.')}</p>
+        <h3 className="mt-5 text-xs font-semibold text-ink">{t('How booking works')}</h3>
         <ol className="mt-2 grid gap-2 text-sm text-muted sm:grid-cols-3">
           {expertSteps.map((step, i) => (
             <li key={step} className="flex gap-2">
               <span className="bg-brand grid size-5 shrink-0 place-items-center rounded-full text-xs font-semibold">{i + 1}</span>
-              {step}
+              {t(step)}
             </li>
           ))}
         </ol>
-        <h3 className="mt-5 text-xs font-semibold text-ink">You could cover</h3>
+        <h3 className="mt-5 text-xs font-semibold text-ink">{t('You could cover')}</h3>
         <ul className="mt-2 grid gap-2 text-sm text-muted sm:grid-cols-2">
           {expertTopics.map((topic) => (
             <li key={topic} className="flex gap-2">
               <Check className="mt-0.5 size-4 shrink-0 text-blue" aria-hidden="true" />
-              {topic}
+              {t(topic)}
             </li>
           ))}
         </ul>
-        <p className="mt-5 rounded-2xl border border-line bg-[var(--glass)] p-4 text-xs leading-relaxed text-muted">Sessions are for education only. We will not tell you what to buy or sell, when to trade or how much to invest, and nothing said on the call is investment advice.</p>
+        <p className="mt-5 rounded-2xl border border-line bg-[var(--glass)] p-4 text-xs leading-relaxed text-muted">{t('Sessions are for education only. We will not tell you what to buy or sell, when to trade or how much to invest, and nothing said on the call is investment advice.')}</p>
       </div>
     </Reveal>
   );
 }
 
-const webinarDate = (value) =>
-  new Date(value).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
+const webinarDate = (value, locale) =>
+  new Date(value).toLocaleString(locale, { dateStyle: 'medium', timeStyle: 'short' });
 
 /** Turns a YouTube or Vimeo page link into its embeddable address. Other links play as a video file. */
 function embedUrl(link) {
@@ -93,6 +95,9 @@ function embedUrl(link) {
 function VideoDialog({ video, onClose }) {
   const ref = useRef(null);
   const embed = embedUrl(video.url);
+  const { t, lang } = useI18n();
+  // Our own videos come in English, Urdu and Arabic versions: same narration, with on-screen text and subtitles in that language.
+  const src = lang !== 'en' && video.url.startsWith('/videos/') ? video.url.replace(/\.mp4$/, `.${lang}.mp4`) : video.url;
 
   useEffect(() => {
     ref.current.showModal();
@@ -109,7 +114,7 @@ function VideoDialog({ video, onClose }) {
     >
       <div className="flex items-center justify-between gap-3 p-4 md:p-5">
         <h2 id="video-title" className="text-lg font-semibold md:text-xl">{video.title}</h2>
-        <button type="button" onClick={onClose} aria-label="Close video" className="grid size-11 shrink-0 place-items-center rounded-full border border-line hover:border-blue/60">
+        <button type="button" onClick={onClose} aria-label={t('Close video')} className="grid size-11 shrink-0 place-items-center rounded-full border border-line hover:border-blue/60">
           <X className="size-4" aria-hidden="true" />
         </button>
       </div>
@@ -117,11 +122,12 @@ function VideoDialog({ video, onClose }) {
         {embed ? (
           <iframe src={embed} title={video.title} className="size-full" allow="encrypted-media; picture-in-picture; fullscreen" />
         ) : (
-          <video src={video.url} poster={video.url.replace(/\.mp4$/, '.jpg')} controls preload="metadata" className="size-full" />
+          <video key={src} src={src} poster={src.replace(/\.mp4$/, '.jpg')} controls preload="metadata" className="size-full" />
         )}
       </div>
       <p className="px-4 py-3 text-xs leading-relaxed text-muted md:px-5">
-        The narration in our videos is computer-generated. General education only, not investment advice.
+        {lang === 'en' ? '' : `${t('English narration, with on-screen text and subtitles in your language.')} `}
+        {t('The narration in our videos is computer-generated. General education only, not investment advice.')}
       </p>
     </dialog>
   );
@@ -129,20 +135,21 @@ function VideoDialog({ video, onClose }) {
 
 function LessonCard({ item, onPlay }) {
   const { label, Icon, tone } = kinds[item.kind];
+  const { t, locale } = useI18n();
   const isPast = item.startsAt && new Date(item.startsAt) < new Date();
-  const when = item.kind === 'webinar' && item.startsAt ? webinarDate(item.startsAt) : item.lengthLabel;
+  const when = item.kind === 'webinar' && item.startsAt ? webinarDate(item.startsAt, locale) : item.lengthLabel;
   return (
     <article className="glass lift flex h-full flex-col p-6">
       <div className="flex items-start justify-between gap-3">
         <IconTile icon={Icon} tone={tone} />
-        <p className="text-right text-xs font-medium text-muted">
-          {label} · {item.level}
+        <p className="text-end text-xs font-medium text-muted">
+          {t(label)} · {item.level}
         </p>
       </div>
       <h2 className="mt-5 text-xl font-semibold">{item.title}</h2>
       <p className="mt-2 text-sm leading-relaxed text-muted">{item.summary}</p>
 
-      <h3 className="mt-5 text-xs font-semibold text-ink">What you will learn</h3>
+      <h3 className="mt-5 text-xs font-semibold text-ink">{t('What you will learn')}</h3>
       <ul className="mt-2 mb-6 grid gap-2 text-sm text-muted">
         {item.topics.map((topic) => (
           <li key={topic} className="flex gap-2">
@@ -162,25 +169,25 @@ function LessonCard({ item, onPlay }) {
           <span />
         )}
         {!item.url && (
-          <span className="inline-flex min-h-11 items-center rounded-full border border-dashed border-green/60 bg-green/10 px-4 text-xs font-medium text-green">{item.kind === 'webinar' ? 'Date to be announced' : 'Coming soon'}</span>
+          <span className="inline-flex min-h-11 items-center rounded-full border border-dashed border-green/60 bg-green/10 px-4 text-xs font-medium text-green">{t(item.kind === 'webinar' ? 'Date to be announced' : 'Coming soon')}</span>
         )}
         {item.url && item.kind === 'video' && (
           <Button onClick={() => onPlay(item)} className="!min-h-11 !py-2">
             <PlayCircle className="size-4" aria-hidden="true" />
-            Watch
+            {t('Watch')}
           </Button>
         )}
         {item.url?.startsWith('/') && item.kind === 'ebook' && (
           <Button to={item.url} className="!min-h-11 !py-2">
             <BookOpen className="size-4" aria-hidden="true" />
-            Read eBook
+            {t('Read eBook')}
           </Button>
         )}
         {item.url && !item.url.startsWith('/') && item.kind !== 'video' && (
           <Button href={item.url} className="!min-h-11 !py-2">
             {item.kind === 'ebook' && <Download className="size-4" aria-hidden="true" />}
-            {item.kind === 'ebook' ? 'Read eBook' : isPast ? 'Watch recording' : 'Register'}
-            <span className="sr-only">(opens in a new tab)</span>
+            {t(item.kind === 'ebook' ? 'Read eBook' : isPast ? 'Watch recording' : 'Register')}
+            <span className="sr-only">{t('(opens in a new tab)')}</span>
           </Button>
         )}
       </div>
@@ -193,7 +200,8 @@ export default function Learning() {
   const { notAdvice } = useCompliance();
   const { section: slug } = useParams();
   const section = sections.find((s) => s.slug === slug);
-  usePageMeta(section ? `${section.label} | Learning` : 'Learning', 'A step-by-step learning pathway with videos, ebooks and webinars on brokers, CFDs, leverage and trading costs, plus one-to-one sessions with a market expert.');
+  const { t } = useI18n();
+  usePageMeta(section ? `${t(section.label)} | ${t('Learning')}` : 'Learning', 'A step-by-step learning pathway with videos, ebooks and webinars on brokers, CFDs, leverage and trading costs, plus one-to-one sessions with a market expert.');
   const [video, setVideo] = useState(null);
 
   if (!section) return <Navigate to="/learning/start-here" replace />;
@@ -208,14 +216,14 @@ export default function Learning() {
       />
 
       <section className="shell">
-        <nav aria-label="Learning sections" className="grid max-w-5xl grid-cols-2 gap-1 rounded-2xl border border-line bg-[var(--glass)] p-1.5 sm:grid-cols-3 lg:grid-cols-6">
+        <nav aria-label={t('Learning sections')} className="grid max-w-5xl grid-cols-2 gap-1 rounded-2xl border border-line bg-[var(--glass)] p-1.5 sm:grid-cols-3 lg:grid-cols-6">
           {sections.map(({ slug: to, label }) => (
             <NavLink
               key={to}
               to={`/learning/${to}`}
               className={({ isActive }) => `flex min-h-11 items-center justify-center rounded-xl px-2 py-1.5 text-center text-sm leading-tight font-semibold transition-colors ${isActive ? 'bg-brand text-on-accent' : 'text-muted hover:text-ink'}`}
             >
-              {label}
+              {t(label)}
             </NavLink>
           ))}
         </nav>
@@ -233,8 +241,8 @@ export default function Learning() {
           ) : shown.length === 0 ? (
             <div className="glass p-10 text-center md:p-14">
               <SearchX className="mx-auto size-8 text-green" aria-hidden="true" />
-              <h2 className="mt-4 text-xl font-semibold">Nothing here yet</h2>
-              <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-muted">New lessons will appear here as soon as they are ready.</p>
+              <h2 className="mt-4 text-xl font-semibold">{t('Nothing here yet')}</h2>
+              <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-muted">{t('New lessons will appear here as soon as they are ready.')}</p>
             </div>
           ) : (
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -251,12 +259,12 @@ export default function Learning() {
 
         {slug !== 'market-expert' && <Reveal className="glass mt-10 flex flex-col items-start justify-between gap-5 p-7 md:flex-row md:items-center md:p-10">
           <div>
-            <h2 className="text-2xl font-semibold">Still unsure where to begin?</h2>
-            <p className="mt-2 leading-relaxed text-muted">Tell us your experience and we will point you to the right starting place.</p>
+            <h2 className="text-2xl font-semibold">{t('Still unsure where to begin?')}</h2>
+            <p className="mt-2 leading-relaxed text-muted">{t('Tell us your experience and we will point you to the right starting place.')}</p>
           </div>
           <Button to="/book" className="shrink-0">
             <CalendarDays className="size-4" aria-hidden="true" />
-            Book a call
+            {t('Book a call')}
           </Button>
         </Reveal>}
       </section>

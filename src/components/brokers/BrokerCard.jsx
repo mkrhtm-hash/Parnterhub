@@ -2,6 +2,7 @@ import { Check, ExternalLink, Plus } from 'lucide-react';
 import { SampleBadge } from '../ui/Primitives';
 import SmileCoin from './SmileCoin';
 import { useSiteData } from '../../context/SiteDataContext';
+import { useT } from '../../i18n/I18nContext';
 
 export function useInstrumentLabel() {
   const { instruments } = useSiteData().data.options;
@@ -12,6 +13,7 @@ export const money = (n) => `$${n.toLocaleString('en-US')}`;
 
 export function VerifyLink({ licence, verifyUrl }) {
   const regulator = useSiteData().data.regulators[licence.regulator];
+  const t = useT();
   return (
     <a
       href={licence.verifyUrl ?? verifyUrl ?? regulator.registerUrl}
@@ -19,9 +21,9 @@ export function VerifyLink({ licence, verifyUrl }) {
       rel="noopener noreferrer"
       className="inline-flex min-h-10 items-center gap-1 text-xs font-medium text-blue underline-offset-2 hover:underline lg:min-h-0"
     >
-      {licence.kind === 'registration' ? 'See the registration details' : `Verify on ${regulator.code}'s register`}
+      {licence.kind === 'registration' ? t('See the registration details') : t("Verify on {code}'s register", { code: regulator.code })}
       <ExternalLink className="size-3" aria-hidden="true" />
-      <span className="sr-only">(opens in a new tab)</span>
+      <span className="sr-only">{t('(opens in a new tab)')}</span>
     </a>
   );
 }
@@ -39,6 +41,7 @@ function Chips({ items }) {
 export default function BrokerCard({ broker, selected, onToggleCompare }) {
   const { regulators } = useSiteData().data;
   const instrumentLabel = useInstrumentLabel();
+  const t = useT();
   return (
     <article className={`glass lift flex h-full flex-col p-6 ${selected ? '!border-blue' : ''}`}>
       <div className="flex min-h-8 items-center justify-between gap-3">
@@ -57,7 +60,7 @@ export default function BrokerCard({ broker, selected, onToggleCompare }) {
       {broker.highlights?.length > 0 && (
         <ul className="mt-4 grid gap-2">
           {broker.highlights.map(({ title, note }) => (
-            <li key={title} className="flex items-center gap-3 rounded-2xl border border-[#e8b73a]/40 bg-gradient-to-r from-[#f6c945]/14 to-transparent p-2.5 pr-3">
+            <li key={title} className="flex items-center gap-3 rounded-2xl border border-[#e8b73a]/40 bg-gradient-to-r from-[#f6c945]/14 to-transparent p-2.5 pe-3 rtl:bg-gradient-to-l">
               <SmileCoin className="size-10 shrink-0" />
               <span>
                 <span className="block text-sm font-semibold">{title}</span>
@@ -75,9 +78,9 @@ export default function BrokerCard({ broker, selected, onToggleCompare }) {
               {regulators[licence.regulator].code}
               <span className="font-normal text-muted"> · {regulators[licence.regulator].jurisdiction}</span>
             </p>
-            {licence.entity && <p className="mt-1 text-xs text-ink/85">{licence.kind === 'registration' ? 'Registered as' : 'Licensed as'} {licence.entity}</p>}
-            <p className="mt-0.5 mb-1.5 font-mono text-xs break-all text-faint">{licence.kind === 'registration' ? 'Registration no.' : 'Licence no.'} {licence.number}</p>
-            {licence.address && <p className="mb-1.5 text-xs leading-relaxed text-faint">{licence.address}</p>}
+            {licence.entity && <p className="mt-1 text-xs text-ink/85">{t(licence.kind === 'registration' ? 'Registered as' : 'Licensed as')} <span dir="ltr">{licence.entity}</span></p>}
+            <p className="mt-0.5 mb-1.5 font-mono text-xs break-all text-faint">{t(licence.kind === 'registration' ? 'Registration no.' : 'Licence no.')} <span dir="ltr">{licence.number}</span></p>
+            {licence.address && <p dir="ltr" className="mb-1.5 text-start text-xs leading-relaxed text-faint">{licence.address}</p>}
             <VerifyLink licence={licence} verifyUrl={broker.verifyUrl} />
           </li>
         ))}
@@ -85,16 +88,16 @@ export default function BrokerCard({ broker, selected, onToggleCompare }) {
 
       <dl className="mt-5 grid grid-cols-2 gap-4 text-sm">
         <div>
-          <dt className="text-xs text-faint">Minimum deposit</dt>
+          <dt className="text-xs text-faint">{t('Minimum deposit')}</dt>
           <dd className="mt-0.5 font-medium">{money(broker.minDeposit)}</dd>
         </div>
         <div>
-          <dt className="text-xs text-faint">Typical spreads</dt>
+          <dt className="text-xs text-faint">{t('Typical spreads')}</dt>
           <dd className="mt-0.5 font-medium">{broker.spreads}</dd>
         </div>
         {broker.leverage && (
           <div className="col-span-2">
-            <dt className="text-xs text-faint">Leverage</dt>
+            <dt className="text-xs text-faint">{t('Leverage')}</dt>
             <dd className="mt-0.5 font-medium">{broker.leverage}</dd>
           </div>
         )}
@@ -102,11 +105,11 @@ export default function BrokerCard({ broker, selected, onToggleCompare }) {
 
       <div className="mt-5 grid gap-3">
         <div>
-          <p className="mb-1.5 text-xs text-faint">Platforms</p>
+          <p className="mb-1.5 text-xs text-faint">{t('Platforms')}</p>
           <Chips items={broker.platforms} />
         </div>
         <div>
-          <p className="mb-1.5 text-xs text-faint">Instruments</p>
+          <p className="mb-1.5 text-xs text-faint">{t('Instruments')}</p>
           <Chips items={broker.instruments.map(instrumentLabel)} />
         </div>
       </div>
@@ -121,7 +124,7 @@ export default function BrokerCard({ broker, selected, onToggleCompare }) {
           }`}
         >
           {selected ? <Check className="size-4" aria-hidden="true" /> : <Plus className="size-4" aria-hidden="true" />}
-          {selected ? 'Added to compare' : 'Add to compare'}
+          {t(selected ? 'Added to compare' : 'Add to compare')}
         </button>
       </div>
     </article>

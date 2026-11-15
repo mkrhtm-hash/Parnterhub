@@ -3,6 +3,8 @@ import { CalendarDays } from 'lucide-react';
 import Logo from '../ui/Logo';
 import Button from '../ui/Button';
 import ThemeToggle from './ThemeToggle';
+import LanguageSwitch from './LanguageSwitch';
+import { useT } from '../../i18n/I18nContext';
 
 export const mainLinks = [
   { to: '/services', label: 'Services' },
@@ -14,11 +16,12 @@ export const mainLinks = [
 ];
 
 export default function Navbar() {
+  const t = useT();
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-[var(--glass-solid)] backdrop-blur-xl">
       <div className="shell flex h-16 items-center justify-between gap-4 md:h-[4.5rem]">
         <Logo />
-        <nav aria-label="Main" className="hidden items-center gap-1 lg:flex">
+        <nav aria-label={t('Main')} className="hidden items-center gap-1 lg:flex">
           {mainLinks.map(({ to, label }) => (
             <NavLink
               key={to}
@@ -27,16 +30,17 @@ export default function Navbar() {
                 `rounded-full px-3 py-2 text-sm font-medium whitespace-nowrap transition-colors ${isActive ? 'bg-blue/12 text-blue' : 'text-muted hover:text-ink'}`
               }
             >
-              {label}
+              {t(label)}
             </NavLink>
           ))}
         </nav>
         <div className="flex items-center gap-2">
+          <LanguageSwitch />
           <ThemeToggle />
           <div className="hidden lg:block">
             <Button to="/book" className="!min-h-10 !px-4 !py-2">
               <CalendarDays className="size-4" aria-hidden="true" />
-              Book a call
+              {t('Book a call')}
             </Button>
           </div>
         </div>

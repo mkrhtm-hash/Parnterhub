@@ -6,12 +6,14 @@ import MobileNav from './MobileNav';
 import Footer from './Footer';
 import CookieBanner from './CookieBanner';
 import WhatsAppButton from './WhatsAppButton';
+import { useT } from '../../i18n/I18nContext';
 
 export default function Layout() {
   const { pathname, hash } = useLocation();
   const outlet = useOutlet();
   const mainRef = useRef(null);
   const firstRender = useRef(true);
+  const t = useT();
 
   useEffect(() => {
     if (hash) return;
@@ -32,9 +34,9 @@ export default function Layout() {
     <>
       <a
         href="#main"
-        className="fixed top-2 left-2 z-[80] -translate-y-20 rounded-full bg-blue px-4 py-2 text-sm font-semibold text-on-accent focus:translate-y-0"
+        className="fixed top-2 start-2 z-[80] -translate-y-20 rounded-full bg-blue px-4 py-2 text-sm font-semibold text-on-accent focus:translate-y-0"
       >
-        Skip to content
+        {t('Skip to content')}
       </a>
       <div className="ambient" aria-hidden="true" />
       <Navbar />

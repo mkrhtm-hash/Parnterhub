@@ -8,6 +8,7 @@ import { usePageMeta } from '../hooks/usePageMeta';
 import { useToast } from '../context/ToastContext';
 import { findMatches } from '../lib/matchEngine';
 import { useSiteData } from '../context/SiteDataContext';
+import { useI18n } from '../i18n/I18nContext';
 
 const MAX_PRIORITIES = 3;
 
@@ -19,22 +20,23 @@ const steps = [
   { key: 'instruments', short: 'Instruments', title: 'What do you want to trade?', help: 'Choose all that apply.' },
   { key: 'platform', short: 'Platform', title: 'Which platform do you prefer?', help: 'If you are not sure, MT5 is a common starting point. You can change your mind later.' },
   { key: 'deposit', short: 'Deposit', title: 'What deposit range are you considering?', help: 'Only consider money you can afford to lose.' },
-  { key: 'priorities', short: 'Priorities', title: 'What matters most to you?', help: `Choose up to ${MAX_PRIORITIES}.` },
+  { key: 'priorities', short: 'Priorities', title: 'What matters most to you?', help: 'Choose up to {max}.' },
 ];
 
 function Option({ selected, onClick, title, hint, multi }) {
+  const { t } = useI18n();
   return (
     <button
       type="button"
       aria-pressed={selected}
       onClick={onClick}
-      className={`flex min-h-14 w-full items-center justify-between gap-3 rounded-2xl border p-4 text-left transition-colors ${
+      className={`flex min-h-14 w-full items-center justify-between gap-3 rounded-2xl border p-4 text-start transition-colors ${
         selected ? 'border-blue bg-blue/12' : 'border-line bg-[var(--glass)] hover:border-blue/50'
       }`}
     >
       <span>
-        <span className="block font-medium">{title}</span>
-        {hint && <span className="mt-0.5 block text-sm text-muted">{hint}</span>}
+        <span className="block font-medium">{t(title)}</span>
+        {hint && <span className="mt-0.5 block text-sm text-muted">{t(hint)}</span>}
       </span>
       <span className={`grid size-6 shrink-0 place-items-center border transition-colors ${multi ? 'rounded-md' : 'rounded-full'} ${selected ? 'bg-brand border-transparent' : 'border-line'}`}>
         {selected && <Check className="size-3.5" aria-hidden="true" />}
@@ -45,22 +47,23 @@ function Option({ selected, onClick, title, hint, multi }) {
 
 function CountryStep({ value, onChange }) {
   const { countries } = useSiteData().data;
+  const { t } = useI18n();
   const [query, setQuery] = useState('');
   const shown = useMemo(() => countries.filter((c) => c.code === 'OTHER' || c.name.toLowerCase().includes(query.trim().toLowerCase())), [query, countries]);
   return (
     <>
       <div className="relative mb-4">
-        <Search className="absolute top-1/2 left-4 size-4 -translate-y-1/2 text-faint" aria-hidden="true" />
+        <Search className="absolute top-1/2 start-4 size-4 -translate-y-1/2 text-faint" aria-hidden="true" />
         <input
           type="search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search countries"
-          aria-label="Search countries"
-          className="field !pl-11"
+          placeholder={t('Search countries')}
+          aria-label={t('Search countries')}
+          className="field !ps-11"
         />
       </div>
-      <div className="grid max-h-80 gap-2 overflow-y-auto pr-1 sm:grid-cols-2">
+      <div className="grid max-h-80 gap-2 overflow-y-auto pe-1 sm:grid-cols-2">
         {shown.map((c) => (
           <Option key={c.code} title={c.name} selected={value === c.code} onClick={() => onChange(c.code)} />
         ))}
@@ -125,21 +128,22 @@ function StepBody({ stepKey, answers, set, onLimit }) {
 }
 
 function NoResults({ icon: Icon, title, text, onRestart }) {
+  const { t } = useI18n();
   return (
     <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="glass mx-auto max-w-2xl p-8 text-center md:p-12">
       <span className="mx-auto grid size-14 place-items-center rounded-2xl bg-green/12 text-green">
         <Icon className="size-6" aria-hidden="true" />
       </span>
-      <h2 className="mt-6 text-2xl font-semibold md:text-3xl">{title}</h2>
-      <p className="mt-3 leading-relaxed text-muted">{text}</p>
+      <h2 className="mt-6 text-2xl font-semibold md:text-3xl">{t(title)}</h2>
+      <p className="mt-3 leading-relaxed text-muted">{t(text)}</p>
       <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
         <Button to="/book">
           <CalendarDays className="size-4" aria-hidden="true" />
-          Talk to us
+          {t('Talk to us')}
         </Button>
         <Button variant="ghost" onClick={onRestart}>
           <RotateCcw className="size-4" aria-hidden="true" />
-          Change my answers
+          {t('Change my answers')}
         </Button>
       </div>
     </motion.div>
@@ -149,14 +153,15 @@ function NoResults({ icon: Icon, title, text, onRestart }) {
 function Results({ answers, onRestart }) {
   const { data } = useSiteData();
   const { countries, regulators } = data;
-  const { status, results } = useMemo(() => findMatches(answers, data), [answers, data]);
+  const { t } = useI18n();
+  const { status, results } = useMemo(() => findMatches(answers, data, t), [answers, data, t]);
   const country = countries.find((c) => c.code === answers.country);
 
   if (status === 'no-country') {
     return (
       <NoResults
         icon={Globe}
-        title={answers.country === 'OTHER' ? 'We need to know a little more' : `No match in ${country.name} for now`}
+        title={answers.country === 'OTHER' ? t('We need to know a little more') : t('No match in {country} for now', { country: country.name })}
         text="We do not have a partner broker available in your country at the moment. Local rules decide who can serve you, so we would rather say so than point you to a firm that should not be taking your account. You are welcome to contact us, and the regulation guide can help you check any firm yourself."
         onRestart={onRestart}
       />
@@ -181,9 +186,9 @@ function Results({ answers, onRestart }) {
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="text-2xl font-semibold md:text-3xl">
-            {results.length === 1 ? 'Your top match' : `Your top ${results.length} matches`}
+            {results.length === 1 ? t('Your top match') : t('Your top {n} matches', { n: results.length })}
           </h2>
-          <p className="mt-1 text-sm text-muted">Based only on your answers and the listed broker details.</p>
+          <p className="mt-1 text-sm text-muted">{t('Based only on your answers and the listed broker details.')}</p>
         </div>
         <SampleBadge />
       </div>
@@ -198,16 +203,16 @@ function Results({ answers, onRestart }) {
             className="glass flex flex-col p-6"
           >
             <div className="flex items-center justify-between gap-2">
-              <span className="text-brand font-display text-sm font-semibold">Match {rank}</span>
+              <span className="text-brand font-display text-sm font-semibold">{t('Match {n}', { n: rank })}</span>
               <span className="rounded-full bg-blue/12 px-2.5 py-1 text-xs font-medium text-blue">{fit}</span>
             </div>
             <h3 className="mt-3 text-xl font-semibold">{broker.name}</h3>
             <p className="mt-1 text-sm text-muted">
-              {broker.licences.map((l) => regulators[l.regulator].code).join(' · ')} · from ${broker.minDeposit.toLocaleString('en-US')}
+              {broker.licences.map((l) => regulators[l.regulator].code).join(' · ')} · {t('from {amount}', { amount: `$${broker.minDeposit.toLocaleString('en-US')}` })}
             </p>
-            {broker.leverage && <p className="mt-0.5 text-sm text-muted">Leverage: {broker.leverage}</p>}
+            {broker.leverage && <p className="mt-0.5 text-sm text-muted">{t('Leverage:')} {broker.leverage}</p>}
 
-            <h4 className="mt-5 text-sm font-semibold">Why this fits you</h4>
+            <h4 className="mt-5 text-sm font-semibold">{t('Why this fits you')}</h4>
             <ul className="mt-2 grid gap-2 text-sm leading-relaxed text-muted">
               {why.map((reason) => (
                 <li key={reason} className="flex gap-2">
@@ -219,7 +224,7 @@ function Results({ answers, onRestart }) {
 
             {checks.length > 0 && (
               <>
-                <h4 className="mt-5 text-sm font-semibold">Worth checking</h4>
+                <h4 className="mt-5 text-sm font-semibold">{t('Worth checking')}</h4>
                 <ul className="mt-2 grid gap-2 text-sm leading-relaxed text-muted">
                   {checks.map((check) => (
                     <li key={check} className="flex gap-2">
@@ -235,18 +240,18 @@ function Results({ answers, onRestart }) {
       </div>
 
       <p className="mt-5 text-xs leading-relaxed text-faint">
-        Results can include fictional sample brokers, marked Sample data. It is general information, not investment advice or a personal recommendation. Check any licence on the regulator's own register before opening an account.
+        {t("Results can include fictional sample brokers, marked Sample data. It is general information, not investment advice or a personal recommendation. Check any licence on the regulator's own register before opening an account.")}
       </p>
 
       <div className="mt-6 flex flex-col gap-3 sm:flex-row">
         <Button to="/book">
           <CalendarDays className="size-4" aria-hidden="true" />
-          Talk through these results
+          {t('Talk through these results')}
         </Button>
-        {results.length > 1 && <Button to={compareLink} variant="ghost">Compare side by side</Button>}
+        {results.length > 1 && <Button to={compareLink} variant="ghost">{t('Compare side by side')}</Button>}
         <Button variant="quiet" onClick={onRestart}>
           <RotateCcw className="size-4" aria-hidden="true" />
-          Start again
+          {t('Start again')}
         </Button>
       </div>
     </div>
@@ -256,6 +261,8 @@ function Results({ answers, onRestart }) {
 export default function BrokerMatch() {
   usePageMeta('Broker Match', 'Answer six questions to see up to three sample broker matches, each with a plain explanation of why it fits and what to check.');
   const toast = useToast();
+  const { t, ti, dir } = useI18n();
+  const flip = dir === 'rtl' ? -1 : 1;
   const [stepIndex, setStepIndex] = useState(0);
   const [answers, setAnswers] = useState(empty);
   const [done, setDone] = useState(false);
@@ -311,10 +318,10 @@ export default function BrokerMatch() {
       <section ref={topRef} className="shell scroll-mt-20 md:scroll-mt-24">
         <div className="mb-6">
           <div className="mb-2 flex items-center justify-between text-sm">
-            <span className="font-medium">{done ? 'Your results' : `Step ${stepIndex + 1} of ${steps.length}: ${step.short}`}</span>
+            <span className="font-medium">{done ? t('Your results') : t('Step {n} of {total}: {name}', { n: stepIndex + 1, total: steps.length, name: t(step.short) })}</span>
             <span className="text-faint tabular-nums">{Math.round(progress)}%</span>
           </div>
-          <div role="progressbar" aria-label="Questionnaire progress" aria-valuenow={Math.round(progress)} aria-valuemin={0} aria-valuemax={100} className="h-2 overflow-hidden rounded-full bg-line">
+          <div role="progressbar" aria-label={t('Questionnaire progress')} aria-valuenow={Math.round(progress)} aria-valuemin={0} aria-valuemax={100} className="h-2 overflow-hidden rounded-full bg-line">
             <motion.div className="bg-brand h-full rounded-full" animate={{ width: `${progress}%` }} transition={{ duration: 0.45, ease: 'easeOut' }} />
           </div>
         </div>
@@ -329,18 +336,18 @@ export default function BrokerMatch() {
               <motion.div
                 key={step.key}
                 custom={direction}
-                initial={{ opacity: 0, x: direction * 28 }}
+                initial={{ opacity: 0, x: direction * 28 * flip }}
                 animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: direction * -28 }}
+                exit={{ opacity: 0, x: direction * -28 * flip }}
                 transition={{ duration: 0.22, ease: 'easeOut' }}
               >
-                <h2 ref={headingRef} tabIndex={-1} className="text-2xl font-semibold outline-none md:text-3xl">{step.title}</h2>
-                <p className="mt-2 mb-6 text-sm text-muted md:text-base">{step.help}</p>
+                <h2 ref={headingRef} tabIndex={-1} className="text-2xl font-semibold outline-none md:text-3xl">{t(step.title)}</h2>
+                <p className="mt-2 mb-6 text-sm text-muted md:text-base">{t(step.help, { max: MAX_PRIORITIES })}</p>
                 <StepBody
                   stepKey={step.key}
                   answers={answers}
                   set={set}
-                  onLimit={() => toast(`You can choose up to ${MAX_PRIORITIES} priorities. Remove one to pick another.`, 'info')}
+                  onLimit={() => toast(t('You can choose up to {max} priorities. Remove one to pick another.', { max: MAX_PRIORITIES }), 'info')}
                 />
               </motion.div>
             </AnimatePresence>
@@ -348,10 +355,10 @@ export default function BrokerMatch() {
             <div className="mt-7 flex items-center justify-between gap-3 border-t border-line pt-5">
               <Button variant="quiet" onClick={back} disabled={stepIndex === 0} className="!px-3">
                 <ArrowLeft className="size-4" aria-hidden="true" />
-                Back
+                {t('Back')}
               </Button>
               <Button onClick={next} disabled={!complete}>
-                {last ? 'See my matches' : 'Continue'}
+                {t(last ? 'See my matches' : 'Continue')}
                 <ArrowRight className="size-4" aria-hidden="true" />
               </Button>
             </div>
@@ -360,7 +367,7 @@ export default function BrokerMatch() {
 
         {!done && (
           <p className="mt-4 text-center text-xs text-faint">
-            Your answers stay in your browser. See our <Link to="/privacy" className="underline underline-offset-2">Privacy Policy</Link>.
+            {ti('Your answers stay in your browser. See our {link}.', { link: <Link to="/privacy" className="underline underline-offset-2">{t('Privacy Policy')}</Link> })}
           </p>
         )}
       </section>

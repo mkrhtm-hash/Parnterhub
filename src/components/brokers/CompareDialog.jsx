@@ -3,8 +3,9 @@ import { X } from 'lucide-react';
 import { money, useInstrumentLabel, VerifyLink } from './BrokerCard';
 import { SampleBadge } from '../ui/Primitives';
 import { useSiteData } from '../../context/SiteDataContext';
+import { useT } from '../../i18n/I18nContext';
 
-const buildRows = (regulators, instrumentLabel) => [
+const buildRows = (regulators, instrumentLabel, t) => [
   {
     label: 'Regulators and licences',
     render: (b) => (
@@ -22,7 +23,7 @@ const buildRows = (regulators, instrumentLabel) => [
   },
   { label: 'Minimum deposit', render: (b) => money(b.minDeposit) },
   { label: 'Typical spreads', render: (b) => b.spreads },
-  { label: 'Leverage', render: (b) => b.leverage ?? 'Not stated' },
+  { label: 'Leverage', render: (b) => b.leverage ?? t('Not stated') },
   { label: 'Commission', render: (b) => b.commission },
   { label: 'Platforms', render: (b) => b.platforms.join(', ') },
   { label: 'Instruments', render: (b) => b.instruments.map(instrumentLabel).join(', ') },
@@ -32,7 +33,8 @@ const buildRows = (regulators, instrumentLabel) => [
 export default function CompareDialog({ open, brokers, onClose }) {
   const ref = useRef(null);
   const { regulators } = useSiteData().data;
-  const rows = buildRows(regulators, useInstrumentLabel());
+  const t = useT();
+  const rows = buildRows(regulators, useInstrumentLabel(), t);
 
   useEffect(() => {
     const dialog = ref.current;
@@ -51,18 +53,18 @@ export default function CompareDialog({ open, brokers, onClose }) {
     >
       <div className="flex items-center justify-between gap-3 border-b border-line p-5">
         <div className="flex flex-wrap items-center gap-3">
-          <h2 id="compare-title" className="text-xl font-semibold md:text-2xl">Compare brokers</h2>
+          <h2 id="compare-title" className="text-xl font-semibold md:text-2xl">{t('Compare brokers')}</h2>
           {brokers.some((b) => b.isSample) && <SampleBadge />}
         </div>
-        <button type="button" onClick={onClose} aria-label="Close comparison" className="grid size-11 shrink-0 place-items-center rounded-full border border-line hover:border-blue/60">
+        <button type="button" onClick={onClose} aria-label={t('Close comparison')} className="grid size-11 shrink-0 place-items-center rounded-full border border-line hover:border-blue/60">
           <X className="size-4" aria-hidden="true" />
         </button>
       </div>
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[34rem] border-collapse text-left text-sm">
+        <table className="w-full min-w-[34rem] border-collapse text-start text-sm">
           <thead>
             <tr className="border-b border-line">
-              <td className="sticky left-0 w-32 p-4" style={{ background: 'var(--bg-2)' }} />
+              <td className="sticky start-0 w-32 p-4" style={{ background: 'var(--bg-2)' }} />
               {brokers.map((b) => (
                 <th key={b.id} scope="col" className="min-w-40 p-4 align-top font-display font-semibold">{b.name}</th>
               ))}
@@ -71,7 +73,7 @@ export default function CompareDialog({ open, brokers, onClose }) {
           <tbody>
             {rows.map(({ label, render }) => (
               <tr key={label} className="border-b border-line last:border-b-0">
-                <th scope="row" className="sticky left-0 w-32 p-4 align-top text-xs font-medium text-faint" style={{ background: 'var(--bg-2)' }}>{label}</th>
+                <th scope="row" className="sticky start-0 w-32 p-4 align-top text-start text-xs font-medium text-faint" style={{ background: 'var(--bg-2)' }}>{t(label)}</th>
                 {brokers.map((b) => (
                   <td key={b.id} className="p-4 align-top">{render(b)}</td>
                 ))}
@@ -81,7 +83,7 @@ export default function CompareDialog({ open, brokers, onClose }) {
         </table>
       </div>
       <p className="border-t border-line p-5 text-xs leading-relaxed text-faint">
-        Brokers marked Sample data are fictional, shown for illustration, and their licence numbers will not appear on any regulator's register. Real figures vary by account type, entity and market conditions.
+        {t("Brokers marked Sample data are fictional, shown for illustration, and their licence numbers will not appear on any regulator's register. Real figures vary by account type, entity and market conditions.")}
       </p>
     </dialog>
   );

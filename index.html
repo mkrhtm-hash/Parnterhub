@@ -39,6 +39,19 @@
       try {
         var saved = localStorage.getItem('partnerhub-theme');
         if (saved === 'light' || saved === 'dark') document.documentElement.dataset.theme = saved;
+        // Language: English, Urdu or Arabic (src/i18n). Set before first paint so right-to-left pages do not flip after loading.
+        var lang = new URLSearchParams(location.search).get('lang') || localStorage.getItem('mkpips-lang');
+        if (lang === 'ur' || lang === 'ar') {
+          document.documentElement.lang = lang;
+          document.documentElement.dir = 'rtl';
+          var font = document.createElement('link');
+          font.rel = 'stylesheet';
+          font.dataset.langFont = lang;
+          font.href = lang === 'ur'
+            ? 'https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;500;600;700&display=swap'
+            : 'https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap';
+          document.head.appendChild(font);
+        }
       } catch (e) {}
     </script>
   </head>

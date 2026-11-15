@@ -3,6 +3,7 @@ import { CircleCheck, Star, TriangleAlert } from 'lucide-react';
 import Button from '../ui/Button';
 import { useToast } from '../../context/ToastContext';
 import { submitOpinion } from '../../services/leads';
+import { useT } from '../../i18n/I18nContext';
 
 const topics = [
   { value: 'video', label: 'Videos' },
@@ -14,17 +15,19 @@ const topics = [
 const empty = { name: '', topic: 'general', rating: null, message: '', website: '' };
 
 function FieldError({ id, text }) {
+  const t = useT();
   if (!text) return null;
   return (
     <p id={id} className="mt-1.5 flex gap-1.5 text-sm text-danger">
       <TriangleAlert className="mt-0.5 size-3.5 shrink-0" aria-hidden="true" />
-      {text}
+      {t(text)}
     </p>
   );
 }
 
 export default function OpinionForm() {
   const toast = useToast();
+  const t = useT();
   const [form, setForm] = useState(empty);
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState('idle');
@@ -38,11 +41,11 @@ export default function OpinionForm() {
       await submitOpinion(form);
       setForm(empty);
       setStatus('sent');
-      toast('Thank you. Your opinion has been saved.', 'success');
+      toast(t('Thank you. Your opinion has been saved.'), 'success');
     } catch (error) {
       setErrors(error.fields ?? {});
       setStatus('idle');
-      toast(error.fields ? 'Please check the highlighted fields.' : 'We could not save that. Please try again in a moment.', 'error');
+      toast(t(error.fields ? 'Please check the highlighted fields.' : 'We could not save that. Please try again in a moment.'), 'error');
     }
   };
 
@@ -50,9 +53,9 @@ export default function OpinionForm() {
     return (
       <div className="glass mx-auto max-w-2xl p-8 text-center md:p-12">
         <CircleCheck className="mx-auto size-10 text-blue" aria-hidden="true" />
-        <h2 className="mt-4 text-2xl font-semibold">Thank you for telling us.</h2>
-        <p className="mt-2 leading-relaxed text-muted">Your opinion helps us decide what to teach next.</p>
-        <Button variant="ghost" className="mt-6" onClick={() => setStatus('idle')}>Share another opinion</Button>
+        <h2 className="mt-4 text-2xl font-semibold">{t('Thank you for telling us.')}</h2>
+        <p className="mt-2 leading-relaxed text-muted">{t('Your opinion helps us decide what to teach next.')}</p>
+        <Button variant="ghost" className="mt-6" onClick={() => setStatus('idle')}>{t('Share another opinion')}</Button>
       </div>
     );
   }
@@ -60,30 +63,30 @@ export default function OpinionForm() {
   return (
     <form onSubmit={submit} noValidate className="glass mx-auto grid max-w-2xl gap-5 p-5 md:p-7">
       <div>
-        <h2 className="text-xl font-semibold">Tell us what you think</h2>
-        <p className="mt-1 text-sm leading-relaxed text-muted">What helped, what was unclear, and what would you like to learn next?</p>
+        <h2 className="text-xl font-semibold">{t('Tell us what you think')}</h2>
+        <p className="mt-1 text-sm leading-relaxed text-muted">{t('What helped, what was unclear, and what would you like to learn next?')}</p>
       </div>
 
       <input type="text" name="website" value={form.website} onChange={update('website')} tabIndex={-1} autoComplete="off" aria-hidden="true" className="sr-only" />
 
       <div>
-        <label htmlFor="opinion-topic" className="mb-1.5 block text-sm font-medium">What is your opinion about?</label>
+        <label htmlFor="opinion-topic" className="mb-1.5 block text-sm font-medium">{t('What is your opinion about?')}</label>
         <select id="opinion-topic" value={form.topic} onChange={update('topic')} className="field">
-          {topics.map((t) => (
-            <option key={t.value} value={t.value}>{t.label}</option>
+          {topics.map((o) => (
+            <option key={o.value} value={o.value}>{t(o.label)}</option>
           ))}
         </select>
         <FieldError id="opinion-topic-error" text={errors.topic} />
       </div>
 
       <fieldset>
-        <legend className="mb-1.5 text-sm font-medium">How useful is our learning content? <span className="font-normal text-faint">(optional)</span></legend>
+        <legend className="mb-1.5 text-sm font-medium">{t('How useful is our learning content?')} <span className="font-normal text-faint">{t('(optional)')}</span></legend>
         <div className="flex gap-1">
           {[1, 2, 3, 4, 5].map((n) => (
             <button
               key={n}
               type="button"
-              aria-label={`${n} out of 5`}
+              aria-label={t('{n} out of 5', { n })}
               aria-pressed={form.rating === n}
               onClick={() => setForm((f) => ({ ...f, rating: f.rating === n ? null : n }))}
               className="grid size-11 place-items-center rounded-xl text-green transition-colors hover:bg-green/10"
@@ -96,7 +99,7 @@ export default function OpinionForm() {
       </fieldset>
 
       <div>
-        <label htmlFor="opinion-message" className="mb-1.5 block text-sm font-medium">Your opinion</label>
+        <label htmlFor="opinion-message" className="mb-1.5 block text-sm font-medium">{t('Your opinion')}</label>
         <textarea
           id="opinion-message"
           rows={5}
@@ -111,15 +114,15 @@ export default function OpinionForm() {
       </div>
 
       <div>
-        <label htmlFor="opinion-name" className="mb-1.5 block text-sm font-medium">Your name <span className="font-normal text-faint">(optional)</span></label>
+        <label htmlFor="opinion-name" className="mb-1.5 block text-sm font-medium">{t('Your name')} <span className="font-normal text-faint">{t('(optional)')}</span></label>
         <input id="opinion-name" type="text" autoComplete="name" maxLength={100} value={form.name} onChange={update('name')} className="field" />
         <FieldError id="opinion-name-error" text={errors.name} />
       </div>
 
-      <p className="text-xs leading-relaxed text-faint">Your opinion goes privately to the MKPips team and is not published. Please do not include account numbers or other sensitive details.</p>
+      <p className="text-xs leading-relaxed text-faint">{t('Your opinion goes privately to the MKPips team and is not published. Please do not include account numbers or other sensitive details.')}</p>
 
       <Button type="submit" disabled={status === 'sending'} className="w-full">
-        {status === 'sending' ? 'Sending...' : 'Send my opinion'}
+        {t(status === 'sending' ? 'Sending...' : 'Send my opinion')}
       </Button>
     </form>
   );

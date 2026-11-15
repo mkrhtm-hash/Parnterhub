@@ -2,9 +2,10 @@ import { BookOpen, ChartCandlestick, ClipboardCheck, PlayCircle, ShieldCheck } f
 import Pathway from '../ui/Pathway';
 import { Reveal } from '../ui/Primitives';
 import { expertSessions } from '../../../shared/expertSessions';
+import { useT } from '../../i18n/I18nContext';
 
 // Reading times assume about 200 words a minute; video times are the real lengths.
-const steps = [
+const steps = (t) => [
   {
     Icon: PlayCircle,
     title: 'Watch the four short videos',
@@ -37,22 +38,23 @@ const steps = [
     Icon: ChartCandlestick,
     title: 'Go deeper with a market expert',
     tag: 'Optional · paid',
-    meta: `One-to-one call · from ${expertSessions[0].price} per session`,
+    meta: t('One-to-one call · from {price} per session', { price: expertSessions[0].price }),
     learn: ['Your own questions answered', 'A market of your choice explained', 'Costs and risk worked through'],
     cta: { label: 'Book a session', to: '/learning/market-expert' },
   },
 ];
 
 export default function LearningPathway() {
+  const t = useT();
   return (
     <>
       <Reveal className="mb-8 max-w-3xl">
-        <h2 className="text-2xl font-semibold md:text-3xl">Your learning pathway</h2>
+        <h2 className="text-2xl font-semibold md:text-3xl">{t('Your learning pathway')}</h2>
         <p className="mt-2 leading-relaxed text-muted">
-          Five steps, in order. Steps 1 to 4 are free and take under half an hour in total. Step 5 is optional.
+          {t('Five steps, in order. Steps 1 to 4 are free and take under half an hour in total. Step 5 is optional.')}
         </p>
       </Reveal>
-      <Pathway row steps={steps} label="Learning pathway" />
+      <Pathway row steps={steps(t)} label="Learning pathway" />
     </>
   );
 }

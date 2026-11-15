@@ -77,6 +77,29 @@ SELECT * FROM learning_feedback ORDER BY created_at DESC;
 
 For a real broker, set `is_sample` to `false` and add `verify_url` if you can link directly to its register entry.
 
+## Languages
+
+Visitors can switch between English, Urdu (اردو) and Arabic (العربية) from the language button in the header. Urdu and Arabic turn the whole site right to left. The choice is remembered, and a link ending in `?lang=ur` or `?lang=ar` opens the site in that language. The admin page stays in English.
+
+| What | Where |
+|---|---|
+| Urdu and Arabic wording | `src/i18n/ur.json`, `src/i18n/ar.json` |
+| Every English string the site shows | `src/i18n/source.json` (where each one is used: `source-where.json`) |
+| Switching, fonts and right-to-left | `src/i18n/I18nContext.jsx`, `src/index.css` |
+| Urdu and Arabic videos | `public/videos/<id>.ur.mp4` and `<id>.ar.mp4`: English narration, with on-screen text and subtitles in that language |
+
+English is the source. Each translation is stored under a short code made from the English text, so anything without a translation simply shows in English. That includes database content: if you change a FAQ answer or broker note in Neon, the Urdu and Arabic pages show the new English until it is translated.
+
+After changing any English wording, run the preview and then:
+
+```
+node scripts/i18n-extract.js
+```
+
+It updates `source.json` and reports how many strings each language is missing. Add the new translations to `ur.json` and `ar.json` under the codes listed in `source.json`. Keep placeholders such as `{name}` exactly as they are.
+
+The translations were drafted for MKPips and have not yet been reviewed by native speakers. Have the legal pages, risk warnings and broker details checked before you rely on them. The translated legal pages say that the English version is the legally binding one.
+
 ## Consultation requests
 
 The booking form saves to the `consultations` table. To see requests, run this in the Neon SQL Editor:

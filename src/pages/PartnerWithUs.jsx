@@ -6,6 +6,7 @@ import Button from '../components/ui/Button';
 import Pathway from '../components/ui/Pathway';
 import { IconTile, PageHeader, Reveal, SectionHeading } from '../components/ui/Primitives';
 import { usePageMeta } from '../hooks/usePageMeta';
+import { useT } from '../i18n/I18nContext';
 
 const audiences = [
   { Icon: Handshake, title: 'Introducing brokers', text: 'You already refer clients and want regulated brokers and a clear agreement behind you.' },
@@ -50,6 +51,7 @@ const expectations = [
 
 export default function PartnerWithUs() {
   usePageMeta('Partner with us', 'Refer clients to regulated FX and CFD brokers with MKPips: a clear partner pathway, compliant marketing support and customised deals.');
+  const t = useT();
 
   return (
     <>
@@ -61,9 +63,9 @@ export default function PartnerWithUs() {
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
           <Button to="/book?path=partner">
             <CalendarDays className="size-4" aria-hidden="true" />
-            Discuss a customised deal
+            {t('Discuss a customised deal')}
           </Button>
-          <Button to="#pathway" variant="ghost">See the partner pathway</Button>
+          <Button to="#pathway" variant="ghost">{t('See the partner pathway')}</Button>
         </div>
       </PageHeader>
 
@@ -73,8 +75,8 @@ export default function PartnerWithUs() {
           {audiences.map(({ Icon, title, text }, i) => (
             <Reveal key={title} delay={i * 0.06} className="glass lift p-6">
               <IconTile icon={Icon} tone={['blue', 'green', 'red', 'blue'][i]} />
-              <h3 className="mt-5 text-lg font-semibold">{title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted">{text}</p>
+              <h3 className="mt-5 text-lg font-semibold">{t(title)}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-muted">{t(text)}</p>
             </Reveal>
           ))}
         </div>
@@ -86,8 +88,8 @@ export default function PartnerWithUs() {
           {benefits.map(({ Icon, title, text }, i) => (
             <Reveal key={title} delay={i * 0.05} className="glass lift p-6 md:p-7">
               <IconTile icon={Icon} tone={['blue', 'green', 'red'][i % 3]} />
-              <h3 className="mt-5 text-xl font-semibold">{title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted">{text}</p>
+              <h3 className="mt-5 text-xl font-semibold">{t(title)}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-muted">{t(text)}</p>
             </Reveal>
           ))}
         </div>
@@ -99,28 +101,28 @@ export default function PartnerWithUs() {
             <div>
               <span className="inline-flex items-center gap-1.5 rounded-full bg-green/12 px-3 py-1 text-xs font-semibold text-green">
                 <Settings2 className="size-3.5" aria-hidden="true" />
-                Customised deals available
+                {t('Customised deals available')}
               </span>
-              <h2 className="mt-4 text-3xl font-semibold leading-tight md:text-4xl">No two partners are the same, so no two deals are either.</h2>
+              <h2 className="mt-4 text-3xl font-semibold leading-tight md:text-4xl">{t('No two partners are the same, so no two deals are either.')}</h2>
               <p className="mt-4 leading-relaxed text-muted">
-                Tell us how you work and who you serve. We put together a proposal with the broker that fits, and you see every term in writing before you agree to anything.
+                {t('Tell us how you work and who you serve. We put together a proposal with the broker that fits, and you see every term in writing before you agree to anything.')}
               </p>
               <Button to="/book?path=partner" className="mt-7">
-                Request a customised deal
+                {t('Request a customised deal')}
               </Button>
             </div>
             <div>
-              <h3 className="text-sm font-semibold">Each deal is shaped by</h3>
+              <h3 className="text-sm font-semibold">{t('Each deal is shaped by')}</h3>
               <ul className="mt-4 grid gap-3">
                 {shapedBy.map((item) => (
                   <li key={item} className="flex gap-3 text-sm leading-relaxed text-muted">
                     <Check className="mt-0.5 size-4 shrink-0 text-green" aria-hidden="true" />
-                    {item}
+                    {t(item)}
                   </li>
                 ))}
               </ul>
               <p className="mt-6 rounded-2xl border border-line bg-[var(--glass)] p-4 text-xs leading-relaxed text-muted">
-                Terms depend on the broker, your region and local rules, and are agreed in writing with the broker. We do not promise any level of income.
+                {t('Terms depend on the broker, your region and local rules, and are agreed in writing with the broker. We do not promise any level of income.')}
               </p>
             </div>
           </div>
@@ -138,18 +140,18 @@ export default function PartnerWithUs() {
         <SectionHeading eyebrow="Ground rules" title="What we ask of every partner." />
         <div className="mt-10 grid gap-4 md:grid-cols-2">
           <Reveal className="glass p-6 md:p-8">
-            <h3 className="text-sm font-semibold text-green">Partners always</h3>
+            <h3 className="text-sm font-semibold text-green">{t('Partners always')}</h3>
             <ul className="mt-4 grid gap-3">
               {expectations.filter(([ok]) => ok).map(([, text]) => (
-                <li key={text} className="flex gap-3 text-sm leading-relaxed text-muted"><Check className="mt-0.5 size-4 shrink-0 text-green" aria-hidden="true" />{text}</li>
+                <li key={text} className="flex gap-3 text-sm leading-relaxed text-muted"><Check className="mt-0.5 size-4 shrink-0 text-green" aria-hidden="true" />{t(text)}</li>
               ))}
             </ul>
           </Reveal>
           <Reveal delay={0.06} className="glass p-6 md:p-8">
-            <h3 className="text-sm font-semibold text-red">Partners never</h3>
+            <h3 className="text-sm font-semibold text-red">{t('Partners never')}</h3>
             <ul className="mt-4 grid gap-3">
               {expectations.filter(([ok]) => !ok).map(([, text]) => (
-                <li key={text} className="flex gap-3 text-sm leading-relaxed text-muted"><X className="mt-0.5 size-4 shrink-0 text-red" aria-hidden="true" />{text}</li>
+                <li key={text} className="flex gap-3 text-sm leading-relaxed text-muted"><X className="mt-0.5 size-4 shrink-0 text-red" aria-hidden="true" />{t(text)}</li>
               ))}
             </ul>
           </Reveal>
@@ -157,16 +159,16 @@ export default function PartnerWithUs() {
 
         <Reveal className="glass mt-10 flex flex-col items-start justify-between gap-5 p-7 md:flex-row md:items-center md:p-10">
           <div>
-            <h2 className="text-2xl font-semibold">Ready to talk it through?</h2>
-            <p className="mt-2 leading-relaxed text-muted">Book a call and tell us about your audience. We will come back with options, not pressure.</p>
+            <h2 className="text-2xl font-semibold">{t('Ready to talk it through?')}</h2>
+            <p className="mt-2 leading-relaxed text-muted">{t('Book a call and tell us about your audience. We will come back with options, not pressure.')}</p>
           </div>
           <Button to="/book?path=partner" className="shrink-0">
             <CalendarDays className="size-4" aria-hidden="true" />
-            Discuss a customised deal
+            {t('Discuss a customised deal')}
           </Button>
         </Reveal>
         <p className="mt-6 text-xs leading-relaxed text-faint">
-          MKPips introduces clients to regulated brokers and may receive compensation from them. Partner arrangements are subject to each broker&apos;s approval and to the rules where you and your clients are based.
+          {t("MKPips introduces clients to regulated brokers and may receive compensation from them. Partner arrangements are subject to each broker's approval and to the rules where you and your clients are based.")}
         </p>
       </section>
     </>

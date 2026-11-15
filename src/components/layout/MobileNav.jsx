@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
+import { useT } from '../../i18n/I18nContext';
 import { BookOpen, CalendarDays, CircleHelp, Compass, Ellipsis, GraduationCap, Handshake, House, Layers, ListChecks, Network, UserRound, X } from 'lucide-react';
 
 const primary = [
@@ -26,6 +27,7 @@ const tabClass = (active) =>
 export default function MobileNav() {
   const [open, setOpen] = useState(false);
   const { pathname, hash } = useLocation();
+  const t = useT();
 
   useEffect(() => setOpen(false), [pathname, hash]);
 
@@ -43,7 +45,7 @@ export default function MobileNav() {
           <>
             <motion.button
               type="button"
-              aria-label="Close menu"
+              aria-label={t('Close menu')}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -51,7 +53,7 @@ export default function MobileNav() {
               className="fixed inset-0 z-40 bg-black/50 lg:hidden"
             />
             <motion.nav
-              aria-label="More pages"
+              aria-label={t('More pages')}
               initial={{ y: 40, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: 40, opacity: 0 }}
@@ -64,7 +66,7 @@ export default function MobileNav() {
                   <li key={to}>
                     <NavLink to={to} className="flex min-h-12 items-center gap-2.5 rounded-2xl px-3 text-sm font-medium hover:bg-blue/10">
                       <Icon className="size-4 text-blue" aria-hidden="true" />
-                      {label}
+                      {t(label)}
                     </NavLink>
                   </li>
                 ))}
@@ -75,19 +77,19 @@ export default function MobileNav() {
       </AnimatePresence>
 
       <nav
-        aria-label="Primary mobile"
+        aria-label={t('Primary mobile')}
         className="fixed inset-x-0 bottom-0 z-50 flex border-t border-line backdrop-blur-xl lg:hidden"
         style={{ background: 'var(--glass-solid)', paddingBottom: 'env(safe-area-inset-bottom)' }}
       >
         {primary.map(({ to, label, Icon, end }) => (
           <NavLink key={to} to={to} end={end} className={({ isActive }) => tabClass(isActive && !open)}>
             <Icon className="size-5" aria-hidden="true" />
-            {label}
+            {t(label)}
           </NavLink>
         ))}
         <button type="button" aria-expanded={open} onClick={() => setOpen((o) => !o)} className={tabClass(open)}>
           {open ? <X className="size-5" aria-hidden="true" /> : <Ellipsis className="size-5" aria-hidden="true" />}
-          More
+          {t('More')}
         </button>
       </nav>
     </>

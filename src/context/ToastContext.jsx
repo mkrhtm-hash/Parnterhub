@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { CircleCheck, Info, TriangleAlert, X } from 'lucide-react';
+import { useT } from '../i18n/I18nContext';
 
 const ToastContext = createContext(null);
 
@@ -13,6 +14,7 @@ const styles = {
 export function ToastProvider({ children }) {
   const [toasts, setToasts] = useState([]);
   const nextId = useRef(0);
+  const t = useT();
 
   const dismiss = useCallback((id) => setToasts((all) => all.filter((t) => t.id !== id)), []);
 
@@ -31,7 +33,7 @@ export function ToastProvider({ children }) {
       <div
         role="status"
         aria-live="polite"
-        className="pointer-events-none fixed inset-x-4 top-20 z-[70] flex flex-col items-center gap-2 md:top-24 md:right-6 md:left-auto md:w-96"
+        className="pointer-events-none fixed inset-x-4 top-20 z-[70] flex flex-col items-center gap-2 md:top-24 md:end-6 md:start-auto md:w-96"
       >
         <AnimatePresence>
           {toasts.map(({ id, message, type }) => {
@@ -48,7 +50,7 @@ export function ToastProvider({ children }) {
               >
                 <Icon className={`mt-0.5 size-5 shrink-0 ${color}`} aria-hidden="true" />
                 <p className="flex-1 leading-relaxed">{message}</p>
-                <button type="button" onClick={() => dismiss(id)} aria-label="Dismiss message" className="text-faint hover:text-ink">
+                <button type="button" onClick={() => dismiss(id)} aria-label={t('Dismiss message')} className="text-faint hover:text-ink">
                   <X className="size-4" />
                 </button>
               </motion.div>

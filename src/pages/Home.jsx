@@ -12,6 +12,7 @@ import { usePageMeta } from '../hooks/usePageMeta';
 import { useCompliance, useSiteData } from '../context/SiteDataContext';
 import { weDo, weDont } from '../data/staticContent';
 import StanceList from '../components/ui/StanceList';
+import { useI18n } from '../i18n/I18nContext';
 
 const rise = {
   hidden: { opacity: 0, y: 22 },
@@ -27,10 +28,11 @@ const services = [
 
 function Stats() {
   const { status, data } = useSiteData();
+  const { t } = useI18n();
   if (status === 'error') return <DataError compact />;
   if (status === 'loading') {
     return (
-      <div role="status" aria-label="Loading" className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+      <div role="status" aria-label={t('Loading')} className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         <CardSkeleton className="!rounded-2xl" />
         <CardSkeleton className="!rounded-2xl" />
         <CardSkeleton className="!rounded-2xl" />
@@ -39,9 +41,9 @@ function Stats() {
   }
   const { stats } = data;
   const items = [
-    { Icon: CalendarDays, value: stats.years, suffix: '+', label: 'years of experience' },
-    { Icon: ShieldCheck, value: stats.partners, label: 'regulated broker partners', sample: stats.usingSampleData },
-    { Icon: Globe, value: stats.jurisdictions, label: 'regulatory jurisdictions covered', sample: stats.usingSampleData },
+    { Icon: CalendarDays, value: stats.years, suffix: '+', label: t('years of experience') },
+    { Icon: ShieldCheck, value: stats.partners, label: t('regulated broker partners'), sample: stats.usingSampleData },
+    { Icon: Globe, value: stats.jurisdictions, label: t('regulatory jurisdictions covered'), sample: stats.usingSampleData },
   ];
   return (
     <dl className="grid grid-cols-1 gap-3 sm:grid-cols-3">
@@ -71,6 +73,7 @@ function Faqs() {
 export default function Home() {
   usePageMeta();
   const compliance = useCompliance();
+  const { t, ti } = useI18n();
   return (
     <>
       <section className="relative isolate overflow-hidden">
@@ -89,7 +92,7 @@ export default function Home() {
                   <PlaceholderText text={`${compliance.retailLossPercent}%`} /> {compliance.retailLossSentence}{' '}
                 </>
               )}
-              <Link to="/risk-disclosure" className="font-medium whitespace-nowrap underline underline-offset-2">Full risk disclosure</Link>
+              <Link to="/risk-disclosure" className="font-medium whitespace-nowrap underline underline-offset-2">{t('Full risk disclosure')}</Link>
             </span>
           </p>
         </div>
@@ -97,21 +100,21 @@ export default function Home() {
         <div className="shell grid items-center gap-8 pt-8 pb-10 md:pt-14 lg:grid-cols-[1.12fr_0.88fr] lg:gap-6 lg:pt-14 lg:pb-14">
           <div>
             <motion.p custom={0} variants={rise} initial="hidden" animate="show" className="eyebrow mb-4">
-              MKPips · FX and CFD broker consultancy
+              {t('MKPips · FX and CFD broker consultancy')}
             </motion.p>
             <motion.h1 custom={1} variants={rise} initial="hidden" animate="show" className="text-[2.45rem] leading-[1.06] font-semibold sm:text-6xl lg:text-[4.1rem]">
-              The right broker starts with the <span className="text-brand">right partner.</span>
+              {ti('The right broker starts with the {em}', { em: <span className="text-brand">{t('right partner.')}</span> })}
             </motion.h1>
             <motion.p custom={2} variants={rise} initial="hidden" animate="show" className="mt-5 max-w-xl text-base leading-relaxed text-muted sm:text-lg">
-              Access trusted, regulated FX and CFD brokers, guided by 15+ years of industry experience.
+              {t('Access trusted, regulated FX and CFD brokers, guided by 15+ years of industry experience.')}
             </motion.p>
             <motion.div custom={3} variants={rise} initial="hidden" animate="show" className="mt-7 flex flex-col gap-3 sm:flex-row">
               <Button to="/book">
                 <CalendarDays className="size-4" aria-hidden="true" />
-                Book a Free Consultation
+                {t('Book a Free Consultation')}
               </Button>
               <Button to="/broker-match" variant="ghost">
-                Find My Broker Match
+                {t('Find My Broker Match')}
                 <ArrowRight className="size-4" aria-hidden="true" />
               </Button>
             </motion.div>
@@ -131,7 +134,7 @@ export default function Home() {
           <SectionHeading eyebrow="What we do" title="Experience you can talk to, not just a list of brokers." />
           <Reveal>
             <Link to="/services" className="inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-blue">
-              All services <ArrowRight className="size-4" aria-hidden="true" />
+              {t('All services')} <ArrowRight className="size-4" aria-hidden="true" />
             </Link>
           </Reveal>
         </div>
@@ -139,8 +142,8 @@ export default function Home() {
           {services.map(({ Icon, title, text }, i) => (
             <Reveal key={title} delay={i * 0.07} className="glass lift p-6">
               <IconTile icon={Icon} tone={['blue', 'green', 'red'][i % 3]} />
-              <h3 className="mt-5 text-lg font-semibold">{title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted">{text}</p>
+              <h3 className="mt-5 text-lg font-semibold">{t(title)}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-muted">{t(text)}</p>
             </Reveal>
           ))}
         </div>
@@ -150,20 +153,20 @@ export default function Home() {
         <Reveal className="glass relative overflow-hidden p-6 md:p-12">
           <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr]">
             <div>
-              <p className="eyebrow mb-3">Straight talk</p>
-              <h2 className="text-3xl leading-tight font-semibold md:text-4xl">Know exactly where we stand.</h2>
+              <p className="eyebrow mb-3">{t('Straight talk')}</p>
+              <h2 className="text-3xl leading-tight font-semibold md:text-4xl">{t('Know exactly where we stand.')}</h2>
               <p className="mt-4 leading-relaxed text-muted">
                 {compliance.compensationDisclosure} {compliance.notAdvice}
               </p>
-              <Button to="/how-it-works" variant="ghost" className="mt-6">How it works</Button>
+              <Button to="/how-it-works" variant="ghost" className="mt-6">{t('How it works')}</Button>
             </div>
             <div className="grid gap-6 sm:grid-cols-2">
               <div>
-                <h3 className="mb-3 text-sm font-semibold text-blue">We do</h3>
+                <h3 className="mb-3 text-sm font-semibold text-blue">{t('We do')}</h3>
                 <StanceList items={weDo.slice(0, 4)} kind="do" />
               </div>
               <div>
-                <h3 className="mb-3 text-sm font-semibold text-red">We don't</h3>
+                <h3 className="mb-3 text-sm font-semibold text-red">{t("We don't")}</h3>
                 <StanceList items={weDont} kind="dont" />
               </div>
             </div>
@@ -175,20 +178,20 @@ export default function Home() {
         <Reveal>
           <Link to="/broker-match" className="glass lift group block h-full p-7 md:p-10">
             <IconTile icon={Compass} />
-            <h2 className="mt-6 text-2xl font-semibold md:text-3xl">Six questions. Three brokers worth a closer look.</h2>
-            <p className="mt-3 leading-relaxed text-muted">Each match explains why it fits you, and what you should check.</p>
+            <h2 className="mt-6 text-2xl font-semibold md:text-3xl">{t('Six questions. Three brokers worth a closer look.')}</h2>
+            <p className="mt-3 leading-relaxed text-muted">{t('Each match explains why it fits you, and what you should check.')}</p>
             <span className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-blue">
-              Find my broker match <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+              {t('Find my broker match')} <ArrowRight className="size-4 transition-transform group-hover:translate-x-1 rtl:group-hover:-translate-x-1" aria-hidden="true" />
             </span>
           </Link>
         </Reveal>
         <Reveal delay={0.08}>
           <Link to="/learning" className="glass lift group block h-full p-7 md:p-10">
             <IconTile icon={GraduationCap} tone="green" />
-            <h2 className="mt-6 text-2xl font-semibold md:text-3xl">Learn the basics before you risk real money.</h2>
-            <p className="mt-3 leading-relaxed text-muted">Short videos and ebooks, each showing exactly what you will learn.</p>
+            <h2 className="mt-6 text-2xl font-semibold md:text-3xl">{t('Learn the basics before you risk real money.')}</h2>
+            <p className="mt-3 leading-relaxed text-muted">{t('Short videos and ebooks, each showing exactly what you will learn.')}</p>
             <span className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-green">
-              Explore learning <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+              {t('Explore learning')} <ArrowRight className="size-4 transition-transform group-hover:translate-x-1 rtl:group-hover:-translate-x-1" aria-hidden="true" />
             </span>
           </Link>
         </Reveal>
@@ -204,14 +207,14 @@ export default function Home() {
       <section className="shell pt-14 md:pt-24">
         <Reveal className="glass relative overflow-hidden p-8 text-center md:p-16">
           <div className="absolute inset-0 -z-10 bg-[radial-gradient(36rem_18rem_at_50%_110%,var(--glow-1),transparent_70%)]" aria-hidden="true" />
-          <h2 className="text-3xl leading-tight font-semibold md:text-5xl">Start with a conversation.</h2>
-          <p className="mx-auto mt-4 max-w-xl leading-relaxed text-muted">Tell us what you trade and what has gone wrong before. You will get a straight answer, with no obligation to open an account.</p>
+          <h2 className="text-3xl leading-tight font-semibold md:text-5xl">{t('Start with a conversation.')}</h2>
+          <p className="mx-auto mt-4 max-w-xl leading-relaxed text-muted">{t('Tell us what you trade and what has gone wrong before. You will get a straight answer, with no obligation to open an account.')}</p>
           <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
             <Button to="/book">
               <CalendarDays className="size-4" aria-hidden="true" />
-              Book a Free Consultation
+              {t('Book a Free Consultation')}
             </Button>
-            <Button to="/broker-match" variant="ghost">Find My Broker Match</Button>
+            <Button to="/broker-match" variant="ghost">{t('Find My Broker Match')}</Button>
           </div>
         </Reveal>
       </section>

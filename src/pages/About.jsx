@@ -6,6 +6,7 @@ import AnimatedCounter from '../components/ui/AnimatedCounter';
 import { IconTile, isBlank, withoutBlanks, PageHeader, PlaceholderText, Reveal, SectionHeading } from '../components/ui/Primitives';
 import { usePageMeta } from '../hooks/usePageMeta';
 import { useSiteData } from '../context/SiteDataContext';
+import { useT } from '../i18n/I18nContext';
 
 const values = [
   { Icon: Eye, title: 'Transparency', text: 'We tell you how we may be paid, what we cannot do and when a broker is not right for you.' },
@@ -17,6 +18,7 @@ export default function About() {
   const { company, founder } = useSiteData().data;
   usePageMeta('About', 'Meet the founder of MKPips and the values behind the service: transparency, client-first advice and regulated partners only.');
   const lineRef = useRef(null);
+  const t = useT();
   const { scrollYProgress } = useScroll({ target: lineRef, offset: ['start 80%', 'end 60%'] });
   const scaleY = useTransform(scrollYProgress, [0, 1], [0, 1]);
   const highlights = founder.highlights.filter((h) => !isBlank(h));
@@ -37,11 +39,11 @@ export default function About() {
               <p className="text-brand font-display text-5xl font-semibold">
                 <AnimatedCounter value={company.yearsExperience} suffix="+" />
               </p>
-              <p className="max-w-40 text-sm leading-snug text-muted">years in FX and CFD sales</p>
+              <p className="max-w-40 text-sm leading-snug text-muted">{t('years in FX and CFD sales')}</p>
             </div>
             {highlights.length > 0 && (
               <>
-                <h3 className="mt-7 mb-3 text-sm font-semibold">Career highlights</h3>
+                <h3 className="mt-7 mb-3 text-sm font-semibold">{t('Career highlights')}</h3>
                 <ul className="flex flex-wrap gap-2 text-sm">
                   {highlights.map((highlight) => (
                     <li key={highlight} className="rounded-full border border-line bg-[var(--glass)] px-3 py-1.5 text-muted"><PlaceholderText text={highlight} /></li>
@@ -56,12 +58,12 @@ export default function About() {
       {timeline.length > 0 && <section className="shell pt-16 md:pt-28">
         <SectionHeading eyebrow="Career timeline" title="15+ years in FX and CFD sales." />
         <ol ref={lineRef} className="relative mt-10 grid max-w-3xl gap-8">
-          <div className="absolute top-2 bottom-2 left-[7px] w-px bg-line" aria-hidden="true" />
-          <motion.div className="absolute top-2 bottom-2 left-[7px] w-px origin-top bg-gradient-to-b from-blue via-green to-red" style={{ scaleY }} aria-hidden="true" />
+          <div className="absolute top-2 bottom-2 start-[7px] w-px bg-line" aria-hidden="true" />
+          <motion.div className="absolute top-2 bottom-2 start-[7px] w-px origin-top bg-gradient-to-b from-blue via-green to-red" style={{ scaleY }} aria-hidden="true" />
           {timeline.map(({ period, title, detail }, i) => (
-            <Reveal as="li" key={period} delay={i * 0.04} className="relative pl-10">
-              <span className="bg-brand absolute top-1 left-0 size-[15px] rounded-full ring-4 ring-bg" aria-hidden="true" />
-              <p className="eyebrow">{period}</p>
+            <Reveal as="li" key={period} delay={i * 0.04} className="relative ps-10">
+              <span className="bg-brand absolute top-1 start-0 size-[15px] rounded-full ring-4 ring-bg" aria-hidden="true" />
+              <p className="eyebrow">{t(period)}</p>
               <h3 className="mt-2 text-lg font-semibold"><PlaceholderText text={title} /></h3>
               <p className="mt-2 text-sm leading-relaxed text-muted"><PlaceholderText text={detail} /></p>
             </Reveal>
@@ -75,13 +77,13 @@ export default function About() {
           {values.map(({ Icon, title, text }, i) => (
             <Reveal key={title} delay={i * 0.08} className="glass lift p-7">
               <IconTile icon={Icon} tone={['blue', 'green', 'red'][i % 3]} />
-              <h3 className="mt-5 text-xl font-semibold">{title}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-muted">{text}</p>
+              <h3 className="mt-5 text-xl font-semibold">{t(title)}</h3>
+              <p className="mt-3 text-sm leading-relaxed text-muted">{t(text)}</p>
             </Reveal>
           ))}
         </div>
         <Reveal className="mt-10 flex justify-center">
-          <Button to="/book">Book a Free Consultation</Button>
+          <Button to="/book">{t('Book a Free Consultation')}</Button>
         </Reveal>
       </section>
     </>

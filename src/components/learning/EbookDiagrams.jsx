@@ -1,4 +1,18 @@
+import { Children, cloneElement, isValidElement } from 'react';
 import { ArrowRight, Check, FileText, Home, IdCard, PiggyBank, Receipt, Wallet, X } from 'lucide-react';
+import { useT } from '../../i18n/I18nContext';
+
+/** Translates the words inside a text element, including <tspan> parts. Numbers and symbols pass through unchanged. */
+function useWords() {
+  const t = useT();
+  const words = (children) =>
+    Children.map(children, (c) => {
+      if (typeof c === 'string') return t(c);
+      if (isValidElement(c) && c.type === 'tspan') return cloneElement(c, {}, words(c.props.children));
+      return c;
+    });
+  return { t, words };
+}
 
 /*
  * Diagrams for the eBooks. Every number is a made-up round example that matches the text.
@@ -13,16 +27,32 @@ const green = 'var(--green)';
 const red = 'var(--red)';
 
 function Svg({ label, height, children }) {
+  const t = useT();
+  // Drawings stay left to right in every language, like the charts they show. The words inside are translated.
   return (
-    <svg viewBox={`0 0 400 ${height}`} role="img" aria-label={label} className="block w-full font-sans" style={{ maxHeight: `${height * 1.6}px` }}>
+    <svg viewBox={`0 0 400 ${height}`} role="img" aria-label={t(label)} dir="ltr" className="block w-full font-sans" style={{ maxHeight: `${height * 1.6}px`, direction: 'ltr' }}>
       {children}
     </svg>
   );
 }
 
-const T = ({ x, y, size = 12, fill = muted, weight = 400, anchor = 'start', children }) => (
-  <text x={x} y={y} fontSize={size} fill={fill} fontWeight={weight} textAnchor={anchor}>{children}</text>
-);
+// True when any of the words is in Arabic script (Urdu or Arabic).
+const rtlText = (nodes) =>
+  Children.toArray(nodes).some((c) => (typeof c === 'string' ? /[\u0600-\u06FF]/.test(c) : isValidElement(c) && rtlText(c.props.children)));
+
+function T({ x, y, size = 12, fill = muted, weight = 400, anchor = 'start', children }) {
+  const { words } = useWords();
+  const out = words(children);
+  // The drawing stays left to right. An Urdu or Arabic label is set right to left, with its anchor mirrored
+  // (start <-> end), so it reads in the right order and still sits where the drawing places it.
+  const rtl = rtlText(out);
+  const mirrored = rtl ? { start: 'end', end: 'start', middle: 'middle' }[anchor] : anchor;
+  return (
+    <text x={x} y={y} fontSize={size} fill={fill} fontWeight={weight} textAnchor={mirrored} style={rtl ? { direction: 'rtl', unicodeBidi: 'embed' } : undefined}>
+      {out}
+    </text>
+  );
+}
 
 /* ---------- Generic layouts ---------- */
 
@@ -30,6 +60,7 @@ const toneClass = { blue: 'border-blue/45 bg-blue/8', green: 'border-green/45 bg
 
 /** Boxes in a row with arrows or symbols between them. Stacks on narrow screens. */
 function Flow({ steps, ops = [] }) {
+  const t = useT();
   return (
     <ol className="flex flex-col items-stretch gap-2 sm:flex-row">
       {steps.map((s, i) => (
@@ -40,9 +71,9 @@ function Flow({ steps, ops = [] }) {
             </span>
           )}
           <div className={`flex-1 rounded-2xl border p-3.5 ${toneClass[s.tone ?? 'plain']}`}>
-            {s.value && <p className="font-display text-xl font-semibold tabular-nums">{s.value}</p>}
-            <p className={`${s.value ? 'mt-0.5 text-xs text-muted' : 'text-sm font-semibold'}`}>{s.title}</p>
-            {s.text && <p className="mt-1 text-xs leading-relaxed text-muted">{s.text}</p>}
+            {s.value && <p className="font-display text-xl font-semibold tabular-nums">{t(s.value)}</p>}
+            <p className={`${s.value ? 'mt-0.5 text-xs text-muted' : 'text-sm font-semibold'}`}>{t(s.title)}</p>
+            {s.text && <p className="mt-1 text-xs leading-relaxed text-muted">{t(s.text)}</p>}
           </div>
         </li>
       ))}
@@ -52,16 +83,17 @@ function Flow({ steps, ops = [] }) {
 
 /** Two columns of yes/no points. */
 function Compare({ columns }) {
+  const t = useT();
   return (
     <div className="grid gap-3 sm:grid-cols-2">
       {columns.map((col) => (
         <div key={col.title} className={`rounded-2xl border p-4 ${toneClass[col.tone]}`}>
-          <p className="text-sm font-semibold">{col.title}</p>
+          <p className="text-sm font-semibold">{t(col.title)}</p>
           <ul className="mt-3 grid gap-2 text-sm">
             {col.items.map(([good, text]) => (
               <li key={text} className="flex gap-2 leading-snug">
-                {good ? <Check className="mt-0.5 size-4 shrink-0 text-green" aria-label="Yes" /> : <X className="mt-0.5 size-4 shrink-0 text-red" aria-label="No" />}
-                <span className="text-muted">{text}</span>
+                {good ? <Check className="mt-0.5 size-4 shrink-0 text-green" aria-label={t('Yes')} /> : <X className="mt-0.5 size-4 shrink-0 text-red" aria-label={t('No')} />}
+                <span className="text-muted">{t(text)}</span>
               </li>
             ))}
           </ul>
@@ -73,16 +105,17 @@ function Compare({ columns }) {
 
 /** Icon cards. One can be highlighted. */
 function Cards({ cards }) {
+  const t = useT();
   return (
     <div className="grid gap-3 sm:grid-cols-3">
       {cards.map(({ Icon, title, text, tone = 'plain', tag }) => (
         <div key={title} className={`rounded-2xl border p-4 ${toneClass[tone]}`}>
           <div className="flex items-start justify-between gap-2">
             <Icon className={`size-6 ${tone === 'red' ? 'text-red' : tone === 'green' ? 'text-green' : 'text-blue'}`} aria-hidden="true" />
-            {tag && <span className={`rounded-full px-2 py-0.5 text-[11px] font-semibold ${tone === 'red' ? 'bg-red/12 text-red' : 'bg-green/12 text-green'}`}>{tag}</span>}
+            {tag && <span className={`rounded-full px-2 py-0.5 text-[11px] font-semibold ${tone === 'red' ? 'bg-red/12 text-red' : 'bg-green/12 text-green'}`}>{t(tag)}</span>}
           </div>
-          <p className="mt-3 text-sm font-semibold">{title}</p>
-          <p className="mt-1 text-xs leading-relaxed text-muted">{text}</p>
+          <p className="mt-3 text-sm font-semibold">{t(title)}</p>
+          <p className="mt-1 text-xs leading-relaxed text-muted">{t(text)}</p>
         </div>
       ))}
     </div>

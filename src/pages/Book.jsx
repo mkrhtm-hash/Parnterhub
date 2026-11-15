@@ -10,8 +10,10 @@ import { submitLead } from '../services/leads';
 import { useSiteData } from '../context/SiteDataContext';
 import { testBooking } from '../data/staticContent';
 import { expertSessions, findExpertSession } from '../../shared/expertSessions';
+import { useI18n } from '../i18n/I18nContext';
 
-const DAY_LABELS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+// Monday to Sunday, short names in the visitor's language (5 Jan 2026 was a Monday).
+const dayLabels = (locale) => Array.from({ length: 7 }, (_, i) => new Date(2026, 0, 5 + i).toLocaleDateString(locale, { weekday: 'short' }));
 
 const pathMessages = {
   professional: 'I am a professional trader and would like to talk through my set-up.',
@@ -22,9 +24,10 @@ const startOfDay = (d) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
 const sameDay = (a, b) => Boolean(a && b) && a.getTime() === b.getTime();
 // A local calendar date. toISOString() would shift it to the previous day for visitors east of UTC.
 const isoDate = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-const longDate = (d) => d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+const longDate = (d, locale = 'en-GB') => d.toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 
 function Calendar({ consultation, selected, onSelect }) {
+  const { t, locale } = useI18n();
   const today = useMemo(() => startOfDay(new Date()), []);
   const lastDay = useMemo(() => {
     const d = new Date(today);
@@ -46,16 +49,16 @@ function Calendar({ consultation, selected, onSelect }) {
   return (
     <div>
       <div className="mb-3 flex items-center justify-between">
-        <button type="button" aria-label="Previous month" disabled={!canGoBack} onClick={() => move(-1)} className="grid size-11 place-items-center rounded-full border border-line enabled:hover:border-blue/60 disabled:opacity-30">
+        <button type="button" aria-label={t('Previous month')} disabled={!canGoBack} onClick={() => move(-1)} className="grid size-11 place-items-center rounded-full border border-line enabled:hover:border-blue/60 disabled:opacity-30">
           <ChevronLeft className="size-4" aria-hidden="true" />
         </button>
-        <p className="font-display font-semibold" aria-live="polite">{view.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })}</p>
-        <button type="button" aria-label="Next month" disabled={!canGoForward} onClick={() => move(1)} className="grid size-11 place-items-center rounded-full border border-line enabled:hover:border-blue/60 disabled:opacity-30">
+        <p className="font-display font-semibold" aria-live="polite">{view.toLocaleDateString(locale, { month: 'long', year: 'numeric' })}</p>
+        <button type="button" aria-label={t('Next month')} disabled={!canGoForward} onClick={() => move(1)} className="grid size-11 place-items-center rounded-full border border-line enabled:hover:border-blue/60 disabled:opacity-30">
           <ChevronRight className="size-4" aria-hidden="true" />
         </button>
       </div>
       <div className="grid grid-cols-7 gap-1 text-center">
-        {DAY_LABELS.map((d) => (
+        {dayLabels(locale).map((d) => (
           <span key={d} className="py-1 text-xs font-medium text-faint">{d}</span>
         ))}
         {cells.map((date, i) => {
@@ -69,7 +72,7 @@ function Calendar({ consultation, selected, onSelect }) {
               type="button"
               disabled={disabled}
               aria-pressed={active}
-              aria-label={longDate(date)}
+              aria-label={longDate(date, locale)}
               onClick={() => onSelect(date)}
               className={`aspect-square min-h-10 rounded-xl text-sm font-medium transition-colors ${
                 active ? 'bg-brand' : disabled ? 'text-faint/45' : 'hover:bg-blue/15'
@@ -85,16 +88,17 @@ function Calendar({ consultation, selected, onSelect }) {
 }
 
 function Field({ id, label, optional, error, children }) {
+  const { t } = useI18n();
   return (
     <div>
       <label htmlFor={id} className="mb-1.5 block text-sm font-medium">
-        {label} {optional && <span className="font-normal text-faint">(optional)</span>}
+        {t(label)} {optional && <span className="font-normal text-faint">{t('(optional)')}</span>}
       </label>
       {children}
       {error && (
         <p id={`${id}-error`} className="mt-1.5 flex gap-1.5 text-sm text-danger">
           <TriangleAlert className="mt-0.5 size-3.5 shrink-0" aria-hidden="true" />
-          {error}
+          {t(error)}
         </p>
       )}
     </div>
@@ -119,8 +123,12 @@ function validate(form, date, time, expert) {
 
 /** The booking form. expert: the Book with Market Expert tab on Learning, shown without a page header. */
 export default function Book({ testMode = false, expert = false }) {
-  const siteData = useSiteData().data;
-  const { consultation, countries, options } = testMode ? testBooking : siteData;
+  const { data: siteData, raw } = useSiteData();
+  const { t, ti, locale } = useI18n();
+  // English values are what gets saved, so the admin page reads the same in any language. Labels are translated.
+  const source = testMode ? testBooking : raw;
+  const { countries, options } = source;
+  const consultation = testMode ? testBooking.consultation : siteData.consultation;
   const { experienceLevels } = options;
   usePageMeta(expert ? false : testMode ? 'Test Booking Form' : 'Book a Consultation', 'Book a free consultation with MKPips. Pick a time and tell us what you need. We never ask for passwords, payment details or ID documents here.');
   const toast = useToast();
@@ -133,7 +141,7 @@ export default function Book({ testMode = false, expert = false }) {
     phone: '',
     country: '',
     experience: '',
-    message: pathMessages[params.get('path')] ?? '',
+    message: pathMessages[params.get('path')] ? t(pathMessages[params.get('path')]) : '',
     consent: false,
     session: '',
     website: '', // Hidden from people. Bots fill it in, and the server then discards the request.
@@ -173,7 +181,7 @@ export default function Book({ testMode = false, expert = false }) {
       // Nothing leaves the browser in test mode.
       await new Promise((resolve) => setTimeout(resolve, 500));
       setStatus('success');
-      toast('Test complete. Nothing was sent or saved.');
+      toast(t('Test complete. Nothing was sent or saved.'));
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
@@ -181,15 +189,15 @@ export default function Book({ testMode = false, expert = false }) {
       const { session, ...details } = form;
       await submitLead({ ...details, date: isoDate(date), time, ...(expert ? { kind: 'market-expert', session } : {}) });
       setStatus('success');
-      toast(`Your request for ${longDate(date)} at ${time} is in.`);
+      toast(t('Your request for {date} at {time} is in.', { date: longDate(date, locale), time }));
       if (!expert) window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error) {
       setStatus('idle');
       if (error.fields) {
         setErrors(error.fields);
-        toast('Please check the highlighted fields.', 'error');
+        toast(t('Please check the highlighted fields.'), 'error');
       } else {
-        toast('Sorry, we could not save your request just now. Nothing was lost on your side, so please try again, or message us on WhatsApp.', 'error');
+        toast(t('Sorry, we could not save your request just now. Nothing was lost on your side, so please try again, or message us on WhatsApp.'), 'error');
       }
     }
   };
@@ -199,14 +207,16 @@ export default function Book({ testMode = false, expert = false }) {
       <section className="shell pt-12 md:pt-24">
         <motion.div initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} className="glass mx-auto max-w-2xl p-8 text-center md:p-12">
           <FlaskConical className="mx-auto size-14 text-green" aria-hidden="true" />
-          <h1 className="mt-6 text-3xl font-semibold md:text-4xl">Test complete</h1>
+          <h1 className="mt-6 text-3xl font-semibold md:text-4xl">{t('Test complete')}</h1>
           <p className="mt-3 leading-relaxed text-muted">
-            The form accepted a test request for <strong className="font-semibold text-ink">{longDate(date)}</strong> at{' '}
-            <strong className="font-semibold text-ink">{time}</strong>. Nothing was sent or saved, and no call has been booked.
+            {ti('The form accepted a test request for {date} at {time}. Nothing was sent or saved, and no call has been booked.', {
+              date: <strong className="font-semibold text-ink">{longDate(date, locale)}</strong>,
+              time: <strong className="font-semibold text-ink">{time}</strong>,
+            })}
           </p>
           <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
-            <Button variant="ghost" onClick={() => setStatus('idle')}>Run another test</Button>
-            <Button to="/">Back to home</Button>
+            <Button variant="ghost" onClick={() => setStatus('idle')}>{t('Run another test')}</Button>
+            <Button to="/">{t('Back to home')}</Button>
           </div>
         </motion.div>
       </section>
@@ -218,17 +228,21 @@ export default function Book({ testMode = false, expert = false }) {
       <section className={expert ? '' : 'shell pt-12 md:pt-24'}>
         <motion.div initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} className="glass mx-auto max-w-2xl p-8 text-center md:p-12">
           <CircleCheck className="mx-auto size-14 text-blue" aria-hidden="true" />
-          <h1 className="mt-6 text-3xl font-semibold md:text-4xl">Thanks, {form.name.trim().split(' ')[0]}.</h1>
+          <h1 className="mt-6 text-3xl font-semibold md:text-4xl">{t('Thanks, {name}.', { name: form.name.trim().split(' ')[0] })}</h1>
           <p className="mt-3 leading-relaxed text-muted">
-            You asked for {expert ? `a ${findExpertSession(form.session)?.price} session with a market expert` : `a ${consultation.durationMinutes}-minute call`} on <strong className="font-semibold text-ink">{longDate(date)}</strong> at{' '}
-            <strong className="font-semibold text-ink">{time}</strong>.{' '}
+            {ti(expert ? 'You asked for a {price} session with a market expert on {date} at {time}.' : 'You asked for a {minutes}-minute call on {date} at {time}.', {
+              price: findExpertSession(form.session)?.price,
+              minutes: consultation.durationMinutes,
+              date: <strong className="font-semibold text-ink">{longDate(date, locale)}</strong>,
+              time: <strong className="font-semibold text-ink">{time}</strong>,
+            })}{' '}
             {expert
-              ? `We will email ${form.email.trim()} to confirm the slot and how to pay. Your session is booked once payment is received.`
-              : `We will confirm by email at ${form.email.trim()}.`}
+              ? t('We will email {email} to confirm the slot and how to pay. Your session is booked once payment is received.', { email: form.email.trim() })
+              : t('We will confirm by email at {email}.', { email: form.email.trim() })}
           </p>
           <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
-            {expert ? <Button to="/learning/videos" variant="ghost">Watch our videos</Button> : <Button to="/learning" variant="ghost">Explore learning</Button>}
-            <Button to="/">Back to home</Button>
+            {expert ? <Button to="/learning/videos" variant="ghost">{t('Watch our videos')}</Button> : <Button to="/learning" variant="ghost">{t('Explore learning')}</Button>}
+            <Button to="/">{t('Back to home')}</Button>
           </div>
         </motion.div>
       </section>
@@ -238,13 +252,13 @@ export default function Book({ testMode = false, expert = false }) {
   return (
     <>
       {testMode && <meta name="robots" content="noindex" />}
-      {!expert && <PageHeader eyebrow={testMode ? 'Test booking form' : 'Book a consultation'} title="Let's talk it through." intro={`A free ${consultation.durationMinutes}-minute call. No pressure, and no obligation to open an account.`} />}
+      {!expert && <PageHeader eyebrow={testMode ? 'Test booking form' : 'Book a consultation'} title="Let's talk it through." intro={t('A free {minutes}-minute call. No pressure, and no obligation to open an account.', { minutes: consultation.durationMinutes })} />}
 
       {testMode && (
         <div className="shell mb-5">
           <p className="flex gap-3 rounded-2xl border border-dashed border-green/60 bg-green/10 p-4 text-sm leading-relaxed text-ink">
             <FlaskConical className="mt-0.5 size-4 shrink-0 text-green" aria-hidden="true" />
-            <span><strong className="font-semibold">Test mode.</strong> This form works without the database. Nothing you enter is sent or saved, and no call is booked.</span>
+            <span><strong className="font-semibold">{t('Test mode.')}</strong> {t('This form works without the database. Nothing you enter is sent or saved, and no call is booked.')}</span>
           </p>
         </div>
       )}
@@ -252,9 +266,9 @@ export default function Book({ testMode = false, expert = false }) {
       <form ref={formRef} onSubmit={onSubmit} noValidate className={`${expert ? '' : 'shell '}grid items-start gap-5 lg:grid-cols-[0.9fr_1.1fr]`}>
         {expert && (
           <fieldset data-field="session" tabIndex={-1} className="glass p-5 outline-none md:p-7 lg:col-span-2" aria-describedby={errors.session ? 'session-error' : undefined}>
-            <legend className="sr-only">Choose your session</legend>
-            <h2 className="mb-1 text-lg font-semibold" aria-hidden="true">Choose your session</h2>
-            <p className="mb-4 text-sm text-muted">Prices are per session, in US dollars. You pay after we confirm your slot by email.</p>
+            <legend className="sr-only">{t('Choose your session')}</legend>
+            <h2 className="mb-1 text-lg font-semibold" aria-hidden="true">{t('Choose your session')}</h2>
+            <p className="mb-4 text-sm text-muted">{t('Prices are per session, in US dollars. You pay after we confirm your slot by email.')}</p>
             <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
               {expertSessions.map((s) => {
                 const chosen = form.session === s.id;
@@ -262,19 +276,19 @@ export default function Book({ testMode = false, expert = false }) {
                   <label key={s.id} className={`relative flex min-h-20 cursor-pointer flex-col items-center justify-center rounded-2xl border p-3 text-center transition-colors has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-blue ${chosen ? 'bg-brand border-transparent' : errors.session ? 'border-danger' : 'border-line hover:border-blue/60'}`}>
                     <input type="radio" name="session" value={s.id} checked={chosen} onChange={update('session')} className="sr-only" />
                     <span className="font-display text-2xl font-semibold">{s.price}</span>
-                    <span className={`text-xs ${chosen ? '' : 'text-muted'}`}>{isBlank(s.detail) ? 'per session' : withoutBlanks(s.detail)}</span>
-                    {chosen && <Check className="absolute top-2 right-2 size-4" aria-hidden="true" />}
+                    <span className={`text-xs ${chosen ? '' : 'text-muted'}`}>{isBlank(s.detail) ? t('per session') : t(withoutBlanks(s.detail))}</span>
+                    {chosen && <Check className="absolute top-2 end-2 size-4" aria-hidden="true" />}
                   </label>
                 );
               })}
             </div>
-            {errors.session && <p id="session-error" className="mt-3 flex gap-1.5 text-sm text-danger"><TriangleAlert className="mt-0.5 size-3.5 shrink-0" aria-hidden="true" />{errors.session}</p>}
+            {errors.session && <p id="session-error" className="mt-3 flex gap-1.5 text-sm text-danger"><TriangleAlert className="mt-0.5 size-3.5 shrink-0" aria-hidden="true" />{t(errors.session)}</p>}
           </fieldset>
         )}
         <div className="glass p-5 md:p-7 lg:sticky lg:top-24">
           <h2 className="mb-5 flex items-center gap-2 text-lg font-semibold">
             <CalendarDays className="size-5 text-blue" aria-hidden="true" />
-            Choose a day
+            {t('Choose a day')}
           </h2>
           <div data-field="date" tabIndex={-1} className="outline-none">
             <Calendar
@@ -287,16 +301,16 @@ export default function Book({ testMode = false, expert = false }) {
               }}
             />
           </div>
-          {errors.date && <p className="mt-3 flex gap-1.5 text-sm text-danger"><TriangleAlert className="mt-0.5 size-3.5 shrink-0" aria-hidden="true" />{errors.date}</p>}
+          {errors.date && <p className="mt-3 flex gap-1.5 text-sm text-danger"><TriangleAlert className="mt-0.5 size-3.5 shrink-0" aria-hidden="true" />{t(errors.date)}</p>}
 
           <AnimatePresence initial={false}>
             {date && (
               <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
                 <h2 className="mt-6 mb-1 flex items-center gap-2 text-lg font-semibold">
                   <Clock className="size-5 text-blue" aria-hidden="true" />
-                  Choose a time
+                  {t('Choose a time')}
                 </h2>
-                {isBlank(consultation.timezoneLabel) ? <div className="mb-3" /> : <p className="mb-3 text-xs text-muted">Times shown in <PlaceholderText text={consultation.timezoneLabel} /></p>}
+                {isBlank(consultation.timezoneLabel) ? <div className="mb-3" /> : <p className="mb-3 text-xs text-muted">{t('Times shown in {zone}', { zone: withoutBlanks(consultation.timezoneLabel) })}</p>}
                 <div data-field="time" tabIndex={-1} className="grid grid-cols-3 gap-2 p-0.5 outline-none">
                   {consultation.timeSlots.map((slot) => (
                     <button
@@ -313,14 +327,14 @@ export default function Book({ testMode = false, expert = false }) {
                     </button>
                   ))}
                 </div>
-                {errors.time && <p className="mt-3 flex gap-1.5 text-sm text-danger"><TriangleAlert className="mt-0.5 size-3.5 shrink-0" aria-hidden="true" />{errors.time}</p>}
+                {errors.time && <p className="mt-3 flex gap-1.5 text-sm text-danger"><TriangleAlert className="mt-0.5 size-3.5 shrink-0" aria-hidden="true" />{t(errors.time)}</p>}
               </motion.div>
             )}
           </AnimatePresence>
         </div>
 
         <div className="glass grid gap-5 p-5 md:p-7">
-          <h2 className="text-lg font-semibold">Your details</h2>
+          <h2 className="text-lg font-semibold">{t('Your details')}</h2>
           <input type="text" name="website" value={form.website} onChange={update('website')} tabIndex={-1} autoComplete="off" aria-hidden="true" className="sr-only" />
           <div className="grid gap-5 sm:grid-cols-2">
             <Field id="name" label="Name" error={errors.name}>
@@ -334,24 +348,24 @@ export default function Book({ testMode = false, expert = false }) {
             </Field>
             <Field id="country" label="Country" error={errors.country}>
               <select {...fieldProps('country')} className="field">
-                <option value="">Select your country</option>
+                <option value="">{t('Select your country')}</option>
                 {countries.filter((c) => c.code !== 'OTHER').map((c) => (
-                  <option key={c.code} value={c.name}>{c.name}</option>
+                  <option key={c.code} value={c.name}>{t(c.name)}</option>
                 ))}
-                <option value="Other">Other</option>
+                <option value="Other">{t('Other')}</option>
               </select>
             </Field>
           </div>
           <Field id="experience" label="Experience level" error={errors.experience}>
             <select {...fieldProps('experience')} className="field">
-              <option value="">Select the closest option</option>
+              <option value="">{t('Select the closest option')}</option>
               {experienceLevels.map((o) => (
-                <option key={o.id} value={o.label}>{o.label}</option>
+                <option key={o.id} value={o.label}>{t(o.label)}</option>
               ))}
             </select>
           </Field>
           <Field id="message" label="Message" optional>
-            <textarea {...fieldProps('message')} rows={4} placeholder={expert ? 'Which markets or topics would you like to cover? For example gold, major currency pairs or reading an economic calendar.' : 'What would you like to talk about?'} className="field resize-y" />
+            <textarea {...fieldProps('message')} rows={4} placeholder={expert ? t('Which markets or topics would you like to cover? For example gold, major currency pairs or reading an economic calendar.') : t('What would you like to talk about?')} className="field resize-y" />
           </Field>
 
           <div>
@@ -370,21 +384,22 @@ export default function Book({ testMode = false, expert = false }) {
                 {form.consent && <Check className="size-3.5" aria-hidden="true" />}
               </span>
               <span className="text-muted">
-                I agree that MKPips may contact me about this request and handle my details as set out in the{' '}
-                <Link to="/privacy" className="font-medium text-ink underline underline-offset-2">Privacy Policy</Link>. I understand that CFDs carry a high risk of losing money and that MKPips may receive compensation from partner brokers.
+                {ti('I agree that MKPips may contact me about this request and handle my details as set out in the {link}. I understand that CFDs carry a high risk of losing money and that MKPips may receive compensation from partner brokers.', {
+                  link: <Link to="/privacy" className="font-medium text-ink underline underline-offset-2">{t('Privacy Policy')}</Link>,
+                })}
               </span>
             </label>
-            {errors.consent && <p id="consent-error" className="mt-2 flex gap-1.5 text-sm text-danger"><TriangleAlert className="mt-0.5 size-3.5 shrink-0" aria-hidden="true" />{errors.consent}</p>}
+            {errors.consent && <p id="consent-error" className="mt-2 flex gap-1.5 text-sm text-danger"><TriangleAlert className="mt-0.5 size-3.5 shrink-0" aria-hidden="true" />{t(errors.consent)}</p>}
           </div>
 
           <Button type="submit" disabled={status === 'sending'} className="w-full">
             {status === 'sending' ? <LoaderCircle className="size-4 animate-spin" aria-hidden="true" /> : <CalendarDays className="size-4" aria-hidden="true" />}
-            {status === 'sending' ? 'Sending your request' : testMode ? 'Send test request' : expert ? 'Request my expert session' : 'Request my free consultation'}
+            {t(status === 'sending' ? 'Sending your request' : testMode ? 'Send test request' : expert ? 'Request my expert session' : 'Request my free consultation')}
           </Button>
 
           <p className="flex gap-2 text-xs leading-relaxed text-faint">
             <Lock className="mt-0.5 size-3.5 shrink-0" aria-hidden="true" />
-            We never ask for passwords, payment details or ID documents on this site.
+            {t('We never ask for passwords, payment details or ID documents on this site.')}
           </p>
         </div>
       </form>

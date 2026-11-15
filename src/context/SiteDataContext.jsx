@@ -1,4 +1,5 @@
-import { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { useI18n } from '../i18n/I18nContext';
 import { fallbackCompliance } from '../data/staticContent';
 
 const SiteDataContext = createContext(null);
@@ -30,7 +31,11 @@ export function SiteDataProvider({ children }) {
     setAttempt((n) => n + 1);
   }, []);
 
-  return <SiteDataContext.Provider value={{ ...state, retry }}>{children}</SiteDataContext.Provider>;
+  // Database text (FAQ, legal pages, broker notes and so on) shown in the visitor's language where a translation exists.
+  const { tr } = useI18n();
+  const data = useMemo(() => tr(state.data), [tr, state.data]);
+
+  return <SiteDataContext.Provider value={{ ...state, data, raw: state.data, retry }}>{children}</SiteDataContext.Provider>;
 }
 
 export const useSiteData = () => useContext(SiteDataContext);
@@ -38,5 +43,6 @@ export const useSiteData = () => useContext(SiteDataContext);
 /** Required compliance wording, available even when the database is not. */
 export function useCompliance() {
   const { data } = useSiteData();
-  return { ...fallbackCompliance, ...data?.compliance };
+  const { tr } = useI18n();
+  return { ...tr(fallbackCompliance), ...data?.compliance };
 }

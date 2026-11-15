@@ -13,7 +13,7 @@ function Item({ q, a, open, onToggle }) {
           aria-expanded={open}
           aria-controls={id}
           onClick={onToggle}
-          className="flex min-h-14 w-full items-center justify-between gap-4 px-5 py-4 text-left md:px-7"
+          className="flex min-h-14 w-full items-center justify-between gap-4 px-5 py-4 text-start md:px-7"
         >
           {q}
           <ChevronDown className={`size-5 shrink-0 text-blue transition-transform duration-300 ${open ? 'rotate-180' : ''}`} aria-hidden="true" />

@@ -9,16 +9,18 @@ import { PageHeader, SampleBadge } from '../components/ui/Primitives';
 import { usePageMeta } from '../hooks/usePageMeta';
 import { useToast } from '../context/ToastContext';
 import { useSiteData } from '../context/SiteDataContext';
+import { useT } from '../i18n/I18nContext';
 
 const MAX_COMPARE = 3;
 const noFilters = { regulator: '', platform: '', instrument: '' };
 
 function FilterSelect({ label, value, onChange, options, allLabel }) {
+  const t = useT();
   return (
     <label className="block">
-      <span className="mb-1.5 block text-xs font-medium text-muted">{label}</span>
+      <span className="mb-1.5 block text-xs font-medium text-muted">{t(label)}</span>
       <select value={value} onChange={(e) => onChange(e.target.value)} className="field">
-        <option value="">{allLabel}</option>
+        <option value="">{t(allLabel)}</option>
         {options.map((o) => (
           <option key={o.value} value={o.value}>{o.label}</option>
         ))}
@@ -40,6 +42,7 @@ export default function BrokerPartners() {
   );
   usePageMeta('Broker Partners', 'Filter and compare broker partners by regulator, platform and instrument, with a link to verify each licence. Listings marked Sample data are fictional.');
   const toast = useToast();
+  const t = useT();
   const [params, setParams] = useSearchParams();
   const [filters, setFilters] = useState(noFilters);
   const [compareIds, setCompareIds] = useState([]);
@@ -74,7 +77,7 @@ export default function BrokerPartners() {
     if (compareIds.includes(id)) {
       setCompareIds((ids) => ids.filter((x) => x !== id));
     } else if (compareIds.length >= MAX_COMPARE) {
-      toast(`You can compare up to ${MAX_COMPARE} brokers. Remove one to add another.`, 'info');
+      toast(t('You can compare up to {max} brokers. Remove one to add another.', { max: MAX_COMPARE }), 'info');
     } else {
       setCompareIds((ids) => [...ids, id]);
     }
@@ -89,7 +92,7 @@ export default function BrokerPartners() {
       >
         <Link to="/partner-with-us" className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-full border border-line bg-[var(--glass)] px-4 text-sm font-medium hover:border-blue/60">
           <Handshake className="size-4 text-green" aria-hidden="true" />
-          Refer clients? <span className="text-blue">Partner with us</span>
+          {t('Refer clients?')} <span className="text-blue">{t('Partner with us')}</span>
           <ArrowRight className="size-4 text-blue" aria-hidden="true" />
         </Link>
       </PageHeader>
@@ -98,7 +101,7 @@ export default function BrokerPartners() {
         <div className="mb-6 flex gap-3 rounded-2xl border border-dashed border-green/60 bg-green/8 p-4 text-sm leading-relaxed">
           <SampleBadge className="h-fit shrink-0" />
           <p className="text-muted">
-            Neomarkets, Hantec Markets and ZYZ Capital are real brokers that MKPips works with: their details come from their own websites. ZYZ Capital shows a company registration in Saint Lucia rather than a regulator's licence. The other brokers are fictional examples with made-up figures and licence numbers that will not appear on any register.
+            {t("Neomarkets, Hantec Markets and ZYZ Capital are real brokers that MKPips works with: their details come from their own websites. ZYZ Capital shows a company registration in Saint Lucia rather than a regulator's licence. The other brokers are fictional examples with made-up figures and licence numbers that will not appear on any register.")}
           </p>
         </div>
 
@@ -110,12 +113,12 @@ export default function BrokerPartners() {
 
         <div className="mt-5 mb-4 flex min-h-11 items-center justify-between gap-3">
           <p className="text-sm text-muted" role="status">
-            Showing {shown.length} of {brokers.length} brokers
+            {t('Showing {shown} of {total} brokers', { shown: shown.length, total: brokers.length })}
           </p>
           {hasFilters && (
             <button type="button" onClick={() => setFilters(noFilters)} className="inline-flex min-h-11 items-center gap-1.5 text-sm font-medium text-blue">
               <RotateCcw className="size-3.5" aria-hidden="true" />
-              Clear filters
+              {t('Clear filters')}
             </button>
           )}
         </div>
@@ -123,11 +126,11 @@ export default function BrokerPartners() {
         {shown.length === 0 ? (
           <div className="glass p-10 text-center md:p-14">
             <SearchX className="mx-auto size-8 text-green" aria-hidden="true" />
-            <h2 className="mt-4 text-xl font-semibold">No brokers match that combination</h2>
-            <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-muted">Try removing a filter, or tell us what you are looking for and we will see what is possible.</p>
+            <h2 className="mt-4 text-xl font-semibold">{t('No brokers match that combination')}</h2>
+            <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-muted">{t('Try removing a filter, or tell us what you are looking for and we will see what is possible.')}</p>
             <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
-              <Button variant="ghost" onClick={() => setFilters(noFilters)}>Clear filters</Button>
-              <Button to="/book">Talk to us</Button>
+              <Button variant="ghost" onClick={() => setFilters(noFilters)}>{t('Clear filters')}</Button>
+              <Button to="/book">{t('Talk to us')}</Button>
             </div>
           </div>
         ) : (
@@ -146,7 +149,7 @@ export default function BrokerPartners() {
       <AnimatePresence>
         {compareIds.length > 0 && (
           <motion.aside
-            aria-label="Brokers selected to compare"
+            aria-label={t('Brokers selected to compare')}
             initial={{ y: 40, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 40, opacity: 0 }}
@@ -160,7 +163,7 @@ export default function BrokerPartners() {
                     <button
                       type="button"
                       onClick={() => toggleCompare(b.id)}
-                      aria-label={`Remove ${b.name} from comparison`}
+                      aria-label={t('Remove {name} from comparison', { name: b.name })}
                       className="inline-flex min-h-9 items-center gap-1 rounded-full border border-line px-3 text-xs font-medium hover:border-blue/60"
                     >
                       {b.name.replace('Sample Broker ', '')}
@@ -171,7 +174,7 @@ export default function BrokerPartners() {
               </ul>
               <Button onClick={() => setDialogOpen(true)} disabled={compareIds.length < 2} className="!min-h-10 !py-2">
                 <Scale className="size-4" aria-hidden="true" />
-                {compareIds.length < 2 ? 'Pick one more' : `Compare ${compareIds.length}`}
+                {compareIds.length < 2 ? t('Pick one more') : t('Compare {n}', { n: compareIds.length })}
               </Button>
             </div>
           </motion.aside>

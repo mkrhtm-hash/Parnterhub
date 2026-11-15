@@ -1,6 +1,7 @@
 import { DatabaseZap, RotateCcw } from 'lucide-react';
 import Button from './Button';
 import { useSiteData } from '../../context/SiteDataContext';
+import { useT } from '../../i18n/I18nContext';
 
 export function Skeleton({ className = '' }) {
   return <div aria-hidden="true" className={`animate-pulse rounded-xl bg-line ${className}`} />;
@@ -18,8 +19,9 @@ export function CardSkeleton({ className = '' }) {
 }
 
 function PageSkeleton() {
+  const t = useT();
   return (
-    <div role="status" aria-label="Loading" className="shell min-h-screen pt-10 md:pt-20">
+    <div role="status" aria-label={t('Loading')} className="shell min-h-screen pt-10 md:pt-20">
       <Skeleton className="h-3 w-28" />
       <Skeleton className="mt-4 h-12 w-full max-w-xl" />
       <Skeleton className="mt-4 h-5 w-full max-w-2xl" />
@@ -34,19 +36,20 @@ function PageSkeleton() {
 
 export function DataError({ compact = false, testFormLink = false }) {
   const { retry } = useSiteData();
+  const t = useT();
   return (
     <div role="alert" className={`glass mx-auto max-w-2xl text-center ${compact ? 'p-6' : 'p-8 md:p-12'}`}>
       <span className="mx-auto grid size-14 place-items-center rounded-2xl bg-green/12 text-green">
         <DatabaseZap className="size-6" aria-hidden="true" />
       </span>
-      <h2 className="mt-5 text-xl font-semibold md:text-2xl">We cannot reach our database right now</h2>
-      <p className="mt-2 text-sm leading-relaxed text-muted md:text-base">This part of the site needs live data. Nothing is wrong on your side, so please try again in a moment.</p>
+      <h2 className="mt-5 text-xl font-semibold md:text-2xl">{t('We cannot reach our database right now')}</h2>
+      <p className="mt-2 text-sm leading-relaxed text-muted md:text-base">{t('This part of the site needs live data. Nothing is wrong on your side, so please try again in a moment.')}</p>
       <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
         <Button variant="ghost" onClick={retry}>
           <RotateCcw className="size-4" aria-hidden="true" />
-          Try again
+          {t('Try again')}
         </Button>
-        {testFormLink && <Button to="/book/test">Try the test form</Button>}
+        {testFormLink && <Button to="/book/test">{t('Try the test form')}</Button>}
       </div>
     </div>
   );

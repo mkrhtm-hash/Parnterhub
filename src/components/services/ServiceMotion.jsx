@@ -7,6 +7,8 @@ import { motion, useInView, useReducedMotion } from 'framer-motion';
  * show a still frame for visitors who prefer reduced motion.
  */
 
+import { useT } from '../../i18n/I18nContext';
+
 const blue = 'var(--blue)';
 const green = 'var(--green)';
 const red = 'var(--red)';
@@ -30,11 +32,12 @@ function useLoop(duration) {
 
 /** The panel: drifting coloured light, a fine dot grid and shared filters and gradients. */
 function Frame({ innerRef, play, label, children }) {
+  const T = useT();
   const id = useId().replace(/:/g, '');
   const drift = (dx, dy, dur) => (play ? { animate: { x: [0, dx, 0], y: [0, dy, 0] }, transition: { duration: dur, repeat: Infinity, ease: 'easeInOut' } } : {});
   return (
     <div ref={innerRef} className="overflow-hidden rounded-2xl border border-line" style={{ background: 'linear-gradient(160deg, var(--glass-hi), transparent 75%)' }}>
-      <svg viewBox="0 0 400 180" role="img" aria-label={label} className="block w-full font-sans" shapeRendering="geometricPrecision">
+      <svg viewBox="0 0 400 180" role="img" aria-label={T(label)} dir="ltr" style={{ direction: 'ltr' }} className="block w-full font-sans" shapeRendering="geometricPrecision">
         <defs>
           <pattern id={`${id}-dots`} width="14" height="14" patternUnits="userSpaceOnUse">
             <circle cx="1" cy="1" r="0.9" fill={line} />
@@ -75,6 +78,7 @@ const Glass = ({ id, x, y, w, h, r = 10, stroke = line }) => (
 
 /* 1. Broker selection: a scanner sweeps the field; three cards lift, glow and make the short list. */
 function Selection() {
+  const T = useT();
   const D = 6.5;
   const { ref, loop, play } = useLoop(D);
   const cards = [0, 1, 2, 3, 4, 5, 6, 7, 8].map((i) => ({ i, x: 72 + (i % 3) * 88, y: 14 + Math.floor(i / 3) * 44 }));
@@ -126,7 +130,7 @@ function Selection() {
           </motion.g>
           <motion.g style={{ originX: '50%', originY: '50%' }} {...loop({ opacity: [0, 0, 1, 1, 0], scale: [0.8, 0.8, 1, 1, 0.8] }, [0, 0.52, 0.58, 0.9, 0.97], { opacity: 1, scale: 1 })}>
             <rect x="148" y="150" width="104" height="24" rx="12" fill={`url(#${id}-bg)`} filter={`url(#${id}-glow)`} />
-            <text x="200" y="166.5" fontSize="12.5" fontWeight="700" fill="#fff" textAnchor="middle">3 matches</text>
+            <text x="200" y="166.5" fontSize="12.5" fontWeight="700" fill="#fff" textAnchor="middle">{T('3 matches')}</text>
           </motion.g>
         </>
       )}
@@ -136,6 +140,7 @@ function Selection() {
 
 /* 2. Account opening: documents slide in and get ticked off while a gradient progress bar fills. */
 function Opening() {
+  const T = useT();
   const D = 7;
   const { ref, loop, play } = useLoop(D);
   const docs = [
@@ -154,7 +159,7 @@ function Opening() {
                 <Glass id={id} x={0} y={0} w={116} h={84} r={11} />
                 <path d="M0 11 a11 11 0 0 1 11 -11 h94 a11 11 0 0 1 11 11 v7 h-116 Z" fill={color} />
                 <path d="M0 11 a11 11 0 0 1 11 -11 h94 a11 11 0 0 1 11 11 v7 h-116 Z" fill={`url(#${id}-sheen)`} />
-                <text x="10" y="13" fontSize="9" fontWeight="700" fill="#fff" letterSpacing="0.5">{label.toUpperCase()}</text>
+                <text x="10" y="13" fontSize="9" fontWeight="700" fill="#fff" letterSpacing="0.5">{T(label).toUpperCase()}</text>
                 {label === 'ID' ? (
                   <g transform="translate(25 50)">
                     <circle r="15" fill={color} opacity="0.18" />
@@ -177,12 +182,12 @@ function Opening() {
               <motion.g style={{ originX: '50%', originY: '50%' }} {...loop({ scale: [0, 0, 1.2, 1, 1, 0] }, [0, t, t + 0.04, t + 0.07, 0.9, 0.98], { scale: 1 })}>
                 <Tick r={10} />
               </motion.g>
-              <text x="20" y="4.5" fontSize="13" fontWeight="500" fill={ink}>{label}</text>
+              <text x="20" y="4.5" fontSize="13" fontWeight="500" fill={ink}>{T(label)}</text>
             </g>
           ))}
           <motion.g style={{ originX: '50%', originY: '50%' }} {...loop({ opacity: [0, 0, 1, 1, 0], scale: [0.85, 0.85, 1, 1, 0.85] }, [0, 0.62, 0.68, 0.9, 0.97], { opacity: 1, scale: 1 })}>
             <rect x="262" y="136" width="108" height="22" rx="11" fill={`url(#${id}-bg)`} filter={`url(#${id}-glow)`} />
-            <text x="316" y="151" fontSize="12" fontWeight="700" fill="#fff" textAnchor="middle">Account ready</text>
+            <text x="316" y="151" fontSize="12" fontWeight="700" fill="#fff" textAnchor="middle">{T('Account ready')}</text>
           </motion.g>
           <rect x="26" y="164" width="214" height="7" rx="3.5" fill={line} />
           <motion.rect x="26" y="164" width="214" height="7" rx="3.5" fill={`url(#${id}-bg)`} style={{ originX: 0 }} filter={`url(#${id}-glow)`}
@@ -195,6 +200,7 @@ function Opening() {
 
 /* 3. Trading conditions: the chart is revealed left to right, a glowing marker riding the price. */
 function Conditions() {
+  const T = useT();
   const D = 6;
   const { ref, loop, play } = useLoop(D);
   const pts = [[24, 124], [48, 110], [70, 118], [94, 92], [118, 100], [142, 74], [164, 84], [188, 60], [212, 70], [238, 46]];
@@ -243,7 +249,7 @@ function Conditions() {
           <motion.g {...loop({ opacity: [0, 0, 1, 1, 0] }, [0, 0.58, 0.64, 0.9, 0.97], { opacity: 1 })}>
             <path d="M250 46 V57 M246 46 H254 M246 57 H254" stroke={ink} strokeWidth="1.5" />
             <rect x="208" y="20" width="56" height="18" rx="9" fill={card} stroke={line} />
-            <text x="236" y="32.5" fontSize="10.5" fontWeight="700" fill={ink} textAnchor="middle">Spread</text>
+            <text x="236" y="32.5" fontSize="10.5" fontWeight="700" fill={ink} textAnchor="middle">{T('Spread')}</text>
           </motion.g>
           <Glass id={id} x={264} y={22} w={124} h={150} r={14} />
           {bars.map(([label, , h], i) => {
@@ -253,7 +259,7 @@ function Conditions() {
                 <rect x={x} y="36" width="22" height="108" rx="6" fill={line} />
                 <motion.rect x={x} y="36" width="22" height="108" rx="6" fill={`url(#${id}-bar-${label.replace('.', '')})`} style={{ originY: 1 }}
                   {...loop({ scaleY: h }, [0, 0.33, 0.66, 1], { scaleY: h[0] })} />
-                <text x={x + 11} y="160" fontSize="9" fontWeight="500" fill={muted} textAnchor="middle">{label}</text>
+                <text x={x + 11} y="160" fontSize="9" fontWeight="500" fill={muted} textAnchor="middle">{T(label)}</text>
               </g>
             );
           })}
@@ -289,6 +295,7 @@ function MkMark({ id, x, y, size }) {
 
 /* 4. Ongoing support: you, MKPips and your broker, with messages travelling between you. */
 function Support() {
+  const T = useT();
   const D = 7;
   const { ref, loop, play } = useLoop(D);
   const you = [70, 100];
@@ -350,7 +357,7 @@ function Support() {
           </g>
           <circle cx={you[0]} cy={you[1] - 6} r="6.5" fill={blue} />
           <path d={`M${you[0] - 11} ${you[1] + 12} Q${you[0]} ${you[1] - 2} ${you[0] + 11} ${you[1] + 12} Z`} fill={blue} />
-          <text x={you[0]} y={you[1] + 42} fontSize="12" fontWeight="600" fill={ink} textAnchor="middle">You</text>
+          <text x={you[0]} y={you[1] + 42} fontSize="12" fontWeight="600" fill={ink} textAnchor="middle">{T('You')}</text>
 
           {/* Your broker */}
           <g filter={`url(#${id}-shadow)`}>
@@ -362,7 +369,7 @@ function Support() {
             {[-8, -2.5, 3].map((dx) => <rect key={dx} x={broker[0] + dx} y={broker[1] - 3} width="4" height="12" rx="1" />)}
             <rect x={broker[0] - 12} y={broker[1] + 10} width="24" height="3" rx="1.5" />
           </g>
-          <text x={broker[0]} y={broker[1] + 42} fontSize="12" fontWeight="600" fill={ink} textAnchor="middle">Your broker</text>
+          <text x={broker[0]} y={broker[1] + 42} fontSize="12" fontWeight="600" fill={ink} textAnchor="middle">{T('Your broker')}</text>
 
           {legs.map(({ x, y, opacity, times, color }, i) => (
             <motion.g key={i} {...loop({ x, y, opacity }, times, { x: you[0], y: you[1] - 46, opacity: 0 })}>

@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { ChartLine, Handshake, LifeBuoy, Scale, UserRound } from 'lucide-react';
 import { LogoMark } from '../ui/Logo';
+import { useT } from '../../i18n/I18nContext';
 
 // Positions are percentages of the visual, which keeps it fluid at any width.
 const nodes = [
@@ -13,8 +14,9 @@ const nodes = [
 
 /** Shows the service as a hub. It contains no broker names, logos or figures. */
 export default function HubVisual() {
+  const t = useT();
   return (
-    <div className="relative mx-auto aspect-square w-full max-w-[32rem]" aria-hidden="true">
+    <div className="relative mx-auto aspect-square w-full max-w-[32rem]" aria-hidden="true" dir="ltr">
       <svg viewBox="0 0 100 100" className="absolute inset-0 size-full overflow-visible">
         <defs>
           <linearGradient id="hub-line" x1="0" y1="0" x2="1" y2="1">
@@ -67,7 +69,7 @@ export default function HubVisual() {
             style={{ background: 'var(--glass-solid)' }}
           >
             <n.Icon className="size-4 text-blue" />
-            {n.label}
+            <span dir="auto">{t(n.label)}</span>
           </motion.div>
         </motion.div>
       ))}

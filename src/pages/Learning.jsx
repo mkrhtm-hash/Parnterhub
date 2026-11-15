@@ -96,7 +96,7 @@ function VideoDialog({ video, onClose }) {
   const ref = useRef(null);
   const embed = embedUrl(video.url);
   const { t, lang } = useI18n();
-  // Our own videos come in English, Urdu and Arabic versions: same narration, with on-screen text and subtitles in that language.
+  // Our own videos come in English, Urdu and Arabic versions, each narrated in its own language.
   const src = lang !== 'en' && video.url.startsWith('/videos/') ? video.url.replace(/\.mp4$/, `.${lang}.mp4`) : video.url;
 
   useEffect(() => {
@@ -126,7 +126,6 @@ function VideoDialog({ video, onClose }) {
         )}
       </div>
       <p className="px-4 py-3 text-xs leading-relaxed text-muted md:px-5">
-        {lang === 'en' ? '' : `${t('English narration, with on-screen text and subtitles in your language.')} `}
         {t('The narration in our videos is computer-generated. General education only, not investment advice.')}
       </p>
     </dialog>

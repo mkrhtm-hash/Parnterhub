@@ -30,3 +30,15 @@ export async function startVoiceSession(ticket, lang) {
   if (!res.ok) throw Object.assign(new Error(body.message ?? 'Could not start the call'), { code: body.error });
   return body;
 }
+
+/** Saves the answers given to Noor, the scripted voice assistant, onto the booking. */
+export async function saveVoiceNotes(ticket, answers, lang) {
+  const res = await fetch('/api/voice-notes', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ ticket, answers, lang }),
+  });
+  if (res.ok) return;
+  const body = await res.json().catch(() => ({}));
+  throw Object.assign(new Error(body.message ?? 'Could not save'), { code: body.error });
+}

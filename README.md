@@ -112,15 +112,19 @@ You can also read bookings and opinions at `/admin`, which is protected by the `
 
 ## AI call assistant (Noor)
 
-After someone books, the confirmation screen offers a short voice call in the browser with Noor, an AI assistant built on ElevenLabs Agents. Noor confirms the booking, asks a few questions for the consultant, and speaks English, Urdu or Arabic to match the site. She is told never to give financial advice, make promises or take payment details. The panel stays hidden until the assistant is set up.
+After someone books, the confirmation screen offers a short voice call in the browser with Noor, in English, Urdu or Arabic to match the site. Noor works in one of two ways:
+
+- **Scripted (now).** Noor plays recorded lines, asks three questions (what they want from the call, which markets interest them, whether they already have a trading account) and listens to each answer through the browser's speech recognition, or the visitor types it. The answers are added to the booking's message, so they show in `/admin`. The recordings are in `public/voice/` (Microsoft neural voices: Ava for English, Gul for Urdu, Zariyah for Arabic), and the wording is in `src/data/noorScript.js`. The recordings were made with Microsoft's free Edge voice service, which is not licensed for business use. To change a line, update the script and its translations and record it again.
+- **Live AI (once set up).** With an ElevenLabs key, Noor becomes a real conversation built on ElevenLabs Agents. She confirms the booking, asks questions for the consultant and answers simple questions. She is told never to give financial advice, make promises or take payment details. Once both ElevenLabs values are set, this replaces the scripted version automatically.
 
 | What | Where |
 |---|---|
 | Noor's instructions, greeting and voice | `scripts/voice-agent.js` |
 | Starts a call for a real booking (the API key stays on the server) | `api/voice-session.js`, `api/_lib/voiceTicket.js` |
-| The call panel | `src/components/booking/VoiceAssistant.jsx` |
+| The call panels | `src/components/booking/VoiceAssistant.jsx` (live AI), `ScriptedAssistant.jsx` (scripted) |
+| Saves scripted answers onto the booking | `api/voice-notes.js` |
 
-To set it up:
+To switch on the live AI version:
 
 1. Create an account at elevenlabs.io and make an API key under **Developers > API keys**. Give it access to **ElevenLabs Agents**.
 2. Add `ELEVENLABS_API_KEY=...` to `.env`.

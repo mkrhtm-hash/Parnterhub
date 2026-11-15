@@ -3,15 +3,16 @@ import { AudioLines, LoaderCircle, Mic, MicOff, PhoneOff, Sparkles } from 'lucid
 import Button from '../ui/Button';
 import { startVoiceSession } from '../../services/leads';
 import { useI18n } from '../../i18n/I18nContext';
+import ScriptedAssistant from './ScriptedAssistant';
 
 /**
  * Optional voice call with Noor, the MKPips AI assistant, shown after a booking.
  * The call runs in the browser through ElevenLabs. The server checks the booking pass and hands out a
- * one-off token, so the ElevenLabs key never reaches the page. Shown only once the assistant is set up.
+ * one-off token, so the ElevenLabs key never reaches the page. Until it is set up, the scripted Noor is shown.
  */
 export default function VoiceAssistant({ ticket, firstName }) {
   const { t, lang } = useI18n();
-  const [available, setAvailable] = useState(false);
+  const [available, setAvailable] = useState(null); // null while checking
   const [state, setState] = useState('idle'); // idle | connecting | live | ended | error
   const [speaking, setSpeaking] = useState(false);
   const [muted, setMuted] = useState(false);
@@ -24,7 +25,7 @@ export default function VoiceAssistant({ ticket, firstName }) {
     fetch('/api/voice-session')
       .then((res) => (res.ok ? res.json() : {}))
       .then((body) => active && setAvailable(Boolean(body.available)))
-      .catch(() => {});
+      .catch(() => active && setAvailable(false));
     return () => {
       active = false;
     };
@@ -33,7 +34,9 @@ export default function VoiceAssistant({ ticket, firstName }) {
   // Hang up if the visitor leaves the page mid-call.
   useEffect(() => () => conversation.current?.endSession(), []);
 
-  if (!ticket || !available) return null;
+  if (!ticket || available === null) return null;
+  // Without the live AI assistant, Noor runs from a recorded script instead.
+  if (!available) return <ScriptedAssistant ticket={ticket} />;
 
   const start = async () => {
     setState('connecting');

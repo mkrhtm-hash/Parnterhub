@@ -11,6 +11,7 @@ import { useSiteData } from '../context/SiteDataContext';
 import { testBooking } from '../data/staticContent';
 import { expertSessions, findExpertSession } from '../../shared/expertSessions';
 import { useI18n } from '../i18n/I18nContext';
+import VoiceAssistant from '../components/booking/VoiceAssistant';
 
 // Monday to Sunday, short names in the visitor's language (5 Jan 2026 was a Monday).
 const dayLabels = (locale) => Array.from({ length: 7 }, (_, i) => new Date(2026, 0, 5 + i).toLocaleDateString(locale, { weekday: 'short' }));
@@ -148,6 +149,7 @@ export default function Book({ testMode = false, expert = false }) {
   });
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState('idle');
+  const [voiceTicket, setVoiceTicket] = useState('');
   const formRef = useRef(null);
 
   const update = (key) => (e) => {
@@ -187,7 +189,8 @@ export default function Book({ testMode = false, expert = false }) {
     }
     try {
       const { session, ...details } = form;
-      await submitLead({ ...details, date: isoDate(date), time, ...(expert ? { kind: 'market-expert', session } : {}) });
+      const saved = await submitLead({ ...details, date: isoDate(date), time, ...(expert ? { kind: 'market-expert', session } : {}) });
+      setVoiceTicket(saved?.voiceTicket ?? '');
       setStatus('success');
       toast(t('Your request for {date} at {time} is in.', { date: longDate(date, locale), time }));
       if (!expert) window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -240,6 +243,7 @@ export default function Book({ testMode = false, expert = false }) {
               ? t('We will email {email} to confirm the slot and how to pay. Your session is booked once payment is received.', { email: form.email.trim() })
               : t('We will confirm by email at {email}.', { email: form.email.trim() })}
           </p>
+          <VoiceAssistant ticket={voiceTicket} firstName={form.name.trim().split(' ')[0]} />
           <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
             {expert ? <Button to="/learning/videos" variant="ghost">{t('Watch our videos')}</Button> : <Button to="/learning" variant="ghost">{t('Explore learning')}</Button>}
             <Button to="/">{t('Back to home')}</Button>

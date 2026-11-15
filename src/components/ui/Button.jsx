@@ -7,6 +7,7 @@ const variants = {
   primary: 'bg-brand shadow-[0_10px_34px_-12px_var(--blue)] hover:-translate-y-0.5 hover:shadow-[0_16px_40px_-10px_var(--blue)]',
   ghost: 'border border-line bg-[var(--glass)] text-ink backdrop-blur hover:-translate-y-0.5 hover:border-blue/60',
   quiet: 'text-muted hover:text-ink',
+  danger: 'bg-[#e5484d] text-white hover:-translate-y-0.5 hover:bg-[#d93d42]',
 };
 
 /** Renders a router link with `to`, an outside link with `href`, or a button otherwise. */

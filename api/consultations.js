@@ -1,6 +1,7 @@
 import { getSql } from './_lib/db.js';
 import { route } from './_lib/handler.js';
 import { findExpertSession } from '../shared/expertSessions.js';
+import { issueVoiceTicket } from './_lib/voiceTicket.js';
 
 const text = (value) => (typeof value === 'string' ? value.trim() : '');
 
@@ -58,12 +59,13 @@ export default route({
     if (kind === 'market-expert' && !session) {
       return res.status(400).json({ error: 'validation_failed', message: 'Please check the highlighted fields.', fields: { session: 'Please choose a session.' } });
     }
-    await sql`
+    const [saved] = await sql`
       INSERT INTO consultations (name, email, phone, country, experience, message, preferred_date, preferred_time, consent, kind, session_price)
       VALUES (${text(body.name)}, ${text(body.email)}, ${text(body.phone)}, ${text(body.country)}, ${text(body.experience)},
-              ${text(body.message)}, ${text(body.date)}, ${body.time}, true, ${kind}, ${session?.price ?? ''})`;
+              ${text(body.message)}, ${text(body.date)}, ${body.time}, true, ${kind}, ${session?.price ?? ''})
+      RETURNING id`;
 
-    // Nothing about the request is sent back to the browser.
-    return res.status(201).json({ ok: true });
+    // Nothing about the request is sent back, only a short-lived pass for the optional AI assistant call.
+    return res.status(201).json({ ok: true, voiceTicket: issueVoiceTicket(saved.id) });
   },
 });

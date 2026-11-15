@@ -9,7 +9,7 @@ async function post(path, payload) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
   });
-  if (res.ok) return;
+  if (res.ok) return res.json().catch(() => ({}));
   const body = await res.json().catch(() => ({}));
   const error = new Error(body.message ?? 'Submission failed');
   error.fields = body.fields;
@@ -18,3 +18,15 @@ async function post(path, payload) {
 
 export const submitLead = (payload) => post('/api/consultations', payload);
 export const submitOpinion = (payload) => post('/api/feedback', payload);
+
+/** Asks the server for a voice call with the AI assistant, using the pass returned with a booking. */
+export async function startVoiceSession(ticket, lang) {
+  const res = await fetch('/api/voice-session', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ ticket, lang }),
+  });
+  const body = await res.json().catch(() => ({}));
+  if (!res.ok) throw Object.assign(new Error(body.message ?? 'Could not start the call'), { code: body.error });
+  return body;
+}

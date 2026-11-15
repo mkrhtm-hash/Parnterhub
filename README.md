@@ -110,6 +110,25 @@ SELECT * FROM consultations ORDER BY created_at DESC;
 
 You can also read bookings and opinions at `/admin`, which is protected by the `ADMIN_PASSWORD` environment variable. Set it in `.env` and in Vercel. To change the password, update it in Vercel and redeploy. Only `/api/admin` returns these rows, and only after sign-in. Nothing notifies you yet when a request arrives. To add an email or CRM notification, edit `api/consultations.js`.
 
+## AI call assistant (Noor)
+
+After someone books, the confirmation screen offers a short voice call in the browser with Noor, an AI assistant built on ElevenLabs Agents. Noor confirms the booking, asks a few questions for the consultant, and speaks English, Urdu or Arabic to match the site. She is told never to give financial advice, make promises or take payment details. The panel stays hidden until the assistant is set up.
+
+| What | Where |
+|---|---|
+| Noor's instructions, greeting and voice | `scripts/voice-agent.js` |
+| Starts a call for a real booking (the API key stays on the server) | `api/voice-session.js`, `api/_lib/voiceTicket.js` |
+| The call panel | `src/components/booking/VoiceAssistant.jsx` |
+
+To set it up:
+
+1. Create an account at elevenlabs.io and make an API key under **Developers > API keys**. Give it access to **ElevenLabs Agents**.
+2. Add `ELEVENLABS_API_KEY=...` to `.env`.
+3. Run `node --env-file=.env scripts/voice-agent.js`. It creates the agent and adds `ELEVENLABS_AGENT_ID` to `.env`.
+4. Add both values in Vercel under **Settings > Environment Variables**, then redeploy.
+
+To change what Noor says, edit `scripts/voice-agent.js` and run it again. Call transcripts are in the ElevenLabs dashboard under **Agents > Conversations**. Each booking gets a call pass that lasts two hours, and calls end after ten minutes.
+
 ## Deploying
 
 `vercel.json` already sends page routes to `index.html`. Add `DATABASE_URL` and `JWT_SECRET` in the Vercel project settings.

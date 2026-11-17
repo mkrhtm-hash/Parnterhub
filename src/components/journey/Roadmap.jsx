@@ -30,7 +30,7 @@ export function flatten(journeys) {
 }
 
 function StopCard({ stop, state, side }) {
-  const { t, locale } = useI18n();
+  const { t } = useI18n();
   const Icon = icons[stop.service] ?? Compass;
   return (
     <div
@@ -65,8 +65,7 @@ function StopCard({ stop, state, side }) {
           <span className="truncate" style={{ color: stop.color }}>{t(stop.serviceTitle)}</span>
         </p>
         <p className="mt-1 line-clamp-2 text-sm font-semibold leading-snug">{t(stop.title)}</p>
-        <div className="mt-1 flex items-center justify-between gap-2">
-          <span className="truncate text-xs text-muted">{shortDate(stop.dueOn, locale)}</span>
+        <div className="mt-1 flex items-center justify-end gap-2">
           {state === 'done' && (
             <span className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase" style={{ background: GOLD, color: '#2a1b00' }}>
               {t('Done')}

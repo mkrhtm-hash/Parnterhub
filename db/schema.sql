@@ -125,3 +125,39 @@ CREATE TABLE IF NOT EXISTS learning_feedback (
   created_at timestamptz NOT NULL DEFAULT now()
 );
 CREATE INDEX IF NOT EXISTS learning_feedback_created_at_idx ON learning_feedback (created_at DESC);
+
+-- Client accounts for My Journey (/account). Passwords are stored as scrypt hashes, never as text.
+-- No API route returns these rows except to the signed-in client and to /admin.
+CREATE TABLE IF NOT EXISTS clients (
+  id            bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  name          text NOT NULL,
+  email         text NOT NULL UNIQUE,
+  phone         text NOT NULL DEFAULT '',
+  country       text NOT NULL DEFAULT '',
+  password_hash text NOT NULL,
+  created_at    timestamptz NOT NULL DEFAULT now(),
+  last_sign_in  timestamptz
+);
+CREATE INDEX IF NOT EXISTS clients_created_at_idx ON clients (created_at DESC);
+
+-- The services a client signed up for (ids from shared/journeys.js).
+CREATE TABLE IF NOT EXISTS client_services (
+  id         bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  client_id  bigint NOT NULL REFERENCES clients (id) ON DELETE CASCADE,
+  service    text NOT NULL,
+  started_on date NOT NULL DEFAULT current_date,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  UNIQUE (client_id, service)
+);
+
+-- The stops on each client's roadmap, copied from shared/journeys.js at sign-up. Ticked done in /admin.
+CREATE TABLE IF NOT EXISTS journey_stops (
+  id                bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  client_service_id bigint NOT NULL REFERENCES client_services (id) ON DELETE CASCADE,
+  position          integer NOT NULL,
+  title             text NOT NULL,
+  note              text NOT NULL DEFAULT '',
+  due_on            date,
+  done_at           timestamptz,
+  UNIQUE (client_service_id, position)
+);

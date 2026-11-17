@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useT } from '../../i18n/I18nContext';
-import { BookOpen, CalendarDays, CircleHelp, Compass, Ellipsis, GraduationCap, Handshake, House, Layers, ListChecks, Network, UserRound, X } from 'lucide-react';
+import { BookOpen, CalendarDays, CircleUserRound, CircleHelp, Compass, Ellipsis, GraduationCap, Handshake, House, Layers, ListChecks, Network, UserRound, X } from 'lucide-react';
 
 const primary = [
   { to: '/', label: 'Home', Icon: House, end: true },
@@ -12,6 +12,7 @@ const primary = [
 ];
 
 const more = [
+  { to: '/account', label: 'My Journey', Icon: CircleUserRound },
   { to: '/services', label: 'Services', Icon: Layers },
   { to: '/how-it-works', label: 'How It Works', Icon: ListChecks },
   { to: '/learning', label: 'Learning', Icon: GraduationCap },

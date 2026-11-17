@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { CalendarDays } from 'lucide-react';
+import { CalendarDays, CircleUserRound } from 'lucide-react';
 import Logo from '../ui/Logo';
 import Button from '../ui/Button';
 import ThemeToggle from './ThemeToggle';
@@ -37,6 +37,14 @@ export default function Navbar() {
         <div className="flex items-center gap-2">
           <LanguageSwitch />
           <ThemeToggle />
+          <NavLink
+            to="/account"
+            aria-label={t('My Journey')}
+            title={t('My Journey')}
+            className={({ isActive }) => `hidden size-10 place-items-center rounded-full border border-line transition-colors lg:grid ${isActive ? 'bg-blue/12 text-blue' : 'text-muted hover:text-ink'}`}
+          >
+            <CircleUserRound className="size-5" aria-hidden="true" />
+          </NavLink>
           <div className="hidden lg:block">
             <Button to="/book" className="!min-h-10 !px-4 !py-2">
               <CalendarDays className="size-4" aria-hidden="true" />

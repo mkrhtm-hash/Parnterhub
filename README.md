@@ -110,6 +110,16 @@ SELECT * FROM consultations ORDER BY created_at DESC;
 
 You can also read bookings and opinions at `/admin`, which is protected by the `ADMIN_PASSWORD` environment variable. Set it in `.env` and in Vercel. To change the password, update it in Vercel and redeploy. Only `/api/admin` returns these rows, and only after sign-in. Nothing notifies you yet when a request arrives. To add an email or CRM notification, edit `api/consultations.js`.
 
+## Client accounts and My Journey
+
+Clients create an account at `/account` (the person icon in the header, or "My Journey" in the phone menu) with their name, email, a password and the services they want. Each service gives them a roadmap of stops, shown as one trail in date order with a "You are here" marker on the first stop not yet done. A link like `/account?service=account-opening` ticks that service in advance.
+
+- **The stops for each service** are in `shared/journeys.js` (title, short note, and how many days after sign-up each stop is due). Changing that file affects new sign-ups only. If you change a stop's wording, add its Urdu and Arabic in `src/i18n/ur.json` and `ar.json` too.
+- **Updating a client's roadmap:** in `/admin`, open **Clients**, then a client. Tick a stop when it is done, change its date, or edit its note. You can also add or remove a service.
+- **Forgotten passwords:** there is no email service, so use **Reset password** on the client in `/admin`. It shows a new password once; send it to the client privately. They can change it under My Journey. A reset signs them out everywhere.
+- Passwords are stored as scrypt hashes, never as text. Sign-ins use a cookie signed with `JWT_SECRET`. Clients only ever see their own roadmap, and only `/admin` can tick stops.
+- Tables: `clients`, `client_services` and `journey_stops` in `db/schema.sql`. `npm run db:setup` creates them.
+
 ## AI call assistant (Noor)
 
 After someone books, the confirmation screen offers a short voice call in the browser with Noor, in English, Urdu or Arabic to match the site. Noor works in one of two ways:

@@ -3,6 +3,7 @@ import { LoaderCircle, Lock, LogOut, Mail, Phone, RotateCcw, Star, TriangleAlert
 import Button from '../components/ui/Button';
 import { PageHeader } from '../components/ui/Primitives';
 import { usePageMeta } from '../hooks/usePageMeta';
+import ClientsAdmin from '../components/journey/ClientsAdmin';
 
 const when = (value) => new Date(value).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
 const callDate = (value) => new Date(`${value}T12:00:00`).toLocaleDateString(undefined, { dateStyle: 'medium' });
@@ -150,6 +151,7 @@ export default function Admin() {
   const tabs = state.status === 'ready' ? [
     { id: 'bookings', label: 'Bookings', count: state.bookings.length },
     { id: 'opinions', label: 'Opinions', count: state.opinions.length },
+    { id: 'clients', label: 'Clients', count: state.clients?.length ?? 0 },
   ] : [];
   const rows = state.status === 'ready' ? state[tab] : [];
   const Card = tab === 'bookings' ? BookingCard : OpinionCard;
@@ -157,7 +159,7 @@ export default function Admin() {
   return (
     <>
       <meta name="robots" content="noindex" />
-      <PageHeader eyebrow="Private" title="Admin" intro="Booking requests and opinions sent through the site, newest first." />
+      <PageHeader eyebrow="Private" title="Admin" intro="Booking requests, opinions and client roadmaps, newest first." />
       <section className="shell min-h-[40vh]">
         {state.status === 'loading' && (
           <p role="status" className="flex items-center justify-center gap-2 py-10 text-sm text-muted">
@@ -181,7 +183,7 @@ export default function Admin() {
         {state.status === 'ready' && (
           <>
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <div role="group" aria-label="Admin sections" className="grid grid-cols-2 gap-1 rounded-2xl border border-line bg-[var(--glass)] p-1.5">
+              <div role="group" aria-label="Admin sections" className="grid grid-cols-3 gap-1 rounded-2xl border border-line bg-[var(--glass)] p-1.5">
                 {tabs.map(({ id, label, count }) => (
                   <button
                     key={id}
@@ -207,7 +209,9 @@ export default function Admin() {
             </div>
 
             <div className="mt-5 grid gap-4">
-              {rows.length === 0 ? (
+              {tab === 'clients' ? (
+                <ClientsAdmin clients={state.clients ?? []} onChange={(clients) => setState((st) => ({ ...st, clients }))} />
+              ) : rows.length === 0 ? (
                 <p className="glass p-10 text-center text-sm text-muted">Nothing here yet.</p>
               ) : (
                 rows.map((item) => <Card key={item.id} item={item} />)
